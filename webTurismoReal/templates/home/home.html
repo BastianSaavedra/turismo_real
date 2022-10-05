@@ -1,0 +1,95 @@
+{% extends '../layout/base.html' %}
+{% load tags %}
+{% block title %}Home{% endblock %}
+{% block content %}
+
+<!-- Booking Section starts here -->
+<section>
+  <div class="container-fluid py-5 px-5">
+
+    <!-- Formulario de busqueda de departamento empieza aqui -->
+    <form action="" method="POST">
+      {% csrf_token %}
+      <div class="row justify-content-center py-5 bg-light">
+
+        <div class="col-lg-4">
+          <label for="">Ubicacion</label>
+          <select class="form-control" name="search_location" id="dptostatus">
+
+            <!-- Departamento id y ubicacion  -->
+            <option>Ubicacion</option>
+            {% for each_location, each_departamento_id in all_location %}
+            <option value="{{ each_departamento_id}}">{{ each_location }}</option>
+            {% endfor %}
+
+          </select>
+        </div>
+
+        <div class="col-lg-2">
+          <label for="">Check-in</label>
+          <input class="form-control mr-sm-2" type="date" placeholder="Check in" name="cin" min="{% todays_date %}" max="{% max_date %}" aria-label="Search" required="True"/>
+        </div>
+
+        <div class="col-lg-2">
+          <label for="">Check-out</label>
+          <input class="form-control mr-sm-2" type="date" placeholder="Check out" name="cout" min="{% tommorow %}" max="{% max_date %}" aria-label="Search" required="True"/>
+        </div>
+        
+        <div class="col-lg-2">
+          <label for="">Acompañantes</label>
+          <input class="form-control mr-sm-2" type="number" placeholder="Acompañantes" name="capacidad"  aria-label="Search" required="True"/>
+        </div>
+
+        <div class="col-lg-2">
+          <input type="submit" value="Buscar" class="form-control mr-sm-2 btn btn-primary my-4" style="position: relative;top: 7px;" >
+        </div>
+
+        {% comment %}
+        {% if detalles_dpto %}
+        <p class="text-center text-success ">Departamentos Disponibles</p>
+        {% endif %}
+        {% endcomment %}
+
+        <div class="col-lg-4 text-center">
+          {% include '../layout/mensajes.html' %}
+        </div>
+        
+      </div>
+    </form>
+    <!-- Formulario de busqueda de departamento termina aqui -->
+    
+    <!-- Resultados de busqueda del departamento empieza aqui -->
+    <div class="container-fluid px-0 mx-aut">
+      {% if detalles_dpto %}
+        <table class="table">
+          <thead class="o">
+            <th>Titulo</th>
+            <th>Direccion</th>
+            <th>Capacidad</th>
+            <th>Descripcion</th>
+            <th>Precio</th>
+            <th>Acciones</th>
+          </thead>
+          {% for dpto in detalles_dpto %}
+          <tbody>
+            <td>{{ dpto.departamento.titulo }}</td>
+            <td>{{ dpto.departamento.direccion }}</td>
+            <td>{{ dpto.capacidad }}</td>
+            <td>{{ dpto.departamento.descripcion }}</td>
+            <td>{{ dpto.precio }}</td>
+            <td><a><button class="btn btn-warning">Arrendar</button></a></td>
+          </tbody>
+          
+          {% endfor %}
+        </table>
+      {% endif %}
+    </div>
+
+    <!-- Resultados de busqueda del departamento termina aqui -->
+
+  </div>
+</section>
+
+
+
+{% endblock %}
