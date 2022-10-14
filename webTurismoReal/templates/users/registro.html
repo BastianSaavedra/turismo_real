@@ -1,0 +1,40 @@
+{% extends "../layout/base.html" %}
+{% block content%}
+<title href="{% url 'registro' %}">{% block title %}Registro de usuarios{% endblock %}</title>
+<hr style="color:aliceblue ; height: 0.1px;">
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="row"> 
+            <div class="col-12 col-md-8 offset-md-2"> 
+            <div class="card text-white bg-secondary mb-3">
+            <div class="card-body">
+            <h2>Registro</h2>
+            <form method="post">
+
+            {% csrf_token %}
+            {% for m in form %}
+            <div class="form-group">
+                <hr style="color:rgb(255, 255, 255) ; height: 0.1px;">
+                {{m.label_tag}}
+                {{m}}
+
+                {%if m.errors%}
+                    {{m.errors}}
+                {%endif%}
+            </div>
+            {%endfor%}
+            <hr>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <button type="submit" class="btn btn-warning">Registrarse</button>
+            </div>
+        </form>
+        </div>
+    </div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+{% endblock %}

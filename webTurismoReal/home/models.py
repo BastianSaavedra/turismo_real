@@ -1,7 +1,72 @@
 from django.db import models
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
 
 # Create your models here.
+class UsuarioManager(BaseUserManager):
+    def create_user(self, email, username, 
+                    nombre, ap_paterno, ap_materno, 
+                    rut, dv, telefono, password=None):
+        if not email:
+            raise ValueError('El usuario debe tener un correo electronico')
+        
+        usuario = self.model(username = username,
+                             email = self.normalize_email(email),
+                             nombre = nombre, 
+                             ap_paterno = ap_paterno,
+                             ap_materno = ap_materno,
+                             rut = rut,
+                             dv = dv,
+                             telefono = telefono)
+
+        usuario.set_password(password)
+        usuario.save()
+        return usuario
+    
+    def create_superuser(self,username, email, nombre, ap_paterno, ap_materno, rut, dv, telefono, password):
+        usuario = self.create_user(
+            email,
+            username=username,
+            nombre = nombre,
+            ap_paterno = ap_paterno,
+            ap_materno = ap_materno,
+            rut = rut,
+            dv = dv,
+            telefono = telefono
+            )
+        usuario.usuario_administrador = True
+        usuario.save()
+        return usuario
+
+class Usuario(AbstractBaseUser):
+    username = models.CharField('Nombre de usuario', unique = True, max_length=40)
+    nombre = models.CharField('Nombre', max_length=40)
+    ap_paterno = models.CharField('Apellido paterno', max_length=40)
+    ap_materno = models.CharField('Apellido paterno', max_length=40)
+    rut = models.CharField('RUT', max_length=8)
+    dv = models.CharField('Dv', max_length=1)
+    correo = models.EmailField('Correo electronico', max_length=254, unique=True)
+    telefono = models.IntegerField('Telefono')
+    usuario_administrador = models.BooleanField(default=False)
+    objects = UsuarioManager()
+    
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['nombre','ap_paterno','ap_materno',
+                       'rut','dv','correo','telefono']
+    
+    def __str__(self):
+        return f'{self.nombre},{self.ap_paterno}'
+    
+    def has_perm(self, perm, obj = None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.usuario_administrador
+
+
 
 class Region(models.Model):
     nombre = models.CharField(max_length=150)
@@ -111,11 +176,5 @@ class Reserva(models.Model):
 #     user = models.ForeignKey(User, models.DO_NOTHING)
 #     rut = models.PositiveIntegerField()
 #     dv = models.CharField(max_length=1)
-
-
-
-
-
-
 
 
