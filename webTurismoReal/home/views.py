@@ -1,14 +1,16 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
 from .models import Departamento, DetalleDpto, Reserva, Comuna
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as lg
+from django.views.generic import CreateView
 from .forms import Registro
+from .models import Usuario
 from django.contrib import messages
-import datetime
+import datetime, re
 
 # def home_inicio(request):
 #     return render(
@@ -79,18 +81,34 @@ def salir(request):
     return redirect(login)
 
 
-def registro(request):
-    if request.user.is_authenticated:
-        return redirect ('home')
+class RegistrarUsuario(CreateView):
+    model = Usuario
+    form_class = Registro
+    template_name = 'users/registro.html'
+    success_url = reverse_lazy('home/home.html')
+    
 
-    form = Registro(request.POST or None) 
-    if request.method =='POST' and form.is_valid():
-        usuario = form.save()    
-        if usuario:
-            lg(request, usuario, backend='django.contrib.auth.backends.ModelBackend') 
-            messages.success(request, f'Bienvenido {form.print_user()}')
-            return redirect('home')
-
-    return render(request, 'users/registro.html',{
-        'form':form
-    })
+    
+    def post(self,request,*args,**kwargs):      
+        form = self.form_class(request.POST)
+        if form.is_valid():
+            nuevo_usuario = Usuario(
+                correo = form.cleaned_data.get('correo'),
+                username = form.cleaned_data.get('username'),
+                nombre = form.cleaned_data.get('nombre'),
+                ap_paterno = form.cleaned_data.get('ap_paterno'),
+                ap_materno = form.cleaned_data.get('ap_materno'),
+                rut = form.cleaned_data.get('rut'),
+                dv = form.cleaned_data.get('dv'),
+                telefono = form.cleaned_data.get('telefono')
+            )
+            nuevo_usuario.set_password(form.cleaned_data.get('password1'))
+            nuevo_usuario.save()
+            
+            if nuevo_usuario:
+                lg(request, nuevo_usuario, backend='django.contrib.auth.backends.ModelBackend')
+                messages.success(request, f'Bienvenido {form.print_user()}')
+                return redirect('home')
+            #return redirect('home')
+        else:
+            return render(request,self.template_name,{'form':form})

@@ -1,6 +1,11 @@
 from django.contrib import admin
 from .models import *
 
+class UsuariosAdmin(admin.ModelAdmin):
+    list_display = ('id', 'username', 'nombre', 'ap_paterno')
+    ordering = ('id', 'username','nombre')
+    search_fields = ('id','username')
+    list_display_links = ('username',)
 
 # class DepartamentoAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'direccion', 'precio')
@@ -28,6 +33,7 @@ from .models import *
 # admin.site.register(Region, RegionAdmin)
 # admin.site.register(Reserva, ReservaAdmin)
 
+admin.site.register(Usuario, UsuariosAdmin)
 admin.site.register(Departamento)
 admin.site.register(DetalleDpto)
 admin.site.register(Comuna)

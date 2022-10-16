@@ -1,16 +1,16 @@
 from django.db import models
-from django.contrib.auth.models import User, AbstractBaseUser, BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 # Create your models here.
 class UsuarioManager(BaseUserManager):
-    def create_user(self, email, username, 
+    def create_user(self, correo, username, 
                     nombre, ap_paterno, ap_materno, 
                     rut, dv, telefono, password=None):
-        if not email:
+        if not correo:
             raise ValueError('El usuario debe tener un correo electronico')
         
         usuario = self.model(username = username,
-                             email = self.normalize_email(email),
+                             correo = self.normalize_email(correo),
                              nombre = nombre, 
                              ap_paterno = ap_paterno,
                              ap_materno = ap_materno,
@@ -22,16 +22,17 @@ class UsuarioManager(BaseUserManager):
         usuario.save()
         return usuario
     
-    def create_superuser(self,username, email, nombre, ap_paterno, ap_materno, rut, dv, telefono, password):
+    def create_superuser(self,username, correo, nombre, ap_paterno, ap_materno, rut, dv, telefono, password):
         usuario = self.create_user(
-            email,
+            correo,
             username=username,
             nombre = nombre,
             ap_paterno = ap_paterno,
             ap_materno = ap_materno,
             rut = rut,
             dv = dv,
-            telefono = telefono
+            telefono = telefono,
+            password=password
             )
         usuario.usuario_administrador = True
         usuario.save()
@@ -39,13 +40,13 @@ class UsuarioManager(BaseUserManager):
 
 class Usuario(AbstractBaseUser):
     username = models.CharField('Nombre de usuario', unique = True, max_length=40)
-    nombre = models.CharField('Nombre', max_length=40)
-    ap_paterno = models.CharField('Apellido paterno', max_length=40)
-    ap_materno = models.CharField('Apellido paterno', max_length=40)
+    nombre = models.CharField('Nombre', max_length=50)
+    ap_paterno = models.CharField('Apellido paterno', max_length=50)
+    ap_materno = models.CharField('Apellido materno', max_length=50)
     rut = models.CharField('RUT', max_length=8)
     dv = models.CharField('Dv', max_length=1)
-    correo = models.EmailField('Correo electronico', max_length=254, unique=True)
-    telefono = models.IntegerField('Telefono')
+    correo = models.EmailField('Correo electronico', max_length=100, unique=True)
+    telefono = models.CharField('Telefono', max_length=12)
     usuario_administrador = models.BooleanField(default=False)
     objects = UsuarioManager()
     
@@ -161,7 +162,7 @@ class Reserva(models.Model):
     check_in = models.DateField(auto_now=False)
     check_out = models.DateField()
     detalle_dpto = models.ForeignKey(DetalleDpto, on_delete=models.CASCADE)
-    guest = models.ForeignKey(User, on_delete=models.CASCADE)
+    guest = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     booking_id = models.CharField(max_length=100, default="null")
 
     def __str__(self):

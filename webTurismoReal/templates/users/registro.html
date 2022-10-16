@@ -10,24 +10,24 @@
             <div class="card text-white bg-secondary mb-3">
             <div class="card-body">
             <h2>Registro</h2>
-            <form method="post">
-
-            {% csrf_token %}
-            {% for m in form %}
+            <form method="POST">
+             {% csrf_token %}
+                {{form.as_p}}
+                <hr>
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button type="submit" class="btn btn-warning">Registrarse</button>
+                    <a href="{% url 'home' %}" type="submit" class="btn btn-danger">Cancelar</a>
+                </div>
+            </form>
             <div class="form-group">
                 <hr style="color:rgb(255, 255, 255) ; height: 0.1px;">
-                {{m.label_tag}}
+                <!--{{m.label_tag}}
                 {{m}}
 
                 {%if m.errors%}
                     {{m.errors}}
-                {%endif%}
-            </div>
-            {%endfor%}
-            <hr>
-            <div class="d-grid gap-2 col-6 mx-auto">
-                <button type="submit" class="btn btn-warning">Registrarse</button>
-            </div>
+                {%endif%} 
+            </div> -->
         </form>
         </div>
     </div>
