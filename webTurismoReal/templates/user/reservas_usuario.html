@@ -1,0 +1,32 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+{% block title %}Mis Reservas {% endblock %}
+{% block content %}
+
+<h3 class="text-center text-success">
+  Mis Reservas
+</h3>
+
+<div class="container px-0 mx-auto">
+  {% for reserva in reservas %}
+  <div class="card mb-3" style="max-width: 540px;">
+    <div class="row g-0">
+      <div class="col-md-4">
+        <img src="{{ reserva.detalle_dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
+      </div>
+      <div class="col-md-8">
+        <div class="card-body">
+          <h5>{{ reserva.detalle_dpto.departamento.titulo }}</h5>
+          <p>Usuario: {{ reserva.guest }}</p>
+          <p>De: {{ reserva.check_in }}</p>
+          <p>Hasta: {{ reserva.check_out }}</p>
+          <p>{{ reserva.detalle_dpto.precio }}</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}

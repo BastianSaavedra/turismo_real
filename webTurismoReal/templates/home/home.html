@@ -1,47 +1,115 @@
 {% extends '../layout/base.html' %}
+{% load static %}
 {% load tags %}
 {% block title %}Home{% endblock %}
 {% block content %}
 
+
 <!-- Booking Section starts here -->
 <section>
-  <div class="container-fluid py-5 px-5">
+  <div class="container py-5 px-5">
 
     <!-- Formulario de busqueda de departamento empieza aqui -->
-    <form action="" method="POST">
+    <form action="" method="POST" class="needs-validation">
       {% csrf_token %}
-      <div class="row justify-content-center py-5 bg-light">
+      <div class="row justify-content-center py-5 bg-white">
 
-        <div class="col-lg-4">
-          <label for="">Ubicacion</label>
-          <select class="form-control" name="search_location" id="dptostatus">
 
+        <div class="col-lg-2 form-group text-center">
+          <label>Destino</label>
+          <select class="form-select bg-white rounded-pill text-center border-primary" name="search_location" id="id_comuna">
             <!-- Departamento id y ubicacion  -->
-            <option>Ubicacion</option>
-            {% for each_location, each_departamento_id in all_location %}
-            <option value="{{ each_departamento_id}}">{{ each_location }}</option>
+            <option disable selected hidden>Seleccionar</option>
+            {% for comuna_name, region_name, comuna_id in all_locations %}
+            <optgroup  value="{{ comuna_id }}" label="{{ region_name }}">
+              <option value="{{ comuna_id }}">{{ comuna_name }}</option>  
+            </optgroup>
             {% endfor %}
-
           </select>
+        </div>        
+
+        {% comment %}
+        <div class="col-lg-2">
+          <input 
+            class="form-control mr-sm-2" 
+            type="datetime-local" 
+            placeholder="Check in"
+            name="cin" 
+            min="{% todays_date %}" 
+            max="{% max_date %}" 
+            aria-label="Search" 
+            required="True"
+          />
+        </div>
+        {% endcomment %}
+
+
+        <div class="col-lg-2 text-center">
+          <label>Check-in</label>
+          <input 
+            class="form-control mr-sm-2 bg-white rounded-pill border-success text-center" 
+            type="datetime-local" 
+            placeholder="Check in"
+            name="cin"
+            aria-label="Search" 
+            required
+          />
         </div>
 
-        <div class="col-lg-2">
-          <label for="">Check-in</label>
-          <input class="form-control mr-sm-2" type="date" placeholder="Check in" name="cin" min="{% todays_date %}" max="{% max_date %}" aria-label="Search" required="True"/>
-        </div>
-
-        <div class="col-lg-2">
+        <div class="col-lg-2 text-center">
           <label for="">Check-out</label>
-          <input class="form-control mr-sm-2" type="date" placeholder="Check out" name="cout" min="{% tommorow %}" max="{% max_date %}" aria-label="Search" required="True"/>
+          <input 
+            class="form-control mr-sm-2 bg-white rounded-pill border-warning text-center" 
+            type="datetime-local" 
+            placeholder="Check out"
+            name="cout"
+            aria-label="Search" 
+            required="True"
+            />
         </div>
-        
-        <div class="col-lg-2">
-          <label for="">Acompañantes</label>
-          <input class="form-control mr-sm-2" type="number" placeholder="Acompañantes" name="capacidad"  aria-label="Search" required="True"/>
+
+        <div class="col-lg-2 text-center">
+          <label for="">Huéspedes</label>
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button 
+                class="btn btn-number"
+                type="button"
+                disabled="disabled"
+                data-type="minus"
+                data-field="capacidad"
+                >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+            </span>
+
+            <input 
+              type="text" 
+              name="capacidad" 
+              class="form-control input-number text-center rounded-pill border-secondary" 
+              value="1" min="1" max="30">
+
+            <span class="input-group-btn">
+              <button 
+                class="btn btn-number"
+                type="button"
+                data-type="plus"
+                data-field="capacidad"
+                >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </span>
+
+            
+          </div>
         </div>
 
         <div class="col-lg-2">
-          <input type="submit" value="Buscar" class="form-control mr-sm-2 btn btn-primary my-4" style="position: relative;top: 7px;" >
+          <!-- <input type="submit" value="Buscar" class="form-control mr-sm-2 btn btn-primary my-3" style="position: relative;top: 7px;" > -->
+          <button class="btn btn-outline-primary text-center my-3 rounded-pill" style="position: relative; top: 7px;">
+            Buscar
+            <i class="fa-solid fa-magnifying-glass"></i>
+          </button>
         </div>
 
         {% comment %}
@@ -58,38 +126,57 @@
     </form>
     <!-- Formulario de busqueda de departamento termina aqui -->
     
-    <!-- Resultados de busqueda del departamento empieza aqui -->
-    <div class="container-fluid px-0 mx-aut">
-      {% if detalles_dpto %}
-        <table class="table">
-          <thead class="o">
-            <th>Titulo</th>
-            <th>Direccion</th>
-            <th>Capacidad</th>
-            <th>Descripcion</th>
-            <th>Precio</th>
-            <th>Acciones</th>
-          </thead>
-          {% for dpto in detalles_dpto %}
-          <tbody>
-            <td>{{ dpto.departamento.titulo }}</td>
-            <td>{{ dpto.departamento.direccion }}</td>
-            <td>{{ dpto.capacidad }}</td>
-            <td>{{ dpto.departamento.descripcion }}</td>
-            <td>{{ dpto.precio }}</td>
-            <td><a><button class="btn btn-warning">Arrendar</button></a></td>
-          </tbody>
-          
-          {% endfor %}
-        </table>
-      {% endif %}
+
+    <div class="container px-0 mx-auto">
+      {% for dpto in detalles_dpto %}
+        <div class="card mb-3" style="max-width: 540px;">
+          <div class="row g-0">
+            <div class="col-md-4">
+              <img src="{{ dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
+            </div>
+            <div class="col-md-8">
+              <div class="card-body">
+                <h5>{{ dpto.departamento.titulo }}</h5>
+                <p class="card-text">{{ dpto.departamento.direccion }}</p>
+                <p class="card-text">{{ dpto.capacidad }}</p>
+                <p class="card-text">{{ dpto.precio }}</p>
+              </div>
+              <a href="{% url 'home_reserva_confirmacion' dpto.id %}"><button class="btn btn-warning">Reservar</button></a>
+            </div>
+
+          </div>
+        </div>
+      {% endfor %}
     </div>
 
+
+   
     <!-- Resultados de busqueda del departamento termina aqui -->
+
+
+    <div class="container px-0 mx-auto">
+      <div class="row row-cols-1 row-cols-md-6 g-4">
+        {% for comuna in comunas  %}
+          <div class="col">
+            <div class="card border-0">
+              <img src="{{ comuna.comuna.img.url }}" alt="{{ comuna.comuna.nombre }}"  class="card-img-top">
+              <div class="card-body">
+                <h5 class="card-title text-center">{{ comuna.comuna.nombre }}</h5>
+              </div>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+
 
   </div>
 </section>
 
+
+{% endblock %}
+
+{% block js %}
 
 
 {% endblock %}

@@ -2,6 +2,19 @@ from django.contrib import admin
 from .models import *
 
 
+
+class RegionAdmin(admin.ModelAdmin):
+    search_fields = ('id', 'nombre'),
+    ordering = ['nombre']
+
+class ComunaAdmin(admin.ModelAdmin):
+    search_fields = ('id', 'nombre')
+    autocomplete_fields = ['region']
+
+class DepartamentoAdmin(admin.ModelAdmin):
+
+    autocomplete_fields = ['comuna']
+
 # class DepartamentoAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'direccion', 'precio')
 #     search_fields = ('id', 'direccion', 'precio')
@@ -28,8 +41,8 @@ from .models import *
 # admin.site.register(Region, RegionAdmin)
 # admin.site.register(Reserva, ReservaAdmin)
 
-admin.site.register(Departamento)
+admin.site.register(Departamento, DepartamentoAdmin)
 admin.site.register(DetalleDpto)
-admin.site.register(Comuna)
-admin.site.register(Region)
+admin.site.register(Comuna, ComunaAdmin)
+admin.site.register(Region, RegionAdmin)
 admin.site.register(Reserva)

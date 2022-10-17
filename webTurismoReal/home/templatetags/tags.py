@@ -27,3 +27,10 @@ def percentage(value1, value2 = 100):
 @register.filter(name="dateFormat")
 def dateFormat(dateTime):
     date = dateTime.strftime('%d/%m/%Y')
+
+@register.filter(name="numberFormat")
+def numberFormat(number):
+    if number == None:
+        return 0
+    else:
+        return "{:,}".format(number).replace(",",".")

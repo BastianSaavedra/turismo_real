@@ -1,0 +1,164 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+{% load tags %}
+{% block title %}Confirmando Reserva{% endblock %}
+{% block content %}
+
+<!-- Booking Section start here -->
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6 col-lg-6 col-xlg-6 col-sm-12 mx-auto my-4">
+
+      <form action="/user/reserva-dpto/reserva" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+          <label for="username">Departamento</label>
+          <input 
+            type="text" 
+            class="form-control" 
+            id="departamento" 
+            name="departamento" 
+            disabled 
+            value="{{ detalle_dpto.departamento.titulo }}" />
+        </div>
+
+        <div class="form-group">
+          <label for="username">Ubicacion</label>
+          <input 
+              type="text" 
+              class="form-control" 
+              id="ubicacion" 
+              name="ubicacion" 
+              disabled 
+              value="{{ detalle_dpto.departamento.direccion }} - {{ detalle_dpto.departamento.comuna }}" 
+            />
+        </div>
+
+        <div class="form-group">
+          <label for="person">Nombre del Usuario</label>
+          <input
+              type="text"
+              class="form-control"
+              id="username"
+              name="username"
+              required="true"
+              value="{{ request.user }}"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="">Huéspedes</label>
+          <div class="input-group">
+            <span class="input-group-btn">
+              <button 
+                class="btn btn-number"
+                type="button"
+                disabled="disabled"
+                data-type="minus"
+                data-field="capacidad"
+                >
+                <i class="fa-solid fa-minus"></i>
+              </button>
+            </span>
+
+            <input 
+                type="text" 
+                id="person"
+                name="capacidad" 
+                class="form-control input-number text-center rounded-pill border-secondary" 
+                value="1" 
+                min="1" 
+                max="{{ detalle_dpto.capacidad }}"
+              />
+
+            <span class="input-group-btn">
+              <button 
+                class="btn btn-number"
+                type="button"
+                data-type="plus"
+                data-field="capacidad"
+                >
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </span>
+            
+          </div>
+        </div>
+
+        <div class="from-group text-center">
+          <label for="password2">Check-in</label>
+          <input 
+            class="form-control mr-sm-2 bg-white rounded-pill border-success text-center" 
+            type="datetime-local" 
+            placeholder="Check in"
+            id="cin"
+            name="check_in"
+            required="true"
+          />
+        </div>
+
+        <div class="form-group text-center">
+          <label for="password2">Check-out</label>
+          <input 
+            class="form-control mr-sm-2 bg-white rounded-pill border-warning" 
+            type="datetime-local" 
+            placeholder="Check out"
+            id="cout"
+            name="check_out"
+            required="True"
+            />
+        </div>
+
+        <div class="form-group">
+          <label for="password2">Precio</label>
+          <input
+              type="text"
+              class="form-control"
+              id="total_reserva"
+              name="total_reseva"
+              placeholder="0"
+              disabled
+          />
+        </div>
+
+
+
+        <button type="submit" class="btn btn-primary">Reservar ahora</button>
+        <input type="hidden" name="detalledptoid" value="{{ detalle_dpto.id }}" />
+        
+
+
+      </form>
+      
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+  function check() {
+    let output = document.getElementById("total_reserva")
+
+    let startDate = new Date(document.getElementById("cin").value);
+    let endDate = new Date(document.getElementById("cout").value);
+    let price_per_night = "{{ detalle_dpto.precio }}"
+    
+
+    if (startDate.getTime() && endDate.getTime()) {
+      let timeDifference = endDate.getTime() - startDate.getTime();
+
+      let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
+      output.value = "$ " + dayDifference * price_per_night ;
+
+    } else {
+      output.value = 0;
+    }
+  };
+  document.querySelector('#cin').addEventListener("change", check, false);
+  document.querySelector('#cout').addEventListener("change", check, false);
+
+</script>
+{% endblock %}
+

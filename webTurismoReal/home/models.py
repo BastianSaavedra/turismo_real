@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from datetime import datetime
+
 
 # Create your models here.
 
@@ -18,6 +20,7 @@ class Region(models.Model):
 class Comuna(models.Model):
     nombre = models.CharField(max_length=150)
     region = models.ForeignKey(Region, models.DO_NOTHING)
+    img = models.ImageField(upload_to="comunas", default="../static/default/default.png")
 
     def __str__(self):
         return self.nombre
@@ -26,8 +29,6 @@ class Comuna(models.Model):
         db_table = 'comuna'
         verbose_name = 'Comuna'
         verbose_name_plural = 'Comunas'
-
-
 
 
 class Departamento(models.Model):
@@ -39,7 +40,7 @@ class Departamento(models.Model):
 
 
     def __str__(self):
-        return f"{self.titulo}-{self.comuna}"
+        return self.titulo
 
     class Meta:
         db_table = 'departamento'
@@ -95,9 +96,12 @@ class Reserva(models.Model):
 
     check_in = models.DateField(auto_now=False)
     check_out = models.DateField()
+    date_joined = models.DateField(default=datetime.now)
     detalle_dpto = models.ForeignKey(DetalleDpto, on_delete=models.CASCADE)
     guest = models.ForeignKey(User, on_delete=models.CASCADE)
     booking_id = models.CharField(max_length=100, default="null")
+    cant_dias_reserva = models.IntegerField(default=0)
+    total_reserva = models.IntegerField(default=0)
 
     def __str__(self):
         return self.guest.username
@@ -107,10 +111,10 @@ class Reserva(models.Model):
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
 
-# class UsersMetadata(models.Model):
-#     user = models.ForeignKey(User, models.DO_NOTHING)
-#     rut = models.PositiveIntegerField()
-#     dv = models.CharField(max_length=1)
+class UsersMetadata(models.Model):
+    user = models.ForeignKey(User, models.DO_NOTHING)
+    rut = models.PositiveIntegerField()
+    dv = models.CharField(max_length=1)
 
 
 
