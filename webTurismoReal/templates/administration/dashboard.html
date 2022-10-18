@@ -260,10 +260,10 @@
         type: 'column'
     },
     title: {
-        text: 'Departamentos Por Regiones'
+        text: 'Ventas por mes'
     },
     subtitle: {
-        text: 'Se presentan la cantidad de departamentos que hay por cada region'
+        text: 'Se presenta el valor total del dinero de las reservas por cada mes'
     },
     xAxis: {
         categories: [
@@ -287,7 +287,7 @@
 
       title: {
           useHTML: true,
-          text: 'Cantidad de Departamentos'
+          text: 'Monto de ventas'
       },
     },
     tooltip: {
@@ -305,7 +305,7 @@
         }
     },
     series: [{
-      name: 'Departamentos',
+      name: 'Valor Total',
       showInLegend: false,
       colorByPoint: true,
       data: {{ suma_total }}
