@@ -7,6 +7,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
+<!-- <<<<<<< HEAD -->
     <!-- Static CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
 
@@ -23,6 +24,9 @@
     
 
     <title>{% block title %}Turismo Real{% endblock %}</title>
+<!-- ======= -->
+    <!-- Bootstrap CSS -->
+    <!-- >>>>>>> origin/branch_SebastianZuniga -->
   </head>
   <body>
 
@@ -54,11 +58,15 @@
 
         <form class="d-flex">
           {% if user.is_authenticated %}
-          <a class="form-control btn btn-success rounded-pill">Cerrar Sesion</a>
+<!-- <<<<<<< HEAD -->
+          
+<!-- ======= -->
+            <a class="btn btn-danger" href="{% url 'logout' %}">Cerrar Sesion</a>
           {% else %}
-          <a class="form-control btn btn-success">Registrate</a>
-          <br>
-          <a class="form-control btn btn-success">Iniciar Sesion</a>
+            <a class="btn btn-warning" style="margin-right: 5px;" href="{% url 'registro' %}">Registrate</a>
+            <br>
+            <a class="btn btn-success" href="{% url 'login' %}">Iniciar Sesion</a>
+<!-- >>>>>>> origin/branch_SebastianZuniga -->
           {% endif %}
         </form>
         </div>
