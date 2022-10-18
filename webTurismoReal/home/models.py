@@ -111,10 +111,6 @@ class Reserva(models.Model):
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
 
-class UsersMetadata(models.Model):
-    user = models.ForeignKey(User, models.DO_NOTHING)
-    rut = models.PositiveIntegerField()
-    dv = models.CharField(max_length=1)
 
 
 
