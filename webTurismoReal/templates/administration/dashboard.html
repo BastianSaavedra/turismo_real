@@ -3,106 +3,104 @@
 {% load tags %}
 {% block content %}
 
-    
     <!-- offcanvas -->
     <main class="mt-5 pt-3">
       <div class="container-fluid">
         <div class="row">
-          <div class="col-xl-12">
-            <h4>Dashboard {{ arica }} </h4>
+          <div class="col-xl-12 mt-5 pt-3">
+            <h2>Dashboard</h2>
           </div>
         </div>
+
         <div class="row">
   
+          <!-- Inicio Datos Departamentos Reservas -->
           <div class="row">
 
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div>
-                    <h3 class="text-info">{{ total_departamentos }}</h3>
-                    <p class="mb-0">Total Departamentos</p>
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                      <h3 class="text-info">{{ total_departamentos }}</h3>
+                      <p class="mb-0">Total Departamentos</p>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="fas fa-hotel text-info fa-3x"></i>
+                    </div>
                   </div>
-                  <div class="align-self-center">
-                    <i class="fas fa-hotel text-info fa-3x"></i>
-                  </div>
+                  
                 </div>
-                
               </div>
             </div>
-          </div>
 
-      
                                                                                                   
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div>
-                    <h3 class="text-success">{{ disponibles }}</h3>
-                    <p class="mb-0">Departamentos Disponibles</p>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="fas fa-check-square text-success fa-3x"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div>
-                    <h3 class="text-warning">{{ reservas }}</h3>
-                    <p class="mb-0">Departamentos Reservados</p>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="far fa-calendar-check text-warning fa-3x"></i>
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                      <h3 class="text-success">{{ disponibles }}</h3>
+                      <p class="mb-0">Departamentos Disponibles</p>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="fas fa-check-square text-success fa-3x"></i>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          <div class="col-xl-3 col-sm-6 col-12 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <div class="d-flex justify-content-between px-md-1">
-                  <div>
-                    <h3 class="text-danger">{{ no_disponibles }}</h3>
-                    <p class="mb-0">Departamentos No Disponibles</p>
-                  </div>
-                  <div class="align-self-center">
-                    <i class="fas fa-ban text-danger fa-3x"></i>
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                      <h3 class="text-warning">{{ reservas }}</h3>
+                      <p class="mb-0">Departamentos Reservados</p>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="far fa-calendar-check text-warning fa-3x"></i>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          </div>
 
-          
+
+            <div class="col-xl-3 col-sm-6 col-12 mb-4">
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between px-md-1">
+                    <div>
+                      <h3 class="text-danger">{{ no_disponibles }}</h3>
+                      <p class="mb-0">Departamentos No Disponibles</p>
+                    </div>
+                    <div class="align-self-center">
+                      <i class="fas fa-ban text-danger fa-3x"></i>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <!-- Termino Datos Departamentos Reservas -->
+
        
         
-
+          <!-- Inicio Seccion Graficos -->
           <div class="row">
 
             <div class="col-md-6 mb-3">
-              <div class="card h-100">
+              <div class="card h-150">
                 <div class="card-header">
-                  <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
-                  
+                  <span class="me-2"><i class="fas fa-chart-pie"></i></span>
                 </div>
                 <div class="card-body">
-
                   <div class="col-lg-12">
                     <div id="container"></div>
                   </div>
-                  
-
                 </div>
               </div>
             </div>
@@ -111,7 +109,6 @@
               <div class="card h-100">
                 <div class="card-header">
                   <span class="me-2"><i class="bi bi-bar-chart-fill"></i></span>
-                  
                 </div>
                 <div class="card-body">
                   <div class="col-lg-12">
@@ -120,9 +117,12 @@
                 </div>
               </div>
             </div>
+
           </div>
+          <!-- Termino Seccion Graficos -->
 
 
+          {% comment %}
         <div class="row">
           <div class="col-md-12 mb-3">
             <div class="card">
@@ -138,32 +138,34 @@
                   >
                     <thead>
                       <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <th>Id de Reserva</th>
+                        <th>Departamento</th>
+                        <th>Region</th>
+                        <th>Huésped</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Estancia</th>
+                        <th>Total Reserva</th>
                       </tr>
                     </thead>
                     <tbody>
                       <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>61</td>
-                        <td>2011/04/25</td>
-                        <td>$320,800</td>
+                        <!-- <td>Tiger Nixon</td> -->
+                        <!-- <td>System Architect</td> -->
+                        <!-- <td>Edinburgh</td> -->
+                        <!-- <td>61</td> -->
+                        <!-- <td>2011/04/25</td> -->
+                        <!-- <td>$320,800</td> -->
                       </tr>
                     </tbody>
                     <tfoot>
                       <tr>
-                        <th>Name</th>
-                        <th>Position</th>
-                        <th>Office</th>
-                        <th>Age</th>
-                        <th>Start date</th>
-                        <th>Salary</th>
+                        <!-- <th>Name</th> -->
+                        <!-- <th>Position</th> -->
+                        <!-- <th>Office</th> -->
+                        <!-- <th>Age</th> -->
+                        <!-- <th>Start date</th> -->
+                        <!-- <th>Salary</th> -->
                       </tr>
                     </tfoot>
                   </table>
@@ -172,8 +174,12 @@
             </div>
           </div>
         </div>
+        {% endcomment %}
+
       </div>
     </main>
+
+
 {% endblock %}
 
 {% block script %}
@@ -182,6 +188,7 @@
 <script src="{% static 'lib/highcharts/modules/export-data.js' %}"></script>
 <script src="{% static 'lib/highcharts/modules/accessibility.js' %}"></script>
 
+{% comment %}
 <script type="application/javascript">
   Highcharts.chart('container', {
     chart: {
@@ -252,6 +259,102 @@
     }]
 });
  </script>
+
+{% endcomment %}
+
+<script type="application/javascript">
+Highcharts.chart('container', {
+  chart: {
+      plotBackgroundColor: null,
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+  },
+  title: {
+      text: 'Departamentos por Regiones'
+  },
+  subtitle: {
+    text: 'Se presentan la cantidad de departamentos que hay por cada region'
+  },
+  tooltip: {
+    valueDecimals: 0,
+    pointFormat: '{series.name}: <b>{point.y:.0f}</b>'
+  },
+  accessibility: {
+      point: {
+          valueSuffix: '%'
+      }
+  },
+  plotOptions: {
+      pie: {
+          allowPointSelect: true,
+          cursor: 'pointer',
+          dataLabels: {
+            valueDecimals: 0,
+              enabled: true,
+              format: '<b>{point.name}</b>: {point.percentage:.1f} %'
+          }
+      }
+  },
+  series: [{
+      name: 'Departamentos',
+      colorByPoint: true,
+      data: [{
+        name: "Arica-Parinacota",
+        y: {{ arica}}
+      }, {
+        name: "Tarapacá",
+        y: {{ tarapaca }}
+      }, {
+        name: "Antofagasta",
+        y: {{ antofagasta }}
+      }, {
+        name: "Atacama",
+        y: {{ atacama }}
+      }, {
+        name: "Coquimbo",
+        y: {{ coquimbo }}
+      }, {
+        name: "Valparaiso",
+        y: {{ valparaiso }}
+      }, {
+        name: "Metropolitana de Santiago",
+        y: {{ metropolitana }}
+      }, {
+        name: "Libertador General Bernardo O'Higgins",
+        y: {{ libertador }}
+      }, {
+        name: "Maule",
+        y: {{ maule }}
+      }, {
+        name: "Ñuble",
+        y: {{ nuble }}
+      }, {
+        name: "BioBío",
+        y: {{ biobio }}
+      }, {
+        name: "La Araucanía" ,
+        y: {{ araucania }}
+      }, {
+        name: "Los Ríos",
+        y:  {{ rios }}
+      }, {
+        name: "Los Lagos",
+        y: {{ lagos }}
+      }, {
+        name: "Aisén del General Carlos Ibáñez del Campo",
+        y: {{ aisen }}
+      }, {
+        name: "Magallanes y de la Antártica Chilena",
+        y: {{ magallanes }}
+      }]
+  }]
+});
+</script>
+
+
+
+
 
 
 <script type="application/javascript">

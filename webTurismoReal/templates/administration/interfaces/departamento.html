@@ -1,0 +1,34 @@
+{% extends '../layout_administration/list_base.html' %}
+{% block interface_title %}Departamentos{% endblock%}
+{% block list_title %}{{ title }}{% endblock %}
+
+{% block columns %}
+  <tr>
+    <th scope="col">Id Departamento</th>
+    <th scope="col">Titulo</th>
+    <th scope="col">Direccion</th>
+    <th scope="col">Comuna / Region</th>
+    <th scope="col">Acciones</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% for dpto in object_list %}
+    <tr>
+      <td>{{ dpto.id }}</td>
+      <td>{{ dpto.titulo }}</td>
+      <td>{{ dpto.direccion }}</td>
+      <td>{{ dpto.comuna }} - {{ dpto.comuna.region }}</td>
+      <td>
+        <button type="button" class="btn btn-outline-warning btn-sm ">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button type="button" class="btn btn-outline-danger btn-sm">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+{% endblock %}
+
+{% block create_name %}departamento{% endblock %}

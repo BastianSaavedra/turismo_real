@@ -2,7 +2,8 @@ from django.db.models.functions import Coalesce
 from django.db.models import Sum
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
-from home.models import Departamento, DetalleDpto, Reserva
+from django.views.generic import ListView
+from home.models import Comuna, Departamento, DetalleDpto, Reserva
 from datetime import datetime
 
 # Create your views here.
@@ -147,3 +148,26 @@ def administration_dashboard(request):
 
     return HttpResponse(response)
 
+
+def administration_departamento_list(request):
+    context = {
+        'departamentos': Departamento.objects.all()
+    }
+    return render(
+        request,
+        'administration/interfaces/departamento.html',
+        context
+    )
+
+class AdministracionDepartamentoListView(ListView):
+    model = Departamento
+    template_name = 'administration/interfaces/departamento.html' 
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Departamentos'
+        context['object_list'] = Departamento.objects.all()
+        return context
+
+            

@@ -1,0 +1,93 @@
+{% extends 'layout/base_administration.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+<main class="mt-5 pt-3">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xl-12 mt-5 pt-3">
+        <h2>{% block interface_title %}{% endblock %}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row">
+        <div class="col-xl-12  col-12 mb-4">
+          <div class="card card-default">
+
+            <!-- Start Card Header -->
+            <div class="card-header">
+              <h3 class="card-title">
+                <span><i class="fas fa-search"></i></span>
+                {% block list_title %}
+                {% endblock %}
+              </h3>
+            </div>
+            <!-- Finish Card Header -->
+
+            <!-- Start Card body -->
+            <div class="card-body">
+              <div class="table-responsive">
+                <table
+                  id="example"
+                  class="table table-striped data-table"
+                  style="width: 100%"
+                >
+                  <thead>
+                    {% block columns %}
+                    {% endblock %}
+                  </thead>
+                  <tbody>
+                    {% block rows %}
+                    {% endblock %}
+                  </tbody>
+                  <tfoot>
+                    <tr>
+                      <!-- <th>Name</th> -->
+                      <!-- <th>Position</th> -->
+                      <!-- <th>Office</th> -->
+                      <!-- <th>Age</th> -->
+                      <!-- <th>Start date</th> -->
+                      <!-- <th>Salary</th> -->
+                    </tr>
+                  </tfoot>
+                </table>
+
+            </div>
+            <!-- Finish Card Body -->
+
+            <!-- Start Card Footer -->
+            <div class="card-footer">
+              <button class="btn btn-success">
+                <i class="fas fa-plus"></i>
+                Agregar {% block create_name %}{% endblock %} 
+              </button>
+            </div>
+            <!-- Finish Card Footer -->
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+
+  </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    $('#example').DataTable({
+      "bDestroy": true,
+      "language": {
+        "url": "{% static 'js/es-CL.json' %}"
+      }
+    })
+  })
+</script>
+
+{% endblock %}
+

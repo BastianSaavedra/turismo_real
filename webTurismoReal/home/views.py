@@ -90,12 +90,7 @@ def home_reserva_confirmacion(request, id):
     # detalle_dpto = DetalleDpto.objects.all().get(
     #     id = int(request.GET['dptoid'])
     # )
-
-    
-
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
-
-
     return HttpResponse(
         render(
             request,
@@ -196,7 +191,6 @@ def home_reservas_usuario(request):
             { 'reservas': reservas }
         )
     )
-# =======
 
 def login(request):     
     if request.user.is_authenticated:
