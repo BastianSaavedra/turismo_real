@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 DATABASES = { 
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'turismo_real',
+        'NAME': 'turismo_real1',
         'USER': 'root',
         'PASSWORD': 'fq3JnvrMdyf',
         'HOST': 'localhost',

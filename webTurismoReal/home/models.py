@@ -1,6 +1,5 @@
 from django.db import models
 # <<<<<<< HEAD
-from django.contrib.auth.models import User
 from datetime import datetime
 
 # =======
@@ -40,7 +39,7 @@ class UsuarioManager(BaseUserManager):
             telefono = telefono,
             password=password
             )
-        usuario.usuario_administrador = True
+        usuario.usuario_superAdministrador = True
         usuario.save()
         return usuario
 
@@ -53,7 +52,9 @@ class Usuario(AbstractBaseUser):
     dv = models.CharField('Dv', max_length=1)
     correo = models.EmailField('Correo electronico', max_length=100, unique=True)
     telefono = models.CharField('Telefono', max_length=12)
-    usuario_administrador = models.BooleanField(default=False)
+    usuario_superAdministrador = models.BooleanField(default=False)
+    usuario_admin = models.BooleanField(default=False)
+    usuario_funcionario = models.BooleanField(default=False)
     objects = UsuarioManager()
     
     USERNAME_FIELD = 'username'
@@ -72,7 +73,13 @@ class Usuario(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        return self.usuario_administrador
+        return self.usuario_superAdministrador
+    
+    def is_admin(self):
+        return self.usuario_admin
+    
+    def is_funcionario(self):
+        return self.usuario_funcionario
 
 
 
