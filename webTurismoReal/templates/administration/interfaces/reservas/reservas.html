@@ -1,0 +1,43 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Reservas{% endblock %}
+{% block list_title %}{{ title }}{% endblock %}
+{% load tags %}
+
+{% block columns %}
+  <tr>
+    <th scope="col">Id Reserva</th>
+    <th scope="col">Check-in</th>
+    <th scope="col">Check-out</th>
+    <th scope="col">Creacion de Reserva</th>
+    <th scope="col">Departamento</th>
+    <th scope="col">Huesped</th>
+    <th scope="col">Cod Reserva</th>
+    <th scope="col">Dias de Hospedaje</th>
+    <th scope="col">Total</th>
+    <th scope="col">Acciones</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% for r in object_list %}
+    <tr>
+      <td>{{ r.id }}</td>
+      <td>{{ r.check_in }}</td>
+      <td>{{ r.check_out }}</td>
+      <td>{{ r.date_joined }}</td>
+      <td>{{ r.detalle_dpto.departamento.titulo }}</td>
+      <td>{{ r.guest }}</td>
+      <td>{{ r.booking_id }}</td>
+      <td>{{ r.cant_dias_reserva }}</td>
+      <td>${{ r.total_reserva | numberFormat }}</td>
+      <td>
+        <button type="button" class="btn btn-outline-warning btn-sm ">
+          <i class="fas fa-edit"></i>
+        </button>
+        <button type="button" class="btn btn-outline-danger btn-sm">
+          <i class="fas fa-trash-alt"></i>
+        </button>
+      </td>
+    </tr>
+  {% endfor %}
+{% endblock %}

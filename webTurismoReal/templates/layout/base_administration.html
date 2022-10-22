@@ -4,7 +4,9 @@
 
 <!-- shortname urls -->
 {% url 'administration_dashboard' as dashboard %}
-{% url 'administration_departamento' as departamento %}
+{% url 'administration_departamento' as departamentos %}
+{% url 'administration_reserva' as reserva %}
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -130,8 +132,8 @@
             </li>
             <li>
               <a 
-                   href="{{ departamento }}" 
-                   class="nav-link px-3 {% if request.path == departamento %} active {% endif %}"
+                   href="{{ departamentos }}" 
+                   class="nav-link px-3 {% if request.path == departamentos %} active {% endif %}"
                 >
                 <span class="me-2"><i class="far fa-building"></i></span>
                 <span>Departamentos</span>
@@ -139,7 +141,7 @@
             </li>
 
             <li>
-              <a href="#" class="nav-link px-3">
+              <a href="{{ reserva }}" class="nav-link px-3 {% if request.path == reserva %} active {% endif %}">
                 <span class="me-2"><i class="far fa-calendar-check"></i></span>
                 <span>Reservas</span>
               </a>

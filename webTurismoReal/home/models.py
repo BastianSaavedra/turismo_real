@@ -118,6 +118,10 @@ class Departamento(models.Model):
         verbose_name = 'Departamento'
         verbose_name_plural = 'Departamentos'
 
+class ImagenDepartamento(models.Model):
+    imagen = models.ImageField(upload_to="departamentos", default="../static/default/default.png" )
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name="imagenes")
+
 
 class DetalleDpto(models.Model):
     # departamento = models.OneToOneField(
@@ -125,8 +129,10 @@ class DetalleDpto(models.Model):
     # )
     
     DPTO_STATUS = (
-        ("1", "disponible"),
-        ("2", "no disponible")
+        ("0", "Seleccione"),
+        ("1", "Disponible"),
+        ("2", "Mantencion"),
+        ("3", "No Disponible")
     )
 
     OPCIONES = (
@@ -135,8 +141,8 @@ class DetalleDpto(models.Model):
       ('NO','NO')
     )
 
-    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE)
-    precio = models.PositiveBigIntegerField(default=0)
+    departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name="detalle")
+    precio = models.PositiveBigIntegerField(default=0, blank=False)
     capacidad = models.IntegerField()
     
     amoblado = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
@@ -152,7 +158,7 @@ class DetalleDpto(models.Model):
     estacionamiento = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
     cant_estacionamiento = models.PositiveIntegerField(default=0)
 
-    status = models.CharField(choices=DPTO_STATUS, max_length=13)
+    status = models.CharField(choices=DPTO_STATUS, max_length=13, default="0")
 
     def __str__(self):
         return self.departamento.titulo

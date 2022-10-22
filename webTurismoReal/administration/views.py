@@ -1,10 +1,18 @@
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse_lazy
+from django.contrib import messages
 from django.views.generic import ListView
-from home.models import Comuna, Departamento, DetalleDpto, Reserva
+from django.views.generic.edit import CreateView, UpdateView
+from home.models import Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento
+from .forms import (
+    DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate
+    )
+
 from datetime import datetime
+from django.db import transaction
 
 # Create your views here.
 
@@ -21,20 +29,24 @@ def sumatoria():
     return data
 
 
-
 def administration_dashboard(request):
 
     # if request.user.is_staff == False:
     #     return HttpResponse('Acceso Denegado')
 
     detalles_dptos = DetalleDpto.objects.all()
-    total_departamentos = len(detalles_dptos)
     departamentos_disponibles = len(
         DetalleDpto.objects.all().filter(status = '1')
     )
-    departamentos_no_disponibles = len(
+    departamentos_en_mantencion = len(
         DetalleDpto.objects.all().filter(status = '2')
     )
+    departamentos_no_disponibles = len(
+        DetalleDpto.objects.all().filter(status = '3')
+    )
+    total_departamentos = len(detalles_dptos)
+
+
     reservas = len(Reserva.objects.all())
     departamentos = Departamento.objects.values_list('direccion', 'id').distinct().order_by()
 
@@ -121,6 +133,7 @@ def administration_dashboard(request):
             'detalles_dptos': detalles_dptos,
             'total_departamentos': total_departamentos,
             'disponibles': departamentos_disponibles,
+            'mantencion': departamentos_en_mantencion,
             'no_disponibles': departamentos_no_disponibles,
 
             # regiones
@@ -149,25 +162,145 @@ def administration_dashboard(request):
     return HttpResponse(response)
 
 
-def administration_departamento_list(request):
-    context = {
-        'departamentos': Departamento.objects.all()
-    }
-    return render(
-        request,
-        'administration/interfaces/departamento.html',
-        context
-    )
-
 class AdministracionDepartamentoListView(ListView):
-    model = Departamento
-    template_name = 'administration/interfaces/departamento.html' 
-
+    model = DetalleDpto
+    template_name = 'administration/interfaces/departamentos/departamentos.html'
+    ordering = ['id']
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Departamentos'
-        context['object_list'] = Departamento.objects.all()
+        context['object_list'] = DetalleDpto.objects.all()
+        context['create_url'] = reverse_lazy('administration_departamento_create')
         return context
 
+
+class DepartamentoInline():
+    form_class = DepartamentoForm
+    model = Departamento
+    template_name = "administration/interfaces/departamentos/departamento_create_update.html"
+
+    def form_valid(self, form):
+
+        named_formsets = self.get_named_formsets()
+        if not all((x.is_valid() for x in named_formsets.values())):
+            return self.render_to_response(self.get_context_data(form=form))
+
+        self.object = form.save()
+
+        for name, formset in named_formsets.items():
+            formset_save_func = getattr(self, 'formset_{0}_valid'.format(name), None)
+            if formset_save_func is not None:
+                formset_save_func(formset)
+            else:
+                formset.save()
+        return redirect('administration_departamento')
+
+    def formset_detalles_valid(self, formset):
+        detalles = formset.save(commit=False)
+        for detalle in detalles:
+            detalle.departamento = self.object
+            detalle.save()
+
+    def formset_imagenes_valid(self, formset):
+        imagenes = formset.save(commit=False)
+        for imagen in imagenes:
+            imagen.departamento = self.object
+            imagen.save()
+
+
+class AdministracionDepartamentoCreateView(DepartamentoInline, CreateView):
+
+    def get_context_data(self, **kwargs):
+        ctx = super(AdministracionDepartamentoCreateView, self).get_context_data(**kwargs)
+        ctx['named_formset'] = self.get_named_formsets()
+        ctx['title'] = 'Creando Nuevo Departamento'
+        ctx['icon'] = 'fa-solid fa-plus'
+        return ctx
+
+
+    def get_named_formsets(self):
+        if self.request.method == "GET":
+            return {
+                'detalles': DetalleFormSet(prefix='detalles'),
+                'imagenes': ImagenFormSet(prefix='imagenes'),
+            }
+        else:
+            return {
+                'detalles': DetalleFormSet(
+                    self.request.POST or None, 
+                    self.request.FILES or None, 
+                    prefix = 'detalles'
+                ),
+                'imagenes': ImagenFormSet(
+                    self.request.POST or None, 
+                    self.request.FILES or None, 
+                    prefix = 'imagenes'
+                ),
+            }
+
+
+class AdministracionDepartamentoUpdateView(DepartamentoInline, UpdateView):
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionDepartamentoUpdateView, self).get_context_data(**kwargs)
+        context['named_formset'] = self.get_named_formsets()
+        context['title'] = 'Editando Departamento'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+    def get_named_formsets(self):
+        return {
+            'detalles': DetalleFormSetUpdate(
+                self.request.POST or None,
+                self.request.FILES or None,
+                instance = self.object,
+                prefix = 'detalles'
+            ),
+            'imagenes': ImagenFormSetUpdate(
+                self.request.POST or None,
+                self.request.FILES or None,
+                instance = self.object,
+                prefix = 'imagenes'
+            )
+        }
+
+
+def delete_imagen(request, pk):
+    try:
+        imagen = ImagenDepartamento.objects.get(id=pk)
+    except ImagenDepartamento.DoesNotExist:
+        messages.success(
+            request,
+            'Archivo No Existe'
+        )
+        return redirect('administration_update', pk=imagen.departamento.id)
+
+    imagen.delete()
+    messages.success(
+        request,
+        'Imagen eliminada exitosamente'
+    )
+
+    return redirect('administration_departamento_update', pk=imagen.departamento.id)
+
+
+
+class AdministracionReservaListView(ListView):
+    model = Reserva
+    template_name = 'administration/interfaces/reservas/reservas.html'
+
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Reservas'
+        context['object_list'] = Reserva.objects.all()
+        return context
             
+
+class AdministracionReservaCreateView(CreateView):
+    model = Reserva
+    template_name = 'administration/interfaces/reservas/reserva_create_update.html'
+
+
+

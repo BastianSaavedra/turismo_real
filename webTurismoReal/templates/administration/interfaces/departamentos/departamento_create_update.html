@@ -1,0 +1,204 @@
+{% extends 'layout/base_administration.html' %}
+{% load static %}
+{% load tags %}
+{% load widget_tweaks %}
+{% block content %}
+<main class="mt-5 pt-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12 mt-5 pt-3">
+        <h2>{% block interface_title %}{% endblock %}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row">
+        <div class="col-xl-12 col-12 mb-4">
+
+          <form enctype="multipart/form-data" method="POST" action="." novalidate id="departamento_form">
+            {% csrf_token %}
+
+            <div class="card card-default">
+
+              <div class="card-header">
+                <h3 class="card-title">
+                  <span><i class="{{ icon }}"></i></span>
+                  {{ title }}
+                </h3>
+              </div>
+
+
+              {% for field in form %}
+                <div class="card-body">
+                  <label>{{ field.label }}</label>
+
+                  {% if field.field.required %}
+                  <span class="required" style="color: red;">*</span>
+                  {% endif %}
+
+                  {{ field }}
+                  {% if field.help_text %}
+                  <small style="color: grey;">{{ field.help_text }}</small>
+                  {% endif %}
+                  {% for error in field.errors %}
+                  <p style="color: red;">{{ error }}</p>
+                  {% endfor %}
+
+                </div>
+              {% endfor%}
+
+              {% with named_formset.imagenes as formset %}
+                {{ formset.management_form }}
+                <script type="text/html" id="images-template">
+                  <tr id="images-__prefix__" class="hide_all">
+                    {% for fields in formset.empty_form.hidden_fields %}
+                      {{ fields }}
+                    {% endfor %}
+
+                    {% for fields in formset.empty_form.visible_fields %}
+                    <td>{{ fields }}</td>
+                    {% endfor %}
+                  </tr>
+                </script>
+
+                <div class="table-responsive card mt-4">
+                  <div class="card-header card-header-secondary">
+                    <h4 class="card-title">Agregar Imagenes</h4>
+                  </div>
+
+                  <table class="table card-body">
+                    <thead class="text-secondary">
+                      <th>Imagenes</th>
+                      <th>Eliminar</th>
+                    </thead>
+                    <tbody id="item-images">
+                      {% for formss in formset %}
+                        {{ formss.managemet_form }}
+                        <tr id="images-{{ forloop.counter0 }}" class=hide_all>
+                          {{ formss.id }}
+                          {% for field in formss.visible_fields %}
+                            <td>
+                              {{ field }}
+                              {% for error in field.errors %}
+                                <span style="color: red;">{{ error }}</span>
+                              {% endfor %}
+                            </td>
+                          {% endfor %}
+                            <!-- delete code -->
+                          {% if formss.instance.pk %}
+                            <td>
+                              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#exampleModal{{ formss.instance.pk }}">
+                                Eliminar
+                              </button>
+                              <!-- Modal -->
+                              <div class="modal fade" id="exampleModal{{formss.instance.pk}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel{{formss.instance.pk}}" aria-hidden="true">
+                                  <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                        <h5 class="modal-title" id="exampleModalLabel{{formss.instance.pk}}">Estas seguro de eliminarlo?</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                   
+                                        </button>
+                                      </div>
+                                      <div class="modal-footer">
+                                          <a href="{% url 'administration_delete_imagen' formss.instance.pk %}" type="button" class="btn btn-primary">Si, Eliminar</a>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                                      </div>
+                                    </div>
+                                  </div>
+                              </div>
+                            </td>
+                          {% endif %}
+                        </tr>
+                      {% endfor %}
+                    </tbody>
+                  </table>
+                  <a href"#" id="add-image-button" class="btn btn-success add-images">
+                    Añade un nuevo campo de imagen
+                  </a>
+                </div>
+
+              {% endwith %}
+
+              {% with named_formset.detalles as formset %}
+              
+                {{ formset.management_form }}
+                <script type="text/html" id="detalles-template">
+                  {% for fields in formset.empty_form.hidden_fields %}
+                    {{ fields }}
+                  {% endfor %}
+
+                  {% for fields in formset.empty_form.visible_fields %}
+                    <td>{{ fields }}</td>
+                  {% endfor %}
+                </script>
+
+                <div class="card card-default mt-4">
+                  <div class="card-header card-header-secondary">
+                    <h4 class="card-title">Agregar Detalle</h4>
+                  </div>
+
+                  {% for formss in formset %}
+                    <div class="card-body pt-4">
+                      {{ formss.management_form }}
+                      <div id="detalles-{{ forloop.counter0 }}" class="hide_all">
+                        {{ formss.id }}
+                        {% for field in formss.visible_fields %}
+                          <label>{{ field.label }}</label>
+                          {% if field.field.required %}
+                          <span class="required" style="color: red;">*</span>
+                          {% endif %}
+                        
+                          {{ field }}
+
+                          {% for error in field.errors %}
+                            <span style="color:red;">{{ error }}</span>
+                          {% endfor %}
+                        {% endfor %}
+
+                      </div>
+                    </div>
+                  {% endfor %}
+
+                    
+
+
+
+                </div>
+              {% endwith %}
+
+
+            <div class="card-footer">
+              <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save">Agregar</i>
+              </button>
+            </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script>
+  $(document).ready(function() {
+    // when user clicks and more btn of images
+    $('.add-images').click(function(ev) {
+      ev.preventDefault();
+      var count = $('#item-images').children().length;
+      var tmplMarkup = $('#images-template').html();
+      var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
+      $('#item-images').append(compiledTmpl);
+
+
+      // update form count
+      $('#id_images-TOTAL_FORMS').attr('value', count+1);
+    });
+  });
+</script>
+
+{% endblock %}

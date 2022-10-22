@@ -16,9 +16,14 @@ class ComunaAdmin(admin.ModelAdmin):
     search_fields = ('id', 'nombre')
     autocomplete_fields = ['region']
 
-class DepartamentoAdmin(admin.ModelAdmin):
+class ImagenDepartamentoAdmin(admin.TabularInline):
+    model = ImagenDepartamento
 
+class DepartamentoAdmin(admin.ModelAdmin):
     autocomplete_fields = ['comuna']
+    inlines = [
+        ImagenDepartamentoAdmin
+    ]
 
 # class DepartamentoAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'direccion', 'precio')
