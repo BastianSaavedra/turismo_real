@@ -9,88 +9,14 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" integrity="sha512-sMXtMNL1zRzolHYKEujM2AqCLUR9F2C4/05cdbxjjLSRvMQIciEPCQZo++nk7go3BtSuK9kfa/s+a4f4i5pLkw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
 
-<!-- Carrousel de imagenes empieza aqui-->
-<section class="home">
-  <div class="content">
-    <div class="owl-carousel owl-theme">
-      <div class="item">
-        <img src="{% static 'img/banner-1.jpg' %}" height="500px" alt="">
-          <div class="text" id="texto">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-      <div class="item">
-        <img src="{% static 'img/banner.jpg' %}" height="500px"  alt="">
-          <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-      <div class="item">
-        <img src="{% static 'img/banner-4.jpg' %}" height="500px"  alt="">
-          <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-      <div class="item">
-        <img src="{% static 'img/gallery-2.jpg' %}" height="500px"  alt="">
-          <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-      <div class="item">
-        <img src="{% static 'img/gallery-3.jpg' %}" height="500px"  alt="">
-          <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-      <div class="item">
-        <img src="{% static 'img/gallery-4.jpg' %}" height="500px"  alt="">
-          <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
-              <div class="flex">
-                <button class="btn btn-warning">Leer mas</button> 
-                <button class="btn btn-success">Contactanos</button>
-              </div>      
-          </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- Booking Section starts here -->
+<!-- Booking Section empieza aqui -->
 <section class="booking">
   <div class="container-fluid px-5">
     </div>
     <!-- Formulario de busqueda de departamento empieza aqui -->
     <form action="" method="POST" class="needs-validation">
       {% csrf_token %}
-      <div class="row justify-content-center py-5" style="background: rgba(70, 78, 158, 0.8);">
+      <div class="row justify-content-center py-5" style="background: rgb(40, 44, 90);">
         <div class="col-lg-3 form-group text-center">
           <label>Destino</label>
           <select class="form-select bg-white rounded-pill text-center border-primary" name="search_location" id="id_comuna">
@@ -182,7 +108,7 @@
 
         <div class="col-lg-2">
           <!-- <input type="submit" value="Buscar" class="form-control mr-sm-2 btn btn-primary my-3" style="position: relative;top: 7px;" > -->
-          <button class="btn btn-primary text-center my-3 mx-auto rounded-pill" style="position: relative; top: 7px;">
+          <button class="btn btn-primary text-center my-3 mx-auto rounded-pill" style="position: relative; top: 7px;" >
             Buscar
             <i class="fa-solid fa-magnifying-glass"></i>
           </button>
@@ -202,46 +128,112 @@
     </form>
     <!-- Formulario de busqueda de departamento termina aqui -->
     
-
     <div class="container px-0 mx-auto">
-      {% for dpto in detalles_dpto %}
-        <div class="card mb-3" style="max-width: 540px;">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="{{ dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5>{{ dpto.departamento.titulo }}</h5>
-                <p class="card-text">{{ dpto.departamento.direccion }}</p>
-                <p class="card-text">{{ dpto.capacidad }}</p>
-                <p class="card-text">{{ dpto.precio }}</p>
-              </div>
-              <a href="{% url 'home_reserva_confirmacion' dpto.id %}"><button class="btn btn-warning">Reservar</button></a>
-            </div>
-
+      <div class="col-12 col-md-6 offset-md-3">
+        <div class="col-12 col-md-6 offset-md-3 text-center">
+          {% for dpto in detalles_dpto %}
+          <hr><h4>Departamentos en: <h5>{{dpto.departamento.comuna.nombre}}</h5></h4><hr>
           </div>
-        </div>
+          </div>
+          <div class="card mb-3" style="max-width: 600px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body bg-light">
+                  <h5>{{ dpto.departamento.titulo }}</h5>
+                  <p class="card-text">Direccion: {{ dpto.departamento.direccion }}</p>
+                  <p class="card-text">Capacidad: {{ dpto.capacidad }}</p>
+                  <p class="card-text">A partir de: ${{ dpto.precio|numberFormat}}</p>
+                  <div class="d-grid gap-2 col-6 mx-auto">
+                   <a href="{% url 'home_reserva_confirmacion' dpto.id %}"><button class= "btn btn-warning btn-lg">Reservar</button></a>
+
+                  </div>
+                </div>
+            </div>
       {% endfor %}
     </div>
     <!-- Resultados de busqueda del departamento termina aqui -->
+  </div>
+</section>
+<!-- Booking Section finaliza aqui -->
 
-    <div class="container px-0 mx-auto">
-      <div class="row row-cols-1 row-cols-md-6 g-4">
-        {% for comuna in comunas  %}
-          <div class="col">
-            <div class="card border-0">
-              <img src="{{ comuna.comuna.img.url }}" alt="{{ comuna.comuna.nombre }}"  class="card-img-top">
-              <div class="card-body">
-                <h5 class="card-title text-center">{{ comuna.comuna.nombre }}</h5>
-              </div>
-            </div>
+<!-- Carrusel de imagenes empieza aqui-->
+<section class="home">
+  <div class="content">
+    <div class="owl-carousel owl-theme">
+      <div class="item">
+        <img src="{% static 'img/banner-1.jpg' %}" height="500px" alt="">
+          <div class="text" id="texto">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
           </div>
-        {% endfor %}
+      </div>
+      <div class="item">
+        <img src="{% static 'img/banner.jpg' %}" height="500px"  alt="">
+          <div class="text">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
+          </div>
+      </div>
+      <div class="item">
+        <img src="{% static 'img/banner-4.jpg' %}" height="500px"  alt="">
+          <div class="text">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
+          </div>
+      </div>
+      <div class="item">
+        <img src="{% static 'img/gallery-2.jpg' %}" height="500px"  alt="">
+          <div class="text">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
+          </div>
+      </div>
+      <div class="item">
+        <img src="{% static 'img/gallery-3.jpg' %}" height="500px"  alt="">
+          <div class="text">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
+          </div>
+      </div>
+      <div class="item">
+        <img src="{% static 'img/gallery-4.jpg' %}" height="500px"  alt="">
+          <div class="text">
+            <h1>Disfruta de tus vacaciones</h1>
+            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+              <div class="flex">
+                <button class="btn btn-warning">Leer mas</button> 
+                <button class="btn btn-success">Contactanos</button>
+              </div>      
+          </div>
       </div>
     </div>
   </div>
 </section>
+<!-- Fin de seccion carrusel -->
+
 <!-- Footer -->
 <footer class="bg-dark text-white">
   <!-- Grid container -->
@@ -371,12 +363,15 @@
   </div>
   <!-- Copyright -->
 </footer>
-<!-- Footer -->
+<!-- Fin de Footer -->
 
 {% endblock %}
 
 {% block js %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js" integrity="sha512-bPs7Ae6pVvhOSiIcyUClR7/q2OAsRiovw4vAkX+zJbw3ShAeeqezq50RIIcIURq7Oa20rW2n2q+fyXBNcU9lrw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<!--Script JS para valor seleccionado-->
+
 
 <!--Script JS para primer carrusel-->
 <script>
@@ -386,7 +381,7 @@
     nav:true,
     dots: false,
     autoplay:true,
-    autoplayTimeout:4000,
+    autoplayTimeout:6000,
     autoplayHoverPause:true,
     navtext:["<i class = 'fa-solid fa-chevron-left' height='10px'></i>", "<i class = 'fa fa-chevron-right'></i>"],
     responsive:{
