@@ -1,0 +1,102 @@
+{% extends 'layout/base_administration.html' %}
+{% load static %}
+{% load tags %}
+{% load widget_tweaks %}
+{% block css %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
+{% endblock %}
+{% block content %}
+<main class="mt-5 pt-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-xl-12 mt-5 pt-3">
+        <h2>{% block interface_title %}{% endblock %}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row">
+        <div class="col-xl-12 col-12 mb-4">
+          <form enctype="multipart/form-data" method="POST" action="." novalidate id="departamento_form">
+            {% csrf_token %}
+
+            <div class="card card-default">
+
+              <div class="card-header">
+                <h3 class="card-title">
+                  <span><i class="{{ icon }}"></i></span>
+                  {{ title }}
+                </h3>
+              </div>
+
+              
+              <div class="card-body">
+                {{ form }}
+              </div>
+            <div class="card-footer">
+
+              <button type="submit" class="btn btn-primary">
+                 Guardar
+              </button>
+              <button class="btn btn-secondary" onclick="javascript:history.back();">Cancelar</button>
+
+            </div>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+{% endblock %}
+
+{% block script %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+  flatpickr("input[type=datetime-local]", {
+    dateFormat: "Y-m-d",
+    minDate: "today",
+    locale : {
+      weekdays: {
+        shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+        longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+      }, 
+      months: {
+        shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+        longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+      },
+    }
+  });
+</script>
+<script>
+  function check() {
+    let output = document.getElementById("total_reserva")
+    let cant_dias = document.getElementById("cantidad_dias")
+
+    let startDate = new Date(document.getElementById("cin").value);
+    let endDate = new Date(document.getElementById("cout").value);
+    let price_per_night = parseInt("{% for r in object_list %}{{ r.detalle_dpto.precio }}{% endfor %}")
+    
+
+    
+
+    if (startDate.getTime() && endDate.getTime()) {
+      let timeDifference = endDate.getTime() - startDate.getTime();
+
+      let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
+      output.value = parseInt(dayDifference * price_per_night) ;
+      cant_dias.value = dayDifference
+      
+
+    } else {
+      output.value = 0;
+    }
+  };
+  document.querySelector('#cin').addEventListener("change", check, false);
+  document.querySelector('#cout').addEventListener("change", check, false);
+
+</script>
+
+{% endblock %}

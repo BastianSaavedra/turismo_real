@@ -8,7 +8,8 @@ from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento
 from .forms import (
-    DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate
+    DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
+    ReservaForm
     )
 
 from datetime import datetime
@@ -181,7 +182,6 @@ class DepartamentoInline():
     template_name = "administration/interfaces/departamentos/departamento_create_update.html"
 
     def form_valid(self, form):
-
         named_formsets = self.get_named_formsets()
         if not all((x.is_valid() for x in named_formsets.values())):
             return self.render_to_response(self.get_context_data(form=form))
@@ -285,7 +285,6 @@ def delete_imagen(request, pk):
     return redirect('administration_departamento_update', pk=imagen.departamento.id)
 
 
-
 class AdministracionReservaListView(ListView):
     model = Reserva
     template_name = 'administration/interfaces/reservas/reservas.html'
@@ -300,7 +299,27 @@ class AdministracionReservaListView(ListView):
 
 class AdministracionReservaCreateView(CreateView):
     model = Reserva
+    form_class = ReservaForm
+    template_name = 'administration/interfaces/reservas/reserva_create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionReservaCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Creando Nueva Reserva'
+        context['icon'] = 'fa-solid fa-plus'
+        return context 
+
+
+class AdministracionReservaUpdateView(UpdateView):
+    model = Reserva
+    form_class = ReservaForm
+    success_url = reverse_lazy('administration_reserva')
     template_name = 'administration/interfaces/reservas/reserva_create_update.html'
 
 
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionReservaUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Reserva'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        context['object_list'] = Reserva.objects.all()
+        return context
 

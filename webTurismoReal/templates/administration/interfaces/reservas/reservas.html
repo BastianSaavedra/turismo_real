@@ -14,7 +14,7 @@
     <th scope="col">Cod Reserva</th>
     <th scope="col">Dias de Hospedaje</th>
     <th scope="col">Total</th>
-    <th scope="col">Acciones</th>
+    <th scope="col">Editar</th>
   </tr>
 {% endblock %}
 
@@ -31,13 +31,19 @@
       <td>{{ r.cant_dias_reserva }}</td>
       <td>${{ r.total_reserva | numberFormat }}</td>
       <td>
-        <button type="button" class="btn btn-outline-warning btn-sm ">
+        <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-outline-warning btn-sm ">
           <i class="fas fa-edit"></i>
-        </button>
-        <button type="button" class="btn btn-outline-danger btn-sm">
-          <i class="fas fa-trash-alt"></i>
-        </button>
+        </a>
+        
       </td>
     </tr>
   {% endfor %}
 {% endblock %}
+{% comment %}
+{% block button_create %}
+<a href="{% url 'administration_reserva_create' %}" class="btn btn-success">
+  <i class="fas fa-plus"></i>
+  Agregar reserva
+</a>
+{% endblock %}
+{% endcomment %}

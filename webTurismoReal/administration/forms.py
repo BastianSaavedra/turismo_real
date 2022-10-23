@@ -110,7 +110,74 @@ class DetalleForm(forms.ModelForm):
             )
         }
 
+class ReservaForm(forms.ModelForm):
 
+    class Meta:
+        model = Reserva
+        fields = (
+            'check_in', 'check_out', 
+            'detalle_dpto', 'guest', 'cant_dias_reserva',
+            'total_reserva'
+        )
+        labels = {
+            'check_in': 'Check In',
+            'check_out': 'Check Out',
+            'detalle_dpto': 'Departamento',
+            'guest': 'Huesped',
+            'cant_dias_reserva': 'Cantidad de dias de la Reserva',
+            'total_reserva': 'Monto Total de la Reserva',
+        }
+        widgets = {
+            'check_in': forms.DateInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'placeholder': 'Selecciona una fecha',
+                    'type': 'datetime-local',
+                    'id': 'cin',
+                }
+                
+            ),
+            'check_out': forms.DateInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'placeholder': 'Selecciona una fecha',
+                    'type': 'datetime-local',
+                    'id': 'cout',
+                }
+            ),
+            # 'date_joined': forms.DateTimeInput(
+            #     attrs={
+            #         'class': 'form-control',
+            #         'disabled': 'true',
+            #     }
+            # ),
+            'detalle_dpto': forms.Select(
+                attrs={'class': 'form-control',}
+            ),
+            'guest': forms.Select(
+                attrs={'class': 'form-control',}
+            ),
+            'cant_dias_reserva': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'id': 'cantidad_dias',
+                    'name': 'cantidad_dias',
+                }
+            ),
+            'total_reserva': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'id': 'total_reserva',
+                    'type': 'number',
+                    'name': 'total_reserva',
+                }
+            ),
+            
+        }
+
+
+
+# Inline Forms Departamento
 DetalleFormSet = inlineformset_factory(
     Departamento,
     DetalleDpto,
@@ -151,9 +218,4 @@ ImagenFormSetUpdate = inlineformset_factory(
 )
 
 
-class ReservaForm(forms.ModelForm):
-
-    class Meta:
-        model = Reserva
-        fields = '__all__'
 
