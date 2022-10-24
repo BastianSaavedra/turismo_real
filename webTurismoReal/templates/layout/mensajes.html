@@ -1,19 +1,25 @@
 
 
+{% comment %}
 {% if messages %}
-  {% for m in messages %} 
-    {% if m.tags == 'success' %}
-      <div class="alert alert-success">
-      {{ m }}
-      </div>
-    {% elif m.tags == 'warning' %}
-      <div class="alert alert-warning">
-        {{ m }}
-      </div>
-    {% else %}
-      <div class="alert alert-danger">
-        {{ m }}
-      </div>
-    {% endif %}
+  {% for message in messages %}
+  <div {% if message.tags %} class="alert alert-{{ message.tags }}"{% endif %}>
+    {{ message }}
+  </div>
+  {% endfor %}
+{% endif %}
+{% endcomment %}
+
+
+{% if messages %}
+  {% for m in messages %}
+<script>
+  Swal.fire({
+    "title": "Felicitaciones",
+    "text": "{{ m }}",
+    "icon": "success"
+  })
+</script>
+
   {% endfor %}
 {% endif %}

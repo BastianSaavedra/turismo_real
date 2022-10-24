@@ -1,18 +1,23 @@
 {% extends '../layout/base.html' %}
 {% load static %}
+{% load tags %}
 {% block title %}Mis Reservas {% endblock %}
 {% block content %}
-
-<h3 class="text-center text-success">
+<hr style="color:aliceblue ; height: 0.1px;">
+<h2 class="text-center" 
+    style="@import url('https://fonts.googleapis.com/css?family=Poppins');
+           font-family: 'Poppins' ;
+           font-weight: 400;
+           text-transform: uppercase;">
   Mis Reservas
-</h3>
+</h2>
 
 <div class="container px-0 mx-auto">
   {% for reserva in reservas %}
-  <div class="card mb-3" style="max-width: 540px;">
+  <div class="card mb-3" style="background-color: rgb(255, 255, 255);">
     <div class="row g-0">
       <div class="col-md-4">
-        <img src="{{ reserva.detalle_dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
+        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -20,7 +25,8 @@
           <p>Usuario: {{ reserva.guest }}</p>
           <p>De: {{ reserva.check_in }}</p>
           <p>Hasta: {{ reserva.check_out }}</p>
-          <p>{{ reserva.detalle_dpto.precio }}</p>
+          <p>Precio: ${{ reserva.total_reserva|numberFormat}}</p>
+          <p>Codigo Reserva: {{ reserva.booking_id }}</p>
         </div>
       </div>
 

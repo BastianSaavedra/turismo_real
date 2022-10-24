@@ -17,18 +17,9 @@ from .models import Usuario
 from django.contrib import messages
 import datetime
 
-# def home_inicio(request):
-#     return render(
-#         request,
-#         'home/home.html',
-#         {}
-#     )
 
 def home_inicio(request):
-    # all_location = Comuna.objects.values_list('nombre', 'id').distinct().order_by()
-    # all_locations = Departamento.objects.values_list('comuna__nombre', 'comuna__region__nombre', 'id').distinct().order_by()
-    all_locations = Departamento.objects.values_list('comuna__nombre', 'comuna__region__nombre', 'id').distinct().order_by()
-    # comunas = Departamento.objects.values_list('comuna__nombre', 'comuna__img', 'id').distinct().order_by()
+    all_locations = Departamento.objects.values_list('comuna__nombre', 'comuna__region__nombre', 'id').distinct().order_by().filter(detalle__status = '1')
     comunas = Departamento.objects.all()
     if request.method == "POST":
         try:
@@ -47,7 +38,8 @@ def home_inicio(request):
 
             detalle_dpto = DetalleDpto.objects.all().filter(
                 departamento=departamento, 
-                capacidad__gte = int(request.POST['capacidad'])
+                capacidad__gte = int(request.POST['capacidad']),
+                status = '1'
             ).exclude(id__in=rr)
   
                     
@@ -64,19 +56,15 @@ def home_inicio(request):
             response = render(request, 'home/home.html', data)
 
         except Exception as e:
-# <<<<<<< HEAD
             messages.error(request, "No hay departamentos disponibles en la zona que elegiste")
             response = render(request, 'home/home.html', {
                 'all_locations': all_locations,
                 'comunas': comunas,
             })
-# =======
-            messages.error(request, "No hay departamentos disponibles en la zona seleccionada")
-            response = render(request, 'home/home.html', {'all_location': all_location})
-# >>>>>>> origin/branch_SebastianZuniga
+            messages.info(request, "Debes completar los campos para obtener resultados")
+            response = render(request, 'home/home.html', {'all_locations': all_locations})
 
     else:
-        # data = {'all_location': all_location}
         data = {
             'all_locations': all_locations,
             'comunas': comunas,
@@ -84,12 +72,9 @@ def home_inicio(request):
         response = render(request, 'home/home.html', data)
     return HttpResponse(response)
 
-# <<<<<<< HEAD
 # @login_required(login_url='/user')
 def home_reserva_confirmacion(request, id):
-    # detalle_dpto = DetalleDpto.objects.all().get(
-    #     id = int(request.GET['dptoid'])
-    # )
+    
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
     return HttpResponse(
         render(
@@ -131,20 +116,10 @@ def home_reserva(request):
         reservation.detalle_dpto = detalle_dpto_object
         person = total_person
 
-        # check_in = datetime.datetime.strptime( request.POST['check_in'], '%d-%m-%Y')
-        # check_in_format = datetime.datetime.strftime(check_in, '%Y-%m-%d') 
-        # reservation.check_in = check_in_format
-
-        
-        # check_out = datetime.datetime.strptime( request.POST['check_out'], '%d-%m-%Y')
-        # check_out_format = datetime.datetime.strftime(check_out, '%Y-%m-%d')
-
-        # reservation.check_out = check_out_format
 
         # Guardado de fechas en bbdd
         reservation.check_in = request.POST['check_in']
         reservation.check_out = request.POST['check_out']
-
 
         # obtengo las fechas para poder tener la cantidad de dias que hay entre ellas
         startDate = datetime.datetime.strptime(reservation.check_in, "%Y-%m-%d")
@@ -170,7 +145,7 @@ def home_reserva(request):
 
         reservation.save()
 
-        messages.success(request, "Felicidades! Tu reserva fue ingresada Exitosamente!")
+        messages.success(request, "Felicidades!", extra_tags="Tu reserva fue ingresada Exitosamente!")
 
         return redirect("home_inicio")
     else:
@@ -181,7 +156,7 @@ def home_reservas_usuario(request):
         return redirect("home_inicio")
     user = Usuario.objects.all().get(id=request.user.id)
     print(f"request user id = {request.user.id}")
-    reservas = Reserva.objects.all().filter(guest=user)
+    reservas = Reserva.objects.all().filter(guest=user, status = '1')
     if not reservas:
         messages.warning(request, "Aún no tienes reservas")
     return HttpResponse(
@@ -192,6 +167,9 @@ def home_reservas_usuario(request):
         )
     )
 
+def cancelar(request):
+    pass
+
 def login(request):     
     if request.user.is_authenticated:
         return redirect ('home')     
@@ -199,19 +177,38 @@ def login(request):
     elif request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        usuarios = authenticate(username=username, password=password)       
+        usuarios = authenticate(username=username, password=password)
+        # if usuarios.is_admin:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect("administration_dashboard")
+        # elif usuarios.is_staff:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect("")
+        # elif usuarios.is_funcionario:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect("")
+        # elif usuarios.is_admin == False:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect("home_inicio")
+        # else:
+        #     messages.error(request, 'Datos Incorrectos')
+
         if usuarios: 
             lg(request,usuarios)
-            messages.success(request, f'Bienvenido {usuarios.username}')
+            messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
             return redirect("home")       
         else:
-            messages.error(request, f'Datos incorrectos')
+            messages.error(request, f'Datos incorrectos', extra_tags='Completa nuevamente los campos')
     return render(request, 'users/login.html',{})
 
 
 def salir(request):
     logout(request)
-    messages.success(request,'Sesion finalizada')
+    messages.success(request,'Sesion finalizada', extra_tags=f'Hasta pronto amigo!')
     return redirect(login)
 
 

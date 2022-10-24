@@ -14,6 +14,7 @@
     <th scope="col">Cod Reserva</th>
     <th scope="col">Dias de Hospedaje</th>
     <th scope="col">Total</th>
+    <th scope="col">Status</th>
     <th scope="col">Editar</th>
   </tr>
 {% endblock %}
@@ -25,13 +26,22 @@
       <td>{{ r.check_in }}</td>
       <td>{{ r.check_out }}</td>
       <td>{{ r.date_joined }}</td>
-      <td>{{ r.detalle_dpto.departamento.titulo }}</td>
+      <td>{{ r.detalle_dpto.departamento.id }}</td>
       <td>{{ r.guest }}</td>
       <td>{{ r.booking_id }}</td>
       <td>{{ r.cant_dias_reserva }}</td>
       <td>${{ r.total_reserva | numberFormat }}</td>
       <td>
-        <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-outline-warning btn-sm ">
+        {% if r.status == '1' %}
+          Activa
+        {% elif r.status == '2' %}
+          Cancelada
+        {% else %}
+        Error
+        {% endif %}
+      </td>
+      <td>
+        <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
           <i class="fas fa-edit"></i>
         </a>
         

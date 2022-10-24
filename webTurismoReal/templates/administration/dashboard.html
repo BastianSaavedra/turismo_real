@@ -3,11 +3,16 @@
 {% load tags %}
 {% block content %}
 
+<link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    
     <!-- offcanvas -->
     <main class="mt-5 pt-3">
       <div class="container-fluid">
-        <div class="row text-center">
+        <div class="row text-center justify-content-center">
           <div class="mt-2 pt-3">
+            <div class="col-lg-4 text-center">
+              {% include '../layout/mensajes.html' %}
+            </div>
             <h2>Dashboard</h2>
           </div>
         </div>
@@ -16,6 +21,7 @@
   
           <!-- Inicio Datos Departamentos Reservas -->
           <div class="row justify-content-center">
+        
 
             <div class="col-xl-3 col-sm-5 col-12 mb-4">
               <div class="card">

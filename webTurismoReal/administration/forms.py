@@ -117,7 +117,7 @@ class ReservaForm(forms.ModelForm):
         fields = (
             'check_in', 'check_out', 
             'detalle_dpto', 'guest', 'cant_dias_reserva',
-            'total_reserva'
+            'total_reserva', 'status'
         )
         labels = {
             'check_in': 'Check In',
@@ -126,6 +126,7 @@ class ReservaForm(forms.ModelForm):
             'guest': 'Huesped',
             'cant_dias_reserva': 'Cantidad de dias de la Reserva',
             'total_reserva': 'Monto Total de la Reserva',
+            'status': 'Status de la Reserva'
         }
         widgets = {
             'check_in': forms.DateInput(
@@ -172,6 +173,11 @@ class ReservaForm(forms.ModelForm):
                     'name': 'total_reserva',
                 }
             ),
+            'status': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                }
+            )
             
         }
 

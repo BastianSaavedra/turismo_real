@@ -1,0 +1,30 @@
+{% extends '../layout/base.html' %}
+{% block content %}
+{% load tags %}
+<div class="col">
+    <p>Resultados de busqueda: </p>
+    <div class="row">
+        <div class="container px-0 mx-auto">
+            {% for dpto in detalles_dpto %}
+            <h4>Departamentos en: <h5>{{dpto.departamento.comuna.nombre}}</h5></h4>
+              <div class="card mb-3" style="max-width: 600px;">
+                <div class="row g-0">
+                  <div class="col-md-4">
+                    <img src="{{ dpto.departamento.comuna.img.url }}" alt="{{ dpto.departamento.comuna.img.url}}" class="img-fluid rounded-start">
+                  </div>
+                  <div class="col-md-8">
+                    <div class="card-body">
+                      <h5>{{ dpto.departamento.titulo }}</h5>
+                      <p class="card-text">Direccion: {{ dpto.departamento.direccion }}</p>
+                      <p class="card-text">Capacidad: {{ dpto.capacidad }}</p>
+                      <p class="card-text">A partir de: ${{ dpto.precio|numberFormat}}</p>
+                    </div class="d-grid gap-2 col-6 mx-auto">
+                      <a href="{% url 'home_reserva_confirmacion' dpto.id %}"><button class="btn btn-warning">Reservar</button></a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+    </div>
+</div>
+{% endblock %} 

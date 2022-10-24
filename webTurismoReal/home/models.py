@@ -1,6 +1,5 @@
 from django.db import models
 # <<<<<<< HEAD
-from django.contrib.auth.models import User
 from datetime import datetime
 
 # =======
@@ -40,7 +39,7 @@ class UsuarioManager(BaseUserManager):
             telefono = telefono,
             password=password
             )
-        usuario.usuario_administrador = True
+        usuario.usuario_superAdministrador = True
         usuario.save()
         return usuario
 
@@ -53,7 +52,9 @@ class Usuario(AbstractBaseUser):
     dv = models.CharField('Dv', max_length=1)
     correo = models.EmailField('Correo electronico', max_length=100, unique=True)
     telefono = models.CharField('Telefono', max_length=12)
-    usuario_administrador = models.BooleanField(default=False)
+    usuario_superAdministrador = models.BooleanField(default=False)
+    usuario_admin = models.BooleanField(default=False)
+    usuario_funcionario = models.BooleanField(default=False)
     objects = UsuarioManager()
     
     USERNAME_FIELD = 'username'
@@ -72,7 +73,13 @@ class Usuario(AbstractBaseUser):
 
     @property
     def is_staff(self):
-        return self.usuario_administrador
+        return self.usuario_superAdministrador
+    
+    def is_admin(self):
+        return self.usuario_admin
+    
+    def is_funcionario(self):
+        return self.usuario_funcionario
 
 
 
@@ -171,6 +178,17 @@ class DetalleDpto(models.Model):
 
 class Reserva(models.Model):
 
+    RESERVA_STATUS = (
+        ('1', 'Activa'),
+        ('2', 'Cancelada')
+    )
+
+    ESTADIA = (
+        ('0', 'Seleccionar'),
+        ('1', 'Arribo'),
+        ('2', 'No Arribo'),
+    )
+
     check_in = models.DateField(auto_now=False)
     check_out = models.DateField()
     date_joined = models.DateField(default=datetime.now)
@@ -179,6 +197,14 @@ class Reserva(models.Model):
     booking_id = models.CharField(max_length=100, default="null")
     cant_dias_reserva = models.IntegerField(default=0)
     total_reserva = models.IntegerField(default=0)
+    status = models.CharField(choices=RESERVA_STATUS, max_length=12, default="1")
+
+
+    status_estadia = models.CharField(choices=ESTADIA, max_length=13, default="0")
+    mensaje_check_in = models.TextField(blank=True)
+    mensaje_check_out = models.TextField(blank=True)
+    costo_multa = models.IntegerField(default=0)
+
 
     def __str__(self):
         return self.guest.username
@@ -187,6 +213,5 @@ class Reserva(models.Model):
         db_table = 'reserva'
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
-
 
 
