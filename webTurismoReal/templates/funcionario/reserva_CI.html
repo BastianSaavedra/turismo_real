@@ -1,0 +1,27 @@
+{% extends '../layout/base_funcionario.html' %}
+{% block title %}Check IN{% endblock %}
+{% block content %}
+<hr style="color:aliceblue ; height: 0.1px;">
+<div class="col" style="color:black">
+    <form action="." method="POST">
+        {% csrf_token %}
+        <div class="card card-default">
+
+            <div class="card-header">
+              <h3 class="card-title">
+                <span><i class=""></i></span>
+              </h3>
+            </div>
+
+            <div class="card-body">
+              {{ form }}
+            </div>
+          <div class="card-footer">
+
+            <button type="submit" class="btn btn-primary">
+               Guardar
+            </button>
+    </form>
+</div>
+
+{% endblock%}

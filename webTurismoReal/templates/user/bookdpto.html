@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div class="from-group text-center">
+        <div class="form-group text-center">
           <label for="password2">Check-in</label>
           <input 
             class="form-control mr-sm-2 bg-white rounded-pill border-success text-center" 
@@ -101,7 +101,7 @@
         <div class="form-group text-center">
           <label for="password2">Check-out</label>
           <input 
-            class="form-control mr-sm-2 bg-white rounded-pill border-warning" 
+            class="form-control mr-sm-2 bg-white rounded-pill border-warning text-center" 
             type="datetime-local" 
             placeholder="Check out"
             id="cout"
@@ -121,10 +121,8 @@
               disabled
           />
         </div>
-
-
-
-        <button type="submit" class="btn btn-primary">Reservar ahora</button>
+        <hr>
+        <button type="submit" class="btn btn-danger">Reservar ahora</button>   
         <input type="hidden" name="detalledptoid" value="{{ detalle_dpto.id }}" />
         
 

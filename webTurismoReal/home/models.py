@@ -81,8 +81,6 @@ class Usuario(AbstractBaseUser):
     def is_funcionario(self):
         return self.usuario_funcionario
 
-
-
 class Region(models.Model):
     nombre = models.CharField(max_length=150)
 
@@ -93,7 +91,6 @@ class Region(models.Model):
         db_table = 'region'
         verbose_name = 'Region'
         verbose_name_plural = 'Regiones'
-
 
 class Comuna(models.Model):
     nombre = models.CharField(max_length=150)
@@ -107,7 +104,6 @@ class Comuna(models.Model):
         db_table = 'comuna'
         verbose_name = 'Comuna'
         verbose_name_plural = 'Comunas'
-
 
 class Departamento(models.Model):
 
