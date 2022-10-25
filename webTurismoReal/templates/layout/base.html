@@ -27,7 +27,7 @@
           "text": "Para ver tus reservas deberas iniciar sesion otra vez",
           "icon": "question",
           "showCancelButton": true,
-          "cancelButtonTest": "No, Cancelar",
+          "cancelButtonText": "No, Cancelar",
           "confirmButtonText": "Si, Cerrar Sesion"
         })
           .then(function(result) {
@@ -57,7 +57,9 @@
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="{% url 'home_inicio' %}"><i class="fa-solid fa-house"></i> Inicio</a>
+              <a class="nav-link active" aria-current="page" href="{% url 'home_inicio' %}">
+                <i class="fa-solid fa-house"></i> Inicio
+              </a>
             </li>
             <li class="nav-item">
               {% if user.is_authenticated %}
@@ -71,23 +73,15 @@
 
         <form class="d-flex">
           {% if user.is_authenticated %}
-<!-- <<<<<<< HEAD -->
           
-<!-- ======= -->
-
-              {% comment %}
-            <a class="btn btn-danger" href="{% url 'logout' %}"><i class="fa-sharp fa-solid fa-right-to-bracket"></i> Cerrar Sesion</a>
-            {% endcomment %}
             <a class="btn btn-danger" onclick="cerrarSesion()">
               <i class="fa-sharp fa-solid fa-right-to-bracket"></i>
               Cerrar Sesion
             </a>
-
           {% else %}
             <a class="btn btn-danger" style="margin-right: 5px;" href="{% url 'registro' %}"><i class="fa-solid fa-address-card"></i> Registrate</a>
             <br>
             <a class="btn btn-success" href="{% url 'login' %}"><i class="fa-solid fa-right-to-bracket"></i> Iniciar Sesion</a>
-<!-- >>>>>>> origin/branch_SebastianZuniga -->
           {% endif %}
         </form>
         </div>

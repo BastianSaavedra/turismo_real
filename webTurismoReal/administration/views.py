@@ -23,7 +23,7 @@ def sumatoria():
     try:
         year = datetime.now().year
         for m in range(1, 13):
-            total = Reserva.objects.filter(date_joined__year=year, date_joined__month=m).aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
+            total = Reserva.objects.filter(date_joined__year=year, date_joined__month=m, status="1").aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
             data.append(float(total))
     except:
         pass
@@ -47,8 +47,11 @@ def administration_dashboard(request):
     )
     total_departamentos = len(detalles_dptos)
 
+    reservas = len(Reserva.objects.all().filter(status = '1'))
+    reservas_canceladas = len(
+        Reserva.objects.all().filter(status = '2')
+    )
 
-    reservas = len(Reserva.objects.all())
     departamentos = Departamento.objects.values_list('direccion', 'id').distinct().order_by()
 
 
@@ -131,6 +134,7 @@ def administration_dashboard(request):
         {
             'departamentos': departamentos,
             'reservas': reservas,
+            'reservas_canceladas': reservas_canceladas,
             'detalles_dptos': detalles_dptos,
             'total_departamentos': total_departamentos,
             'disponibles': departamentos_disponibles,

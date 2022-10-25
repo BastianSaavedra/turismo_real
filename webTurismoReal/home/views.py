@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseRedirect
 # <<<<<<< HEAD
 from django.utils.functional import total_ordering
@@ -158,7 +159,7 @@ def home_reservas_usuario(request):
     print(f"request user id = {request.user.id}")
     reservas = Reserva.objects.all().filter(guest=user, status = '1')
     if not reservas:
-        messages.warning(request, "Aún no tienes reservas")
+        messages.warning(request, "Aún no tienes reservas", extra_tags="Debes reservar un departamento para poder visualizar")
     return HttpResponse(
         render(
             request,
@@ -167,8 +168,17 @@ def home_reservas_usuario(request):
         )
     )
 
-def cancelar(request):
-    pass
+@require_http_methods(['POST'])
+def cancelar_reserva(request, id):
+    Reserva.objects.filter(id=id).update(status="2")
+    messages.success(
+        request,
+        "Reserva Cancelada",
+        extra_tags="Tu reserva ha sido cancelada"
+    )
+    return redirect("home_reservas_usuario")
+    
+    
 
 def login(request):     
     if request.user.is_authenticated:

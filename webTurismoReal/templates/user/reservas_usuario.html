@@ -2,6 +2,9 @@
 {% load static %}
 {% load tags %}
 {% block title %}Mis Reservas {% endblock %}
+
+
+
 {% block content %}
 <hr style="color:aliceblue ; height: 0.1px;">
 <h2 class="text-center" 
@@ -11,10 +14,10 @@
            text-transform: uppercase;">
   Mis Reservas
 </h2>
-
 <div class="container px-0 mx-auto">
   {% for reserva in reservas %}
-  <div class="card mb-3" style="background-color: rgb(255, 255, 255);">
+  {% if reserva.status == '1' %}
+  <div class="card mb-3" style="background-color: rgb(255, 255, 255); max-width: 600px;">
     <div class="row g-0">
       <div class="col-md-4">
         <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
@@ -28,11 +31,38 @@
           <p>Precio: ${{ reserva.total_reserva|numberFormat}}</p>
           <p>Codigo Reserva: {{ reserva.booking_id }}</p>
         </div>
+        <div class="card-footer bg-white text-end">
+          <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
+            {% csrf_token %}
+            <input class="btn btn-danger btn-sm" type="submit"/>
+          </form>
+        </div>
       </div>
-
     </div>
   </div>
+  {% endif %}
+  <script>
+    function cancelarReserva(form) {
+      Swal.fire({
+        "title": "Estas seguro de cancelar la reserva?",
+        "icon": "question",
+        "showCancelButton": true,
+        "cancelButtonText": "No, volver a mis reservas",
+        "confirmButtonText": "Si, Cancelar reserva",
+        "dangerMode": true,
+      })
+        .then(function(result) {
+          if(result.isConfirmed) {
+            form.submit()
+            Swal.fire('Cancelada!', 'Tu reserva ha sido cancelada', 'success')
+          } 
+        })
+        return false;
+    }
+  </script>
   {% endfor %}
 </div>
 
 {% endblock %}
+
+
