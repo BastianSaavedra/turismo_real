@@ -18,8 +18,8 @@ urlpatterns = [
 # <<<<<<< HEAD
     path('', include('home.urls'), name="home_urls"),
     path('administration/', include('administration.urls'), name="administration_urls"),
+    path('funcionario/', include('funcionario.urls'), name="funcionario_urls"),
 # =======
-    path('', include('home.urls'), name="home.urls"),
     path('',views.home_inicio, name='home'),
     path('accounts/logout/', views.salir, name='logout'),
     #path('busqueda', views.searchListView,name='search')

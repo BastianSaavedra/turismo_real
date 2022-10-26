@@ -111,3 +111,4 @@ class Registro(forms.ModelForm):
         if commit:
             user.save()
         return user
+

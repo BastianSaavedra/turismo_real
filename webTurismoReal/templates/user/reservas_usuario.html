@@ -34,7 +34,7 @@
         <div class="card-footer bg-white text-end">
           <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
             {% csrf_token %}
-            <input class="btn btn-danger btn-sm" type="submit"/>
+            <input class="btn btn-danger btn-sm" type="submit" value="Cancelar Reserva"/>
           </form>
         </div>
       </div>

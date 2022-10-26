@@ -204,13 +204,18 @@ def login(request):
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect("home_inicio")
-        # else:
-        #     messages.error(request, 'Datos Incorrectos')
+
 
         if usuarios: 
             lg(request,usuarios)
             messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
-            return redirect("home")       
+            return redirect("home")  
+             
+        elif usuarios.is_funcionario:
+            lg(request, usuarios)
+            messages.success(request, f'Bienvenido {usuarios.username}')
+            return redirect('funcionario/check_in.html')
+        
         else:
             messages.error(request, f'Datos incorrectos', extra_tags='Completa nuevamente los campos')
     return render(request, 'users/login.html',{})
@@ -248,7 +253,7 @@ class RegistrarUsuario(CreateView):
             
             if nuevo_usuario:
                 lg(request, nuevo_usuario, backend='django.contrib.auth.backends.ModelBackend')
-                messages.success(request, f'Bienvenido {form.print_user()}')
+                messages.success(request, f'Bienvenido {form.print_user()}', extra_tags='Tu cuenta ha sido registrada correctamente!')
                 return redirect('home')
             #return redirect('home')
         else:
