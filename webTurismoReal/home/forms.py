@@ -39,13 +39,13 @@ class Registro(forms.ModelForm):
             'ap_materno' : forms.TextInput(
                 attrs = {'class':'form-control', 'placeholder':'Ingrese su apellido'}),
             'rut' : forms.TextInput(
-                attrs = {'class':'form-control', 'placeholder':'Ingrese su RUT'}), 
+                attrs = {'class':'form-control', 'placeholder':'Ingrese su RUT','pattern':'[0-9]{7,8}', 'title':'Ingrese un rut valido'}), 
             'dv' : forms.TextInput(
-                attrs = {'class':'form-control', 'placeholder':'Dv'}),   
+                attrs = {'class':'form-control', 'placeholder':'Dv', 'pattern':'[0-9kK]{1}', 'title':'Ingrese un digito verificador valido'}),   
             'username' : forms.TextInput(
                 attrs = {'class':'form-control', 'placeholder':'Especifique un nombre de usuario'}), 
             'telefono' : forms.TextInput(
-                attrs = {'class':'form-control', 'placeholder':'Digite su numero telefonico'})
+                attrs = {'class':'form-control', 'placeholder':'Digite su numero telefonico', 'pattern':'[0-9]})'})
         }
 
 
@@ -60,30 +60,6 @@ class Registro(forms.ModelForm):
         if Usuario.objects.filter(email = correo).exists():
             raise forms.ValidationError('Correo ya vinculado')
         return correo
-    
-    """def clean_rut(self):
-        
-        Validacion de rut
-        
-        Metodo que valida que el rut ingresado se encuentre en el rango numerico 0-9.
-        
-        Excepciones:
-            -ValidationError = Mensaje de error que aparece cuando se ingresan caracteres no coincidentes
-        
-        if not re.match("^[0-9]*$", self.cleaned_data.get('rut')):
-            raise forms.ValidationError('Debe ser numerico entre 0-9')
-
-    def clean_dv(self):
-        
-        Validacion de digito verificador
-        
-        Metodo que valida que el dv ingresado se encuentre entre los caracteres aceptados 0-9 o K.
-        
-        Excepciones:
-            -ValidationError = Mensaje de error que aparece cuando se ingresan caracteres no coincidentes
-        
-        if not re.match("^[0-9,'k','K']*$", self.cleaned_data.get('dv')):
-            raise forms.ValidationError('Debe ser numerico entre 1-9, o "K" ')"""
             
     def print_user(self):
         return self.cleaned_data.get('username')
