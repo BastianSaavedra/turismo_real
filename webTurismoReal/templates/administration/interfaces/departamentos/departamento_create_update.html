@@ -156,14 +156,12 @@
                           {% endfor %}
                         {% endfor %}
 
+                        
+
+
                       </div>
                     </div>
                   {% endfor %}
-
-                    
-
-
-
                 </div>
               {% endwith %}
 
@@ -197,11 +195,50 @@
       var compiledTmpl = tmplMarkup.replace(/__prefix__/g, count);
       $('#item-images').append(compiledTmpl);
 
-
       // update form count
       $('#id_images-TOTAL_FORMS').attr('value', count+1);
     });
   });
+</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      flatpickr("input[type=datetime-local]", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        locale : {
+          weekdays: {
+            shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+          }, 
+          months: {
+            shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+            longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          },
+        }
+      });
+    </script>
+
+<script>
+  function check() {
+    let output = document.getElementById("dias")
+
+    let startDate = new Date(document.getElementById("inicio").value);
+    let endDate = new Date(document.getElementById("fin").value);
+
+    if (startDate.getTime() && endDate.getTime()) {
+      let timeDifference = endDate.getTime() - startDate.getTime();
+
+      let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
+      output.value =  dayDifference
+
+    } else {
+      output.value = 0;
+    }
+  };
+  document.querySelector('#inicio').addEventListener("change", check, false);
+  document.querySelector('#fin').addEventListener("change", check, false);
+
 </script>
 
 {% endblock %}

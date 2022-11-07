@@ -60,7 +60,8 @@ class DetalleForm(forms.ModelForm):
             'cant_dormitorio': 'Cantidad de Dormitorios',
             'estacionamiento': 'Estacionamiento',
             'cant_estacionamiento': 'Cantidad de Estacionamientos',
-            'status': 'Status del Departamento'
+            'status': 'Status del Departamento',
+            'cant_dias_mantencion': 'Cantidad de dias en Mantencion'
         }
         widgets = {
             'precio': forms.NumberInput(
@@ -106,9 +107,40 @@ class DetalleForm(forms.ModelForm):
                 attrs={'class':'form-control mb-4'}
             ),
             'status': forms.Select(
-                attrs={'class':'form-control select-search mb-4'}
-            )
+                attrs={
+                    'class':'form-control select-search mb-4',
+                    'name': 'statusDpto',
+                    'id': 'statusDpto'
+                }
+            ),
+            'inicio_mantencion': forms.DateInput(
+                attrs={
+                    'class': 'form-control bg-white',
+                    'placeholder': 'Selecciona una fecha',
+                    'type': 'datetime-local',
+                    'id': 'inicio',
+                }
+            ),
+            'fin_mantencion': forms.DateInput(
+                attrs={
+                    'class': 'form-control bg-white',
+                    'placeholder': 'Selecciona una fecha',
+                    'type': 'datetime-local',
+                    'id': 'fin'
+                }
+
+            ),
+            'cant_dias_mantencion': forms.NumberInput(
+                attrs={
+                    'class': 'form-control mb-4',
+                    'id': 'dias'
+                }
+            ) 
         }
+
+
+
+
 
 class ReservaForm(forms.ModelForm):
 

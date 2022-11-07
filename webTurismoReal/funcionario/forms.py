@@ -14,7 +14,7 @@ class FormularioCheckIn(forms.ModelForm):
         )
         labels = {
             'guest':'Cliente',
-            'booking_id':'Identificador',
+            'booking_id':'Codigo Reserva',
             'status_estadia':'Estado',
             'mensaje_check_in': 'Comentarios'
         }
@@ -68,7 +68,7 @@ class FormularioCheckOut(forms.ModelForm):
         )
         labels = {
             'guest':'Cliente',
-            'booking_id':'Identificador',
+            'booking_id':'Codigo Reserva',
             'mensaje_check_out': 'Comentarios',
             'costo_multa':'Monto a multar'
         }

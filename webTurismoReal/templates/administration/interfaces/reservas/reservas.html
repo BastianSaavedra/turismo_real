@@ -12,9 +12,8 @@
     <th scope="col">Departamento</th>
     <th scope="col">Huesped</th>
     <th scope="col">Cod Reserva</th>
-    <th scope="col">Dias de Hospedaje</th>
-    <th scope="col">Total</th>
-    <th scope="col">Status</th>
+    <th scope="col">Monto Reserva</th>
+    <th scope="col">Estado</th>
     <th scope="col">Editar</th>
   </tr>
 {% endblock %}
@@ -29,26 +28,47 @@
       <td>{{ r.detalle_dpto.departamento.id }}</td>
       <td>{{ r.guest }}</td>
       <td>{{ r.booking_id }}</td>
-      <td>{{ r.cant_dias_reserva }}</td>
       <td>${{ r.total_reserva | numberFormat }}</td>
       <td>
         {% if r.status == '1' %}
+        <span class="bg-success text-white rounded-pill px-2">
           Activa
+        </span>
         {% elif r.status == '2' %}
+        <span class="bg-danger text-white rounded-pill px-2">
           Cancelada
+        </span>
         {% else %}
         Error
         {% endif %}
       </td>
       <td>
         <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
-          <i class="fas fa-edit"></i>
+          <i class="bi bi-pencil"></i>
         </a>
         
       </td>
     </tr>
   {% endfor %}
 {% endblock %}
+
+{% block footer %}
+<tr>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td></td>
+  <td>Total</td>
+  <td>${{ total | numberFormat }}</td>
+  <td></td>
+  <td></td>
+  
+</tr>
+
+{% endblock %}
+
 {% comment %}
 {% block button_create %}
 <a href="{% url 'administration_reserva_create' %}" class="btn btn-success">

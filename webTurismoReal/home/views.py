@@ -115,7 +115,7 @@ def home_reserva(request):
         
         reservation.guest = user_object
         reservation.detalle_dpto = detalle_dpto_object
-        person = total_person
+        reservation.huespedes = total_person
 
 
         # Guardado de fechas en bbdd

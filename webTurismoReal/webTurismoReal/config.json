@@ -1,7 +1,13 @@
 {
-  "user": "root",
+  "user_name": "root",
   "password": "fq3JnvrMdyf",
-  "server": "localhost",
-  "bd": "curso_django_3",
-  "port": "3306"
+  "host_name": "localhost",
+  "db_name": "turismo_real",
+  "port": "3306",
+
+  "smtp": "smtp.google.com",
+  "port_smtp": 587,
+  "email": "kizsawaqwerty@gmail.com",
+  "email_password": "iyyipkxcflntbljp"
+
 }

@@ -51,7 +51,6 @@
     margin: 20px 0;
     opacity: 1;
     background: rgba(162, 162, 162, 0.7);
-    color: #fff;
     border-radius: 10px;
 }
 
@@ -78,9 +77,9 @@
 }
 
 label{
-    color: #fff;
+    color: #fff
     font: "Poppins";
-    text-transform: uppercase;
+    /* text-transform: uppercase; */
     font-weight: bold;
 }
 

@@ -1,10 +1,10 @@
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento
 from .forms import (
@@ -27,8 +27,11 @@ def sumatoria():
             data.append(float(total))
     except:
         pass
-    return data
+    return data 
 
+def total_reserva():
+    total = Reserva.objects.filter(status="1").aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
+    return total
 
 def administration_dashboard(request):
 
@@ -269,7 +272,6 @@ class AdministracionDepartamentoUpdateView(DepartamentoInline, UpdateView):
             )
         }
 
-
 def delete_imagen(request, pk):
     try:
         imagen = ImagenDepartamento.objects.get(id=pk)
@@ -292,11 +294,13 @@ def delete_imagen(request, pk):
 class AdministracionReservaListView(ListView):
     model = Reserva
     template_name = 'administration/interfaces/reservas/reservas.html'
+    
 
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Reservas'
+        context['total'] = total_reserva() 
         context['object_list'] = Reserva.objects.all()
         return context
             
@@ -326,4 +330,5 @@ class AdministracionReservaUpdateView(UpdateView):
         context['icon'] = 'fa-solid fa-pen-to-square'
         context['object_list'] = Reserva.objects.all()
         return context
+
 

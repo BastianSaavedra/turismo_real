@@ -162,6 +162,9 @@ class DetalleDpto(models.Model):
     cant_estacionamiento = models.PositiveIntegerField(default=0)
 
     status = models.CharField(choices=DPTO_STATUS, max_length=13, default="0")
+    inicio_mantencion = models.DateTimeField(default=datetime.now, blank=True)
+    fin_mantencion = models.DateTimeField(default=datetime.now, blank=True)
+    cant_dias_mantencion = models.IntegerField(default=0)
 
     def __str__(self):
         return self.departamento.titulo
@@ -193,6 +196,9 @@ class Reserva(models.Model):
     booking_id = models.CharField(max_length=100, default="null")
     cant_dias_reserva = models.IntegerField(default=0)
     total_reserva = models.IntegerField(default=0)
+    huespedes = models.IntegerField(default=0)
+
+
     status = models.CharField(choices=RESERVA_STATUS, max_length=12, default="1")
 
 

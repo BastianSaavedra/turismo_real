@@ -11,12 +11,20 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-import os
+import os, json
 
 from django.urls import reverse_lazy
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Json Config Tags
+path = os.path.dirname(os.path.abspath(__file__))
+json_path = open('{}/config.json'.format(path), 'r')
+conf_string = json_path.read()
+json_path.close()
+config = json.loads(conf_string)
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -81,17 +89,31 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = { 
+# DATABASES = { 
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'turismo_real',
+#         'USER': 'root',
+#         'PASSWORD': 'fq3JnvrMdyf',
+#         'HOST': 'localhost',
+#         'PORT': 3306,
+#         'OPTIONS': {
+#             'autocommit': True,
+#         }
+#     }
+# }
+
+DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'turismo_real',
-        'USER': 'root',
-        'PASSWORD': 'fq3JnvrMdyf',
-        'HOST': 'localhost',
-        'PORT': 3306,
+        'NAME': config['db_name'],
+        'USER': config['user_name'],
+        'PASSWORD': config['password'],
+        'HOST': config['host_name'],
+        'PORT': config['port'],
         'OPTIONS': {
             'autocommit': True,
-        }
+        },
     }
 }
 
@@ -143,6 +165,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 RUTA = '../'
 RUTA2 = '../webTurismoReal'
+
+# Email settings
+SERVER_SMTP = config['smtp']
+PORT_SMTP = config['port_smtp']
+MAIL_OUTPUT = config['email']
+PASSWORD_MAIL_OUTPUT = config['email_password']
+
+# Webpay settings
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
