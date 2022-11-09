@@ -1,0 +1,49 @@
+{% extends 'layout/base_administration.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<main class="mt-5 pt-3">
+  <div class="container">
+    <div class="row mt-5 pt-3">
+      <div class="row">
+        <div class="col-xl-12 col-12 mb-4">
+          <form enctype="multipart/form-data" method="POST" action="." id="conductor_form">
+            {% csrf_token %}
+
+            <div class="card card-default">
+
+              <div class="card-header">
+                <h3 class="card-title">
+                  <span>
+                    <i class="{{ icon }}"></i>
+                  </span>
+                  {{ title }}
+                </h3>
+              </div>
+
+              <div class="card-body">
+                {{ form }}
+              </div>
+
+              <div class="card-footer">
+                <button type="submit" class="btn btn-primary">
+                  Guardar
+                </button>
+
+                <button class="btn btn-secondary" onclick="javascript:history.back();">
+                  Cancelar
+                </button>
+              </div>
+
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+</main>
+{% endblock %}
+

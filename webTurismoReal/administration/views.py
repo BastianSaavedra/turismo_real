@@ -6,10 +6,14 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.views.generic import ListView, View
 from django.views.generic.edit import CreateView, UpdateView
-from home.models import Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento
+from home.models import (
+    Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento,
+    Conductor
+
+    )
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
-    ReservaForm
+    ReservaForm, ConductorForm
     )
 
 from datetime import datetime
@@ -124,11 +128,7 @@ def administration_dashboard(request):
         Departamento.objects.all().filter(comuna__region__nombre="Valparaiso")
     )
 
-
-    
-
     #Ventas por annio
-
     suma_total = sumatoria()
 
     response = render(
@@ -169,7 +169,7 @@ def administration_dashboard(request):
 
     return HttpResponse(response)
 
-
+# Departamento Views
 class AdministracionDepartamentoListView(ListView):
     model = DetalleDpto
     template_name = 'administration/interfaces/departamentos/departamentos.html'
@@ -221,7 +221,7 @@ class AdministracionDepartamentoCreateView(DepartamentoInline, CreateView):
     def get_context_data(self, **kwargs):
         ctx = super(AdministracionDepartamentoCreateView, self).get_context_data(**kwargs)
         ctx['named_formset'] = self.get_named_formsets()
-        ctx['title'] = 'Creando Nuevo Departamento'
+        ctx['title'] = 'Agregando Nuevo Departamento'
         ctx['icon'] = 'fa-solid fa-plus'
         return ctx
 
@@ -291,12 +291,11 @@ def delete_imagen(request, pk):
     return redirect('administration_departamento_update', pk=imagen.departamento.id)
 
 
+# Reservas Views
 class AdministracionReservaListView(ListView):
     model = Reserva
     template_name = 'administration/interfaces/reservas/reservas.html'
     
-
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Listado de Reservas'
@@ -312,7 +311,7 @@ class AdministracionReservaCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdministracionReservaCreateView, self).get_context_data(**kwargs)
-        context['title'] = 'Creando Nueva Reserva'
+        context['title'] = 'Agregando Nueva Reserva'
         context['icon'] = 'fa-solid fa-plus'
         return context 
 
@@ -323,12 +322,50 @@ class AdministracionReservaUpdateView(UpdateView):
     success_url = reverse_lazy('administration_reserva')
     template_name = 'administration/interfaces/reservas/reserva_create_update.html'
 
-
     def get_context_data(self, **kwargs):
         context = super(AdministracionReservaUpdateView, self).get_context_data(**kwargs)
         context['title'] = 'Editando Reserva'
         context['icon'] = 'fa-solid fa-pen-to-square'
         context['object_list'] = Reserva.objects.all()
+        return context
+
+
+# Conductor Views
+class AdministracionConductorListView(ListView):
+    model = Conductor
+    template_name = 'administration/interfaces/conductores/conductores.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Conductores'
+        context['object_list'] = Conductor.objects.all()
+        context['create_url'] = reverse_lazy('administration_condutor_create')
+        return context
+
+
+class AdministracionConductorCreateView(CreateView):
+    model = Conductor
+    form_class = ConductorForm
+    template_name = 'administration/interfaces/conductores/conductor_create_update.html'
+    success_url = reverse_lazy('administration_conductor')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionConductorCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Conductor'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
+
+
+class AdministracionConductorUpdateView(UpdateView):
+    model = Conductor
+    form_class = ConductorForm
+    success_url = reverse_lazy('administration_conductor')
+    template_name = 'administration/interfaces/conductores/conductor_create_update.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionConductorUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Conductor'
+        context['icon'] = 'fa-solid fa-pen-to-square'
         return context
 
 

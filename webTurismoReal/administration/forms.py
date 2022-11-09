@@ -2,7 +2,9 @@ from operator import attrgetter
 from django import  forms
 from django.contrib.admin.options import widgets
 from django.forms.models import inlineformset_factory, modelformset_factory
-from home.models import Departamento, DetalleDpto, ImagenDepartamento, Reserva
+from home.models import (
+    Departamento, DetalleDpto, ImagenDepartamento, Reserva, Conductor
+    )
 
 
 class DepartamentoForm(forms.ModelForm):
@@ -139,9 +141,6 @@ class DetalleForm(forms.ModelForm):
         }
 
 
-
-
-
 class ReservaForm(forms.ModelForm):
 
     class Meta:
@@ -211,6 +210,45 @@ class ReservaForm(forms.ModelForm):
                 }
             )
             
+        }
+
+
+class ConductorForm(forms.ModelForm):
+
+    class Meta:
+        model = Conductor
+        fields = '__all__'
+        labels = {
+            'nombre': 'Nombre',
+            'apellido': 'Apellido',
+            'edad': 'Edad',
+            'annio_experiencia': 'Años de Experiencia'
+        }
+        widgets = {
+            'nombre': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Nombre del conductor',
+                }
+            ),
+            'apellido': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Nombre del conductor',
+                }
+            ),
+            'edad': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'number',
+                }
+            ),
+            'annio_experiencia': forms.NumberInput(
+                attrs={
+                    'class': 'form-control',
+                    'type': 'number',
+                }
+            )
         }
 
 

@@ -11,8 +11,14 @@ urlpatterns = [
     path('departamento/edit/<int:pk>/', views.AdministracionDepartamentoUpdateView.as_view(), name="administration_departamento_update"),
 
     # Reserva's Views
-    path('reservas/', views.AdministracionReservaListView.as_view(), name="administration_reserva"),
-    path('reservas/add/', views.AdministracionReservaCreateView.as_view(), name="administration_reserva_create"),
-    path('reservas/edit/<int:pk>/', views.AdministracionReservaUpdateView.as_view(), name="administration_reserva_update")
+    path('reserva/list/', views.AdministracionReservaListView.as_view(), name="administration_reserva"),
+    path('reserva/add/', views.AdministracionReservaCreateView.as_view(), name="administration_reserva_create"),
+    path('reserva/edit/<int:pk>/', views.AdministracionReservaUpdateView.as_view(), name="administration_reserva_update"),
+
+    # Conductor Views
+    path('conductor/list/', views.AdministracionConductorListView.as_view(), name="administration_conductor"),
+    path('conductor/add/', views.AdministracionConductorCreateView.as_view(), name="administration_conductor_create"),
+    path('conductor/edit/<int:pk>/', views.AdministracionConductorUpdateView.as_view(), name="administration_conductor_update")
+
        
 ]

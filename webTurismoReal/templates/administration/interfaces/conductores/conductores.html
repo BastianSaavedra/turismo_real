@@ -1,0 +1,40 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Conductores{% endblock %}
+{% block list_title %}{{ title }}{% endblock %}
+
+{% block columns %}
+<tr>
+  <th scope="col">Id</th>
+  <th scope="col">Nombre</th>
+  <th scope="col">Apellido</th>
+  <th scope="col">Edad</th>
+  <th scope="col">Años de Experiencia</th>
+  <th style="width: 5%;">Opciones</th>
+</tr>
+{% endblock %}
+
+{% block rows %}
+{% for driver in object_list %}
+  <tr>
+    <td>{{ driver.id }}</td>
+    <td>{{ driver.nombre }}</td>
+    <td>{{ driver.apellido }}</td>
+    <td>{{ driver.edad }}</td>
+    <td>{{ driver.annio_experiencia }}</td>
+    <td>
+      <a href="{% url 'administration_conductor_update' driver.id %}" class="btn btn-warning btn-sm" type="button">
+        <i class="bi bi-pencil"></i>
+      </a>
+    </td>
+
+  </tr>
+{% endfor %}
+{% endblock %}
+
+{% block button_create %}
+<a href="{% url 'administration_conductor_create' %}" class="btn btn-success">
+  <i class="fas fa-plus"></i>
+  Agregar Conductor
+</a>
+{% endblock %}
+

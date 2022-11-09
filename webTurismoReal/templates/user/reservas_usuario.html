@@ -20,7 +20,7 @@
   <div class="card mb-3" style="background-color: rgb(255, 255, 255); max-width: 600px;">
     <div class="row g-0">
       <div class="col-md-4">
-        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
+        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="330" width="190">
       </div>
       <div class="col-md-8">
         <div class="card-body">
@@ -34,7 +34,9 @@
         <div class="card-footer bg-white text-end">
           <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
             {% csrf_token %}
-            <input class="btn btn-danger btn-sm" type="submit" value="Cancelar Reserva"/>
+            <div class="d-grid gap-3 col-6 mx-auto">
+              <input class="btn btn-danger btn-md" type="submit" value="Cancelar Reserva"/>
+          </div>
           </form>
         </div>
       </div>

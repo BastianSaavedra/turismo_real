@@ -1,7 +1,8 @@
+from email.policy import default
+from unittest.util import _MAX_LENGTH
 from django.db import models
 # <<<<<<< HEAD
 from datetime import datetime
-
 # =======
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 # >>>>>>> origin/branch_SebastianZuniga
@@ -21,8 +22,8 @@ class UsuarioManager(BaseUserManager):
                              ap_materno = ap_materno,
                              rut = rut,
                              dv = dv,
-                             telefono = telefono)
-
+                             telefono = telefono
+                             )
         usuario.set_password(password)
         usuario.save()
         return usuario
@@ -54,6 +55,7 @@ class Usuario(AbstractBaseUser):
     telefono = models.CharField('Telefono', max_length=12)
     usuario_superAdministrador = models.BooleanField(default=False)
     usuario_admin = models.BooleanField(default=False)
+    usuario_cliente = models.BooleanField(default=True)
     usuario_funcionario = models.BooleanField(default=False)
     objects = UsuarioManager()
     
@@ -62,7 +64,6 @@ class Usuario(AbstractBaseUser):
                        'rut','dv','correo','telefono']
     
     def __str__(self):
-        # return f'{self.nombre},{self.ap_paterno}'
         return self.username
     
     def has_perm(self, perm, obj = None):
@@ -77,6 +78,9 @@ class Usuario(AbstractBaseUser):
     
     def is_admin(self):
         return self.usuario_admin
+    
+    def is_cliente(self):
+        return self.usuario_cliente
     
     def is_funcionario(self):
         return self.usuario_funcionario
@@ -125,7 +129,6 @@ class ImagenDepartamento(models.Model):
     imagen = models.ImageField(upload_to="departamentos", default="../static/default/default.png" )
     departamento = models.ForeignKey(Departamento, on_delete=models.CASCADE, related_name="imagenes")
 
-
 class DetalleDpto(models.Model):
     # departamento = models.OneToOneField(
     #     Departamento, on_delete=models.CASCADE, null=False, blank=False
@@ -173,7 +176,108 @@ class DetalleDpto(models.Model):
         db_table = 'detalle_dpto'
         verbose_name = 'Detalle departamento'
         verbose_name_plural = 'Detalles de Departamentos'
+        
+class Tour(models.Model):
+    
+    TIPO_TR = (
+        ("0", "Seleccione"),
+        ("1", "Turismo Cultural"),
+        ("2", "Turismo de Naturaleza"),
+        ("3", "Turismo Gastronomico")
+    )
+    
+    tipoTour = models.CharField(max_length=100, choices=TIPO_TR, default="0", blank=True, null=True)
+    nombreTour = models.CharField(max_length=200, blank=True, null=True)
+    horario_in = models.TimeField(default='00:00', blank=True, null=True)
+    horario_fin = models.TimeField(default='00:00', blank=True, null=True)
+    costo = models.PositiveBigIntegerField(default=0, blank=True, null=True)
+    comuna = models.CharField(max_length=150, blank=True, null=True)
+    
+    def __str__(self):
+        return self.nombreTour
 
+    class Meta:
+        db_table = 'tour'
+        verbose_name = 'Tour'
+        verbose_name_plural = 'Tours'
+    
+class Conductor(models.Model):
+    nombre = models.CharField(max_length=50, blank=True, null=True)
+    apellido = models.CharField(max_length=50, blank=True, null=True)
+    edad = models.PositiveIntegerField(default=0, blank=True, null=True)
+    annio_experiencia = models.PositiveIntegerField(default=0, blank=True, null=True)
+    
+    def __str__(self):
+        return self.nombre
+
+    class Meta:
+        db_table = 'conductor'
+        verbose_name = 'Conductor'
+        verbose_name_plural = 'Conductores'
+
+class Marca(models.Model):
+    marca = models.CharField(max_length=50, blank=True, null=True)
+    
+    def __str__(self):
+        return self.marca
+
+    class Meta:
+        db_table = 'marca'
+        verbose_name = 'Marca'
+        verbose_name_plural = 'Marcas'
+
+class Modelo(models.Model):
+    modelo = models.CharField(max_length=50, blank=True, null=True)
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.modelo
+
+    class Meta:
+        db_table = 'modelo'
+        verbose_name = 'Modelo'
+        verbose_name_plural = 'Modelos'
+        
+class Transporte(models.Model):
+    
+    TIPOS_TRANSPORTE = (
+        ("0", "Seleccione"),
+        ("1", "Taxi"),
+        ("2", "Furgoneta"),
+        ("3", "Bus")
+    )
+    
+    patente = models.CharField(max_length=6, blank=True, null=True)
+    tipo_transporte = models.CharField(max_length=30, choices=TIPOS_TRANSPORTE, default="0", blank=True, null=True)
+    annio = models.PositiveIntegerField(default=0, blank=True, null=True)
+    color = models.CharField(max_length=50, blank=True, null=True)
+    num_puertas = models.PositiveIntegerField(default=0, blank=True, null=True)
+    kmRecorridos = models.PositiveIntegerField(default=0, blank=True, null=True)
+    modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
+    conductor = models.ForeignKey(Conductor, on_delete=models.CASCADE, related_name="transporte")
+    
+    def __str__(self):
+        return self.patente
+
+    class Meta:
+        db_table = 'transporte'
+        verbose_name = 'Trasporte'
+        verbose_name_plural = 'Trasportes'
+    
+class DetalleTP(models.Model):
+    lugar_tp = models.CharField(max_length=200, blank=True, null=True)
+    horario_in = models.TimeField(default='00:00', blank=True, null=True)
+    horario_fin = models.TimeField(default='00:00', blank=True, null=True)
+    costo_tp = models.PositiveBigIntegerField(default=0, blank=True, null=True)
+    transporte = models.ForeignKey(Transporte, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.transporte.patente
+
+    class Meta:
+        db_table = 'detalleTP'
+        verbose_name = 'Detalle Transporte'
+        verbose_name_plural = 'Detalle de Transportes'
 
 class Reserva(models.Model):
 
@@ -200,13 +304,12 @@ class Reserva(models.Model):
 
 
     status = models.CharField(choices=RESERVA_STATUS, max_length=12, default="1")
-
-
     status_estadia = models.CharField(choices=ESTADIA, max_length=13, default="0")
     mensaje_check_in = models.TextField(blank=True)
     mensaje_check_out = models.TextField(blank=True)
     costo_multa = models.IntegerField(default=0)
-
+    tour = models.ForeignKey(Tour, on_delete=models.CASCADE, null=True, blank=True)
+    detalle_tp = models.ForeignKey(DetalleTP, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return self.guest.username
