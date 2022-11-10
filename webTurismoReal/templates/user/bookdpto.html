@@ -3,112 +3,195 @@
 {% load tags %}
 {% block title %}Confirmando Reserva{% endblock %}
 {% block content %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'css/style4.css' %}">
 <!-- Booking Section start here -->
 
 <div class="container">
-  <div class="row">
-    <div class="col-md-6 col-lg-6 col-xlg-6 col-sm-12 mx-auto my-4">
-
-      <form action="/user/reserva-dpto/reserva" method="POST">
-        {% csrf_token %}
-        <div class="form-group">
-          <label for="username">Departamento</label>
-          <input 
-            type="text" 
-            class="form-control" 
-            id="departamento" 
-            name="departamento" 
-            disabled 
-            value="{{ detalle_dpto.departamento.titulo }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="username">Ubicacion</label>
-          <input 
-              type="text" 
-              class="form-control" 
-              id="ubicacion" 
-              name="ubicacion" 
-              disabled 
-              value="{{ detalle_dpto.departamento.direccion }} - {{ detalle_dpto.departamento.comuna }}" 
-            />
-        </div>
-
-        <div class="form-group">
-          <label for="person">Nombre del Usuario</label>
-          <input
-              type="text"
-              class="form-control"
-              id="username"
-              name="username"
-              required="true"
-              value="{{ request.user }}"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="">Huéspedes</label>
-          <div class="input-group">
-            <span class="input-group-btn">
-              <button 
-                class="btn btn-number"
-                type="button"
-                disabled="disabled"
-                data-type="minus"
-                data-field="capacidad"
-                >
-                <i class="fa-solid fa-minus"></i>
-              </button>
-            </span>
-
-            <input 
+  <hr  style="color:aliceblue ; height: 0.1px;">
+    <h2 style="font-weight:600;">Reservar departamento</h2>
+    <hr  style="color:aliceblue ; height: 0.1px;">
+        <form action="/user/reserva-dpto/reserva" method="POST">
+          {% csrf_token %}
+          <div class="row">
+            <div class="col-md-6">
+              <div class="jumbotron">
+              <label for="username">Departamento</label>
+              <input 
                 type="text" 
-                id="person"
-                name="capacidad" 
-                class="form-control input-number text-center rounded-pill border-secondary" 
-                value="1" 
-                min="1" 
-                max="{{ detalle_dpto.capacidad }}"
-              />
+                class="form-control" 
+                id="departamento" 
+                name="departamento" 
+                disabled 
+                value="{{ detalle_dpto.departamento.titulo }}" />
+              </div>
+            </div>
+            <div class="col-md-6">
+              <div class="jumbotron">
+                <label for="username">Ubicacion</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="ubicacion" 
+                    name="ubicacion" 
+                    disabled 
+                    value="{{ detalle_dpto.departamento.direccion }} - {{ detalle_dpto.departamento.comuna }}" 
+                  />
+              </div>
+            </div>
+          </div>
 
-            <span class="input-group-btn">
-              <button 
-                class="btn btn-number"
-                type="button"
-                data-type="plus"
-                data-field="capacidad"
-                >
-                <i class="fa-solid fa-plus"></i>
-              </button>
-            </span>
-            
+          <hr style="color:aliceblue ; height: 0.1px;">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="person">Nombre del Usuario</label>
+              <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  required="true"
+                  disabled
+                  value="{{ request.user }}"
+              />
+           </div>
+          </div>
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="person">Correo</label>
+              <input
+                  type="text"
+                  class="form-control"
+                  id="username"
+                  name="username"
+                  required="true"
+                  disabled
+                  value="{{ user.correo }}"
+              />
+            </div>
           </div>
         </div>
 
-        <div class="form-group text-center">
-          <label for="password2">Check-in</label>
-          <input 
-            class="form-control mr-sm-2 bg-white rounded-pill border-success text-center" 
-            type="datetime-local" 
-            placeholder="Check in"
-            id="cin"
-            name="check_in"
-            required="true"
-          />
+        <hr  style="color:aliceblue ; height: 0.1px;">
+
+        <div class="row">
+          <div class="col-12 col-md-6 offset-md-3">
+            <div class="jumbotron">
+              <label for="" class="col-12 col-md-6 offset-md-5">Huéspedes</label>
+              <div class="input-group">
+                <span class="input-group-btn">
+                  <button 
+                    class="btn btn-number"
+                    type="button"
+                    disabled="disabled"
+                    data-type="minus"
+                    data-field="capacidad"
+                    >
+                    <i class="fa-solid fa-minus"></i>
+                  </button>
+                </span>
+
+              <input 
+                  type="text" 
+                  id="person"
+                  name="capacidad" 
+                  class="form-control input-number text-center rounded-pill border-secondary" 
+                  value="1" 
+                  min="1" 
+                  max="{{ detalle_dpto.capacidad }}"
+                />
+
+              <span class="input-group-btn">
+                <button 
+                  class="btn btn-number"
+                  type="button"
+                  data-type="plus"
+                  data-field="capacidad"
+                  >
+                  <i class="fa-solid fa-plus"></i>
+                </button>
+              </span> 
+          </div>
+        </div>
+        </div>
         </div>
 
-        <div class="form-group text-center">
-          <label for="password2">Check-out</label>
-          <input 
-            class="form-control mr-sm-2 bg-white rounded-pill border-warning text-center" 
-            type="datetime-local" 
-            placeholder="Check out"
-            id="cout"
-            name="check_out"
-            required="True"
-            />
+      <hr style="color:aliceblue ; height: 0.1px;">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="password2">Check-in</label>
+              <input 
+                class="form-control mr-sm-2 bg-success rounded-pill border-success text-center text-white" 
+                type="datetime-local" 
+                placeholder="Seleccionar fecha Check in"
+                id="cin"
+                name="check_in"
+                required="true"
+              />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="password2">Check-out</label>
+              <input 
+                class="form-control mr-sm-2 bg-warning rounded-pill border-warning text-center text-dark"
+                type="datetime-local" 
+                placeholder="Seleccionar fecha Check out"
+                id="cout"
+                name="check_out"
+                required="True"
+                />
+          </div>
         </div>
+        </div>
+
+        <hr style="color:aliceblue ; height: 0.1px;">
+        <div class="col-12 col-lg-6 offset-md-3">
+          <h5 style="font-size: 15px;
+                     font-weight: bold;
+                     color: rgb(255, 255, 255); 
+                     background-color: rgb(195, 47, 47);
+                     border-radius:5px;
+                     opacity: 1;
+                     text-align: center;
+                     padding: 7px;">
+                     Si quieres agregar servicios opcionales puedes seleccionar los siguientes:
+
+          </h5>
+        </div>
+
+        <hr style="color:aliceblue ; height: 0.1px;">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="username" id="lbl1">Servicio Turistico <label style="color:red; font-size: 13px;">*Costo extra</label></label>
+              <select name="Tour" id="tour">
+                <option >Seleccionar</option>
+                    {% for tour in all_tours %}
+                      <option value="{{ tour.nombreTour }}">{{ tour }}</option>  
+                    {% endfor %}
+              </select>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
+              <select name="Transporte" id="transporte">
+                <option >Seleccionar</option>
+                    {% for ts in all_transp %}
+                      <option value="{{ ts.lugar_tp }}">{{ ts }}</option>  
+                    {% endfor %}
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <hr style="color:aliceblue ; height: 0.1px;">
 
         <div class="form-group">
           <label for="password2">Precio</label>
@@ -122,16 +205,20 @@
           />
         </div>
         <hr>
-        <button type="submit" class="btn btn-danger">Reservar ahora</button>   
-        <input type="hidden" name="detalledptoid" value="{{ detalle_dpto.id }}" />
-        
+        <div style="display: flex; justify-content: center;">
+          <a style="padding: 10px 32px;" href="{% url 'home' %}" type="submit" class="btn btn-outline-danger">Cancelar</a>
+          <br style="margin: 10px;">
+          <button type="submit" class="btn btn-outline-primary">Reservar ahora</button>   
+          <input type="hidden" name="detalledptoid" value="{{ detalle_dpto.id }}" />
+        </div>
+        <hr style="color:aliceblue ; height: 0.1px;">
 
 
       </form>
       
     </div>
 
-  </div>
+ 
 
 </div>
 

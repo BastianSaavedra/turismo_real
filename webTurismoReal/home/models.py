@@ -258,7 +258,7 @@ class Transporte(models.Model):
 
     class Meta:
         db_table = 'transporte'
-        verbose_name = 'Trasporte'
+        verbose_name = 'Transporte'
         verbose_name_plural = 'Trasportes'
     
 class DetalleTP(models.Model):
