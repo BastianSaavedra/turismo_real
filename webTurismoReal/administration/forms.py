@@ -3,8 +3,10 @@ from django import  forms
 from django.contrib.admin.options import widgets
 from django.forms.models import inlineformset_factory, modelformset_factory
 from home.models import (
-    Departamento, DetalleDpto, ImagenDepartamento, Reserva, Conductor
+    Departamento, DetalleDpto, ImagenDepartamento, Reserva, Conductor,
+    Transporte, Marca, Modelo
     )
+
 
 
 class DepartamentoForm(forms.ModelForm):
@@ -45,7 +47,12 @@ class DetalleForm(forms.ModelForm):
 
     class Meta:
         model = DetalleDpto
-        fields = '__all__'
+        fields = (
+            'precio', 'capacidad', 'amoblado', 'cable', 'electronicos',
+            'internet', 'aire_acondicionado', 'bodega', 'bannio',
+            'cant_bannio', 'dormitorio', 'cant_dormitorio', 'estacionamiento',
+            'cant_estacionamiento'
+        )
         labels = {
             'departamento': 'Departamento',
             'precio': 'Precio',
@@ -62,8 +69,6 @@ class DetalleForm(forms.ModelForm):
             'cant_dormitorio': 'Cantidad de Dormitorios',
             'estacionamiento': 'Estacionamiento',
             'cant_estacionamiento': 'Cantidad de Estacionamientos',
-            'status': 'Status del Departamento',
-            'cant_dias_mantencion': 'Cantidad de dias en Mantencion'
         }
         widgets = {
             'precio': forms.NumberInput(
@@ -91,28 +96,63 @@ class DetalleForm(forms.ModelForm):
                 attrs={'class':'form-control select-search mb-4'}
             ),
             'bannio': forms.Select(
-                attrs={'class':'form-control select-search mb-4'}
+                attrs={
+                    'class':'form-control select-search mb-4',
+                    'name': 'bannioSelect',
+                    'id': 'bannioSelect'
+                }
             ),
             'cant_bannio': forms.NumberInput(
-                attrs={'class':'form-control mb-4'}
+                attrs={
+                    'class':'form-control mb-4',
+                    'id': 'cant_bannio',
+                    'disabled': 'true'
+                }
             ),
             'dormitorio': forms.Select(
-                attrs={'class':'form-control select-search mb-4'}
+                attrs={
+                    'class': 'form-control select-search mb-4',
+                    'name': 'dormitorioSelect',
+                    'id': 'dormitorioSelect'
+                }
             ),
             'cant_dormitorio': forms.NumberInput(
-                attrs={'class':'form-control mb-4'}
+                attrs={
+                    'class': 'form-control mb-4',
+                    'id': 'cant_dormitorio',
+                    'disabled': 'true'
+                }
             ),
             'estacionamiento': forms.Select(
-                attrs={'class':'form-control select-search mb-4'}
+                attrs={
+                    'class': 'form-control select-search mb-4',
+                    'name': 'estacionamientoSelect',
+                    'id': 'estacionamientoSelect'
+                }
             ),
             'cant_estacionamiento': forms.NumberInput(
-                attrs={'class':'form-control mb-4'}
+                attrs={
+                    'class': 'form-control mb-4',
+                    'id': 'cant_estacionamiento',
+                    'disabled': 'true'
+                }
             ),
+        }
+
+class DepartamentoStatusForm(forms.ModelForm):
+    
+    class Meta:
+        model = DetalleDpto
+        fields = (
+            'status', 'inicio_mantencion', 'fin_mantencion',
+            'cant_dias_mantencion'
+        )
+        widgets = {
             'status': forms.Select(
                 attrs={
                     'class':'form-control select-search mb-4',
                     'name': 'statusDpto',
-                    'id': 'statusDpto'
+                    'id': 'statusDpto',
                 }
             ),
             'inicio_mantencion': forms.DateInput(
@@ -128,17 +168,58 @@ class DetalleForm(forms.ModelForm):
                     'class': 'form-control bg-white',
                     'placeholder': 'Selecciona una fecha',
                     'type': 'datetime-local',
-                    'id': 'fin'
+                    'id': 'fin',
                 }
 
             ),
             'cant_dias_mantencion': forms.NumberInput(
                 attrs={
                     'class': 'form-control mb-4',
-                    'id': 'dias'
+                    'id': 'dias',
                 }
             ) 
         }
+
+
+# Inline Forms Departamento
+DetalleFormSet = inlineformset_factory(
+    Departamento,
+    DetalleDpto,
+    form = DetalleForm,
+    extra = 1,
+    can_delete = False,
+    can_delete_extra = False
+)
+
+
+DetalleFormSetUpdate = inlineformset_factory(
+    Departamento,
+    DetalleDpto,
+    form = DetalleForm,
+    extra = 0,
+    can_delete = False,
+    can_delete_extra = False
+)
+
+
+ImagenFormSet = inlineformset_factory(
+    Departamento,
+    ImagenDepartamento,
+    form = ImagenForm,
+    extra = 5,
+    can_delete = False,
+    can_delete_extra = False
+)
+
+
+ImagenFormSetUpdate = inlineformset_factory(
+    Departamento,
+    ImagenDepartamento,
+    form = ImagenForm,
+    extra = 0,
+    can_delete = False,
+    can_delete_extra = False
+)
 
 
 class ReservaForm(forms.ModelForm):
@@ -252,46 +333,108 @@ class ConductorForm(forms.ModelForm):
         }
 
 
+# Transporte Inline Form
+class MarcaForm(forms.ModelForm):
 
-# Inline Forms Departamento
-DetalleFormSet = inlineformset_factory(
-    Departamento,
-    DetalleDpto,
-    form = DetalleForm,
-    extra = 1,
-    can_delete = False,
-    can_delete_extra = False
-)
+    class Meta:
+        model = Marca
+        fields = '__all__'
+        labels = {
+            'marca': 'Marca'
+        }
+        widgets = {
+            'marca': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                }
+            )
+        }
+
+class ModeloForm(forms.ModelForm):
+
+    class Meta:
+        model = Modelo
+        fields = '__all__'
+        labels = {
+            'modelo' : 'Modelo del Transporte',
+            'marca' : 'Marca del Transporte'
+        }
+        widgets = {
+            'modelo': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Ingrese El modelo del auto'
+                }
+            ),
+            'marca': forms.Select(
+                attrs={
+                    'class': 'form-control '
+                }
+            )
+        }
 
 
-DetalleFormSetUpdate = inlineformset_factory(
-    Departamento,
-    DetalleDpto,
-    form = DetalleForm,
-    extra = 0,
-    can_delete = False,
-    can_delete_extra = False
-)
+class TransporteForm(forms.ModelForm):
 
+    class Meta:
+        model = Transporte
+        fields = '__all__'
+        labels = {
+            'patente': 'Patente',
+            'tipo_transporte': 'Tipo de Transporte',
+            'annio': 'Año del Transporte',
+            'color': 'Color del Transporte',
+            'num_puertas': 'Numero de Puertas del Transporte',
+            'kmRecorridos': 'Kilometros Recorridos',
+            'Conductor': 'Conductor Asignado',
+            'modelo': 'Modelo del Transporte',
+        }
+        widgets = {
+            'patente': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Patente del Transporte'
+                }
+            ),
+            'tipo_transporte': forms.Select(
+                attrs={
+                    'class': 'form-control',
+                }
+            ),
+            'annio': forms.NumberInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'color': forms.TextInput(
+                attrs={
+                    'class': 'form-control',
+                    'placeholder': 'Color del Transporte'
+                }
+            ),
+            'num_puertas': forms.NumberInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'kmRecorridos': forms.NumberInput(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'conductor': forms.Select(
+                attrs={
+                    'class': 'form-control'
+                }
+            ),
+            'modelo': forms.Select(
+                attrs={
+                    'class': 'form-control'
+                },
+            ),
+        }
+        
 
-ImagenFormSet = inlineformset_factory(
-    Departamento,
-    ImagenDepartamento,
-    form = ImagenForm,
-    extra = 5,
-    can_delete = False,
-    can_delete_extra = False
-)
-
-
-ImagenFormSetUpdate = inlineformset_factory(
-    Departamento,
-    ImagenDepartamento,
-    form = ImagenForm,
-    extra = 0,
-    can_delete = False,
-    can_delete_extra = False
-)
 
 
 

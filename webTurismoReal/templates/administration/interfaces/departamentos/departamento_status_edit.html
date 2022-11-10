@@ -1,0 +1,43 @@
+{% load static %}
+<div class="modal-dialog modal-lg" role="document">
+  <div class="modal-content border border-2 border-warning">
+    <div class="modal-header">
+      <h3>
+        <span>
+          <i class="{{ icon }}"></i>
+        </span>
+        {{ title }}
+      </h3>
+      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
+      </button>
+    </div>
+    <form action="{% url 'administration_status_edit' object.id %}" method="POST">
+      {% csrf_token %}
+      <div class="modal-body">
+        {{ form.status.label }}
+        {{ form.status }}
+
+        <label id="inicio_label">{{ form.inicio_mantencion.label }}</label>
+        {{ form.inicio_mantencion }}
+
+        <label id="fin_label">{{ form.fin_mantencion.label }}</label>
+        {{ form.fin_mantencion }}
+
+        <label id="dias_label">{{ form.cant_dias_mantencion.label }}</label>
+        {{ form.cant_dias_mantencion }}
+
+      </div>
+
+      <div class="modal-footer d-flex justify-content-start ">
+        <button class="btn btn-success" type="submit">
+          Guardar
+        </button>
+
+        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
+          Cancelar
+        </button>
+
+      </div>
+    </form>
+  </div>
+</div>

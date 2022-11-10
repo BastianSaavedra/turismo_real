@@ -23,12 +23,41 @@
               </div>
 
               <div class="card-body">
-                {{ form }}
+                {{ form.patente.label }}
+                {{ form.patente }}
+
+                {{ form.tipo_transporte.label }}
+                {{ form.tipo_transporte }}
+                
+                {{ form.annio.label }}
+                {{ form.annio}}
+
+                {{ form.color.label }}
+                {{ form.color }}
+
+                {{ form.num_puertas.label }}
+                {{ form.num_puertas}}
+
+                {{ form.kmRecorridos.label }}
+                {{ form.kmRecorridos }}
+                
+                {{ form.modelo.label }}
+                {{ form.modelo}}
+                <p class="pt-2">No esta el modelo? 
+                  <a class="btn btn-outline-success btn-sm" href="{% url 'administration_modelo_create' %}">
+                    <i class="{{ icon }}"></i>
+                    Agregar Modelo
+                  </a>
+                </p>
+
+                {{ form.conductor.label }}
+                {{ form.conductor }}
+
+
               </div>
 
               <div class="card-footer">
                 <button type="submit" class="btn btn-success">
-
                   <i class="far fa-save"></i>
                   Guardar
                 </button>
@@ -44,8 +73,9 @@
       </div>
     </div>
   </div>
-
-
 </main>
+
 {% endblock %}
 
+{% block script %}
+{% endblock %}

@@ -108,6 +108,7 @@
                     </tbody>
                   </table>
                   <a href"#" id="add-image-button" class="btn btn-success add-images">
+                    <i class="far fa-plus"></i>
                     Añade un nuevo campo de imagen
                   </a>
                 </div>
@@ -137,8 +138,9 @@
                       {{ formss.management_form }}
                       <div id="detalles-{{ forloop.counter0 }}" class="hide_all">
                         {{ formss.id }}
+                        
                         {% for field in formss.visible_fields %}
-                          <label>{{ field.label }}</label>
+                        <label>{{ field.label }}</label>
                           {% if field.field.required %}
                           <span class="required" style="color: red;">*</span>
                           {% endif %}
@@ -161,7 +163,8 @@
 
 
             <div class="card-footer">
-              <button type="submit" class="btn btn-primary">
+              <button type="submit" class="btn btn-success">
+                <i class="far fa-save"></i>
                 Guardar
               </button>
               <button class="btn btn-secondary" onclick="javascript:history.back();">
@@ -194,45 +197,35 @@
     });
   });
 </script>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script>
-      flatpickr("input[type=datetime-local]", {
-        dateFormat: "Y-m-d",
-        minDate: "today",
-        locale : {
-          weekdays: {
-            shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
-            longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
-          }, 
-          months: {
-            shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
-            longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-          },
-        }
-      });
-    </script>
-
 <script>
-  function check() {
-    let output = document.getElementById("dias")
+  $(document).ready(function() {
+    $('#bannioSelect').change(function (e) {
+      if ($(this).val() === "SI") {
+        $('#cant_bannio').prop("disabled", false);
+      } else {
+        $('#cant_bannio').prop("disabled", true);
+      }
+    });
 
-    let startDate = new Date(document.getElementById("inicio").value);
-    let endDate = new Date(document.getElementById("fin").value);
+    $('#dormitorioSelect').change(function (e) {
+      if ($(this).val() === "SI") {
+        $('#cant_dormitorio').prop("disabled", false);
+      } else {
+        $('#cant_dormitorio').prop("disabled", true);
+      }
+    });
 
-    if (startDate.getTime() && endDate.getTime()) {
-      let timeDifference = endDate.getTime() - startDate.getTime();
+    $('#estacionamientoSelect').change(function (e) {
+      if ($(this).val() === "SI") {
+        $('#cant_estacionamiento').prop("disabled", false);
+      } else {
+        $('#cant_estacionamiento').prop("disabled", true);
+      }
+    });
 
-      let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
-      output.value =  dayDifference
-
-    } else {
-      output.value = 0;
-    }
-  };
-  document.querySelector('#inicio').addEventListener("change", check, false);
-  document.querySelector('#fin').addEventListener("change", check, false);
-
+  })
 </script>
+
+
 
 {% endblock %}

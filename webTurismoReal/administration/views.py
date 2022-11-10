@@ -1,3 +1,4 @@
+from typing import List
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render, redirect
@@ -8,12 +9,11 @@ from django.views.generic import ListView, View
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import (
     Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento,
-    Conductor
-
+    Conductor, Transporte, Modelo, Marca
     )
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
-    ReservaForm, ConductorForm
+    DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm
     )
 
 from datetime import datetime
@@ -368,4 +368,66 @@ class AdministracionConductorUpdateView(UpdateView):
         context['icon'] = 'fa-solid fa-pen-to-square'
         return context
 
+class AdministracionDptoStatusUpdateView(UpdateView):
+    model = DetalleDpto
+    form_class = DepartamentoStatusForm
+    success_url = reverse_lazy('administration_departamento')
+    template_name = 'administration/interfaces/departamentos/departamento_status_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionDptoStatusUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Status del Departamento'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
+# Transporte Views
+class AdministracionTransporteListView(ListView):
+    model = Transporte
+    template_name = 'administration/interfaces/transportes/transportes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Transportes'
+        context['object_list'] = Transporte.objects.all()
+        # context['create_url'] = reverse_lazy('administration_transporte_create')
+        return context
+
+
+class AdministracionTransporteCreateView(CreateView):
+    model = Transporte
+    form_class = TransporteForm
+    template_name = 'administration/interfaces/transportes/transporte_create_update.html'
+    success_url = reverse_lazy('administration_transporte')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTransporteCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Transporte'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
+
+
+class AdministracionModeloCreateView(CreateView):
+    model = Modelo
+    form_class = ModeloForm
+    template_name = 'administration/interfaces/transportes/modelo_create.html'
+    success_url = reverse_lazy('administration_transporte_create')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionModeloCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Modelo del Transporte'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
+
+class AdministracionMarcaCreateView(CreateView):
+    model = Marca
+    form_class = MarcaForm
+    template_name = 'administration/interfaces/transportes/marca_create.html'
+    success_url = reverse_lazy('administration_modelo_create')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionMarcaCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nueva Marca del Transporte'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
 

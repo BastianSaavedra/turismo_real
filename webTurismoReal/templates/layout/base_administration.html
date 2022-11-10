@@ -6,6 +6,7 @@
 {% url 'administration_departamento' as departamentos %}
 {% url 'administration_reserva' as reserva %}
 {% url 'administration_conductor' as conductores %}
+{% url 'administration_transporte' as transportes %}
 
 
 {% if request.user.is_admin %}
@@ -32,6 +33,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
     <link rel="shortcut icon" href="{% static 'icons/dashboard.svg' %}"/>
+    <link rel="stylesheet" href="{% static 'css/administracion_style.css' %}"/>
 
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -175,9 +177,9 @@
               </a>
             </li>
             <li>
-              <a href="#" class="nav-link px-3">
+              <a href="{{ transportes }}" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-car"></i></span>
-                <span>Vehiculos</span>
+                <span>Transportes</span>
               </a>
             </li>
           </ul>
@@ -187,10 +189,9 @@
     <!-- Sidebar end -->
 
 
-    <!-- dashbord content -->
+    <!-- content display -->
     {% block content %}
     {% endblock %}
- <!-- Bootstrap JS -->
 
      <!-- Bootstrap JS -->
     <script src="https://kit.fontawesome.com/bf278f08a6.js" crossorigin="anonymous"></script>

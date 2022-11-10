@@ -135,7 +135,6 @@ class DetalleDpto(models.Model):
     # )
     
     DPTO_STATUS = (
-        ("0", "Seleccione"),
         ("1", "Disponible"),
         ("2", "Mantencion"),
         ("3", "No Disponible")
@@ -164,7 +163,7 @@ class DetalleDpto(models.Model):
     estacionamiento = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
     cant_estacionamiento = models.PositiveIntegerField(default=0)
 
-    status = models.CharField(choices=DPTO_STATUS, max_length=13, default="0")
+    status = models.CharField(choices=DPTO_STATUS, max_length=13, default="1")
     inicio_mantencion = models.DateTimeField(default=datetime.now, blank=True)
     fin_mantencion = models.DateTimeField(default=datetime.now, blank=True)
     cant_dias_mantencion = models.IntegerField(default=0)
@@ -228,7 +227,7 @@ class Marca(models.Model):
 
 class Modelo(models.Model):
     modelo = models.CharField(max_length=50, blank=True, null=True)
-    marca = models.ForeignKey(Marca, on_delete=models.CASCADE)
+    marca = models.ForeignKey(Marca, on_delete=models.CASCADE, related_name="modelo")
     
     def __str__(self):
         return self.modelo

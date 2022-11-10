@@ -1,0 +1,59 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Transportes{% endblock %}
+{% block list_title %}{{ title }}{% endblock %}
+
+{% block columns%}
+  <tr>
+    <th class="col" style="width: 10%;">Id</th>
+    <th class="col">Tipo de Transporte</th>
+    <th class="col">Patente</th>
+    <th class="col">Año</th>
+    <th class="col">Marca / Modelo</th>
+    <th class="col">Id / Conductor Asignado</th>
+    <th style="width: 5%;">Editar</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% if object_list %}
+    {% for trans in object_list %}
+    <tr>
+      <td>{{ trans.id }}</td>
+      <td>
+        {% if trans.tipo_transporte == "1" %}
+        Taxi
+        {% elif trans.tipo_transporte == "2" %}
+        Furgoneta
+        {% elif trans.tipo_transporte == "3" %}
+        Bus
+        {% else %}
+        Otro
+        {% endif %}
+      </td>
+      <td>{{ trans.patente}}</td>
+      <td>{{ trans.annio }}</td>
+      <td>{{ trans.modelo.marca }} / {{ trans.modelo }}</td>
+      <td>{{ trans.conductor.id }} - {{ trans.conductor }} {{ trans.conductor.apellido }}</td>
+      <td>
+        <a href="#" class="btn btn-warning btn-sm" type="button">
+          <i class="bi bi-pencil"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block button_create %}
+
+<a href="{% url 'administration_transporte_create' %}" class="btn btn-success">
+  <i class="fas fa-plus"></i>
+  Agregar Transporte
+</a>
+
+{% endblock %}
+

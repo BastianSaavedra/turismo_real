@@ -4,31 +4,37 @@
 
 {% block columns %}
 <tr>
-  <th scope="col">Id</th>
-  <th scope="col">Nombre</th>
-  <th scope="col">Apellido</th>
-  <th scope="col">Edad</th>
-  <th scope="col">Años de Experiencia</th>
-  <th style="width: 5%;">Opciones</th>
+  <th scope="col" style="width: 20%;">Id</th>
+  <th scope="col" style="width: 20%;">Nombre</th>
+  <th scope="col" style="width: 20%;">Apellido</th>
+  <th scope="col" style="width: 20%;">Edad</th>
+  <th scope="col" style="width: 20%;">Años de Experiencia</th>
+  <th style="width: 5%;">Editar</th>
 </tr>
 {% endblock %}
 
 {% block rows %}
-{% for driver in object_list %}
-  <tr>
-    <td>{{ driver.id }}</td>
-    <td>{{ driver.nombre }}</td>
-    <td>{{ driver.apellido }}</td>
-    <td>{{ driver.edad }}</td>
-    <td>{{ driver.annio_experiencia }}</td>
-    <td>
-      <a href="{% url 'administration_conductor_update' driver.id %}" class="btn btn-warning btn-sm" type="button">
-        <i class="bi bi-pencil"></i>
-      </a>
-    </td>
+  {% if object_list %}
+    {% for driver in object_list %}
+      <tr>
+        <td>{{ driver.id }}</td>
+        <td>{{ driver.nombre }}</td>
+        <td>{{ driver.apellido }}</td>
+        <td>{{ driver.edad }}</td>
+        <td>{{ driver.annio_experiencia }}</td>
+        <td>
+          <a href="{% url 'administration_conductor_update' driver.id %}" class="btn btn-warning btn-sm" type="button">
+            <i class="bi bi-pencil"></i>
+          </a>
+        </td>
 
-  </tr>
-{% endfor %}
+      </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block button_create %}

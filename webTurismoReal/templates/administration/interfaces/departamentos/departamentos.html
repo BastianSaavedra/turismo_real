@@ -15,40 +15,159 @@
 {% endblock %}
 
 {% block rows %}
-  {% for dpto in object_list %}
-    <tr>
-      <td>{{ dpto.departamento.id }}</td>
-      <td>{{ dpto.departamento.titulo }}</td>
-      <td>{{ dpto.departamento.direccion }}</td>
-      <td>{{ dpto.departamento.comuna }} - {{ dpto.departamento.comuna.region }}</td>
-      <td>
-        {% if dpto.status == "1" %}
-        <span class="bg-success text-white rounded-pill px-2">
-          Disponible
-        </span>
-        {% elif dpto.status == "2"%}
-        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Cantidad de Dias en Mantencion: {{ dpto.cant_dias_mantencion }}" class="bg-warning text-white rounded-pill px-2">
-          En Mantencion
-        </span>
-        {% else %}
-        <span class="bg-secondary text-white rounded-pill px-2">
-          No Disponible
-        </span>
-        {% endif %}
-      </td>
-      <td>
-        <a href="{% url 'administration_departamento_update' dpto.departamento.id %}" class="btn btn-warning btn-sm" type="button">
-          <i class="bi bi-pencil"></i>
-        </a>
-      </td>
-    </tr>
-  {% endfor %}
+  {% if object_list %}
+    {% for dpto in object_list %}
+      <tr>
+        <td>{{ dpto.departamento.id }}</td>
+        <td>{{ dpto.departamento.titulo }}</td>
+        <td>{{ dpto.departamento.direccion }}</td>
+        <td>{{ dpto.departamento.comuna }} - {{ dpto.departamento.comuna.region }}</td>
+        <td>
+          {% if dpto.status == "1" %}
+          <span class="bg-success text-white rounded-pill px-2">
+            Disponible
+          </span>
+          {% elif dpto.status == "2"%}
+          <span data-bs-toggle="tooltip" data-bs-placement="top" title="Cantidad de Dias en Mantencion: {{ dpto.cant_dias_mantencion }}" class="bg-warning text-white rounded-pill px-2">
+            En Mantencion
+          </span>
+          {% else %}
+          <span class="bg-secondary text-white rounded-pill px-2">
+            No Disponible
+          </span>
+          {% endif %}
+        </td>
+        <td>
+          <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="editButton" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="editButton">
+            <li>
+              <a href="{% url 'administration_departamento_update' dpto.departamento.id %}" class="dropdown-item">
+                Editar registro
+              </a>
+            </li>
+            <li>
+              <button class="dropdown-item" onclick="abrir_modal_edicion('{% url 'administration_status_edit' dpto.id %}')">
+                Cambiar Estado
+              </button>
+            </li>
+          </ul>
 
+          {% comment %}
+          <a href="{% url 'administration_departamento_update' dpto.departamento.id %}" class="btn btn-warning btn-sm" type="button">
+            <i class="bi bi-pencil"></i>
+          </a>
+          {% endcomment %}
+        </td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
+
+
+  <div class="modal fade pt-5" id="edicion" role"dialog" data-bs-backdrop="static">
+
+  </div>
 {% endblock %}
+
 {% block button_create %}
 <a href="{% url 'administration_departamento_create' %}" class="btn btn-success">
   <i class="fas fa-plus"></i>
   Agregar Departamento
 </a>
 {% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  function abrir_modal_edicion(url){
+    $('#edicion').load(url, function(){
+      $(this).modal('show');
+    });
+  }
+</script> 
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script>
+      $('#edicion').on('show.bs.modal', function(){
+
+      flatpickr("input[type=datetime-local]", {
+        dateFormat: "Y-m-d",
+        minDate: "today",
+        locale : {
+          weekdays: {
+            shorthand: ['Do', 'Lu', 'Ma', 'Mi', 'Ju', 'Vi', 'Sa'],
+            longhand: ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'],
+          }, 
+          months: {
+            shorthand: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Оct', 'Nov', 'Dic'],
+            longhand: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
+          },
+        }
+      });
+      });
+    </script>
+
+<script>
+  $('#edicion').on('show.bs.modal', function check(){
+
+    let output = document.getElementById("dias")
+
+    let startDate = new Date(document.getElementById("inicio").value);
+    console.log(startDate)
+    let endDate = new Date(document.getElementById("fin").value);
+    console.log(endDate)
+
+    if (startDate.getTime() && endDate.getTime()) {
+      let timeDifference = endDate.getTime() - startDate.getTime();
+
+      let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
+      output.value =  dayDifference
+
+    } else {
+      output.value = 0;
+    }
+  document.querySelector('#inicio').addEventListener("change", check, false);
+  document.querySelector('#fin').addEventListener("change", check, false);
+  });
+
+</script>
+
+<script>
+  $('#edicion').on('show.bs.modal', function() {
+    $('#statusDpto').change(function (e) {
+      if ($(this).val() === "2" ) {
+
+        $('#inicio_label').show();
+        $('#inicio').show();
+
+        $('#fin_label').show();
+        $('#fin').show();
+
+        $('#dias_label').show();
+        $('#dias').show();
+        $('#dias').value = 0;
+
+      } else {
+
+        $('#inicio_label').hide();
+        $('#inicio').hide();
+
+        $('#fin_label').hide();
+        $('#fin').hide();
+
+        $('#dias_label').hide();
+        $('#dias').hide();
+      }
+    });
+    $('#statusDpto').trigger("change");
+  });
+</script>
+
+
+{% endblock %}
+
 

@@ -19,37 +19,43 @@
 {% endblock %}
 
 {% block rows %}
-  {% for r in object_list %}
-    <tr>
-      <td>{{ r.id }}</td>
-      <td>{{ r.check_in }}</td>
-      <td>{{ r.check_out }}</td>
-      <td>{{ r.date_joined }}</td>
-      <td>{{ r.detalle_dpto.departamento.id }}</td>
-      <td>{{ r.guest }}</td>
-      <td>{{ r.booking_id }}</td>
-      <td>${{ r.total_reserva | numberFormat }}</td>
-      <td>
-        {% if r.status == '1' %}
-        <span class="bg-success text-white rounded-pill px-2">
-          Activa
-        </span>
-        {% elif r.status == '2' %}
-        <span class="bg-danger text-white rounded-pill px-2">
-          Cancelada
-        </span>
-        {% else %}
-        Error
-        {% endif %}
-      </td>
-      <td>
-        <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
-          <i class="bi bi-pencil"></i>
-        </a>
-        
-      </td>
-    </tr>
-  {% endfor %}
+  {% if object_list %}
+    {% for r in object_list %}
+      <tr>
+        <td>{{ r.id }}</td>
+        <td>{{ r.check_in }}</td>
+        <td>{{ r.check_out }}</td>
+        <td>{{ r.date_joined }}</td>
+        <td>{{ r.detalle_dpto.departamento.id }}</td>
+        <td>{{ r.guest }}</td>
+        <td>{{ r.booking_id }}</td>
+        <td>${{ r.total_reserva | numberFormat }}</td>
+        <td>
+          {% if r.status == '1' %}
+          <span class="bg-success text-white rounded-pill px-2">
+            Activa
+          </span>
+          {% elif r.status == '2' %}
+          <span class="bg-danger text-white rounded-pill px-2">
+            Cancelada
+          </span>
+          {% else %}
+          Error
+          {% endif %}
+        </td>
+        <td>
+          <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
+            <i class="bi bi-pencil"></i>
+          </a>
+          
+        </td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
 {% endblock %}
 
 {% block footer %}
