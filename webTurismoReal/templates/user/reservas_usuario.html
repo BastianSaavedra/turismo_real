@@ -30,6 +30,9 @@
           <p>Hasta: {{ reserva.check_out }}</p>
           <p>Precio: ${{ reserva.total_reserva|numberFormat}}</p>
           <p>Codigo Reserva: {{ reserva.booking_id }}</p>
+          <p>Tour: {{ reserva.tour }}</p>
+          <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
+          <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.tipo_transporte }}</p>
         </div>
         <div class="card-footer bg-white text-end">
           <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">

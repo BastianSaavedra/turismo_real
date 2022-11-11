@@ -1,13 +1,10 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_http_methods
 from django.http import HttpResponse, HttpResponseRedirect
-# <<<<<<< HEAD
 from django.utils.functional import total_ordering
 from .models import Departamento, DetalleDpto, Reserva, Comuna, Region
-# =======
 from django.urls import reverse_lazy
-from .models import Departamento, DetalleDpto, Reserva, Comuna
-# >>>>>>> origin/branch_SebastianZuniga
+from .models import *
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -16,6 +13,7 @@ from django.views.generic import CreateView
 from .forms import Registro
 from .models import Usuario
 from django.contrib import messages
+from django.db.models import Q
 import datetime
 
 
@@ -75,12 +73,22 @@ def home_inicio(request):
 
 # @login_required(login_url='/user')
 def home_reserva_confirmacion(request, id):
-    
+    # Obtencion de los tours disponibles
+    #all_tours = Tour.objects.values_list('nombreTour','comuna', 'id').distinct().order_by().filter(tipoTour = '1' and '2' and '3')
+    all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
+    # all_transp = DetalleTP.objects.values_list('lugar_tp').filter(~Q(transporte__tipo_transporte='0'))
+    all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
     return HttpResponse(
         render(
             request,
-            'user/bookdpto.html', {'detalle_dpto': detalle_dpto}
+            'user/bookdpto.html', 
+            {
+                'detalle_dpto': detalle_dpto,
+                'all_tours':all_tours,
+                'all_transp':all_transp,
+            }
         )
     )
 
@@ -88,19 +96,24 @@ def home_reserva_confirmacion(request, id):
 # @login_required(login_url='/user')
 def home_reserva(request):
     if request.method == "POST":
-
+        #--------------------------------- SERVICIOS ---------------------------------
+        lugar_transporte = request.POST['lugar']
+        detalle_transporte = DetalleTP.objects.all().get(lugar_tp=lugar_transporte)
+        tipo_tour = request.POST['tour']
+        tour = Tour.objects.all().get(nombreTour=tipo_tour)
+        #--------------------------------- SERVICIOS ---------------------------------
+        
+        
         detalle_dpto_id = request.POST['detalledptoid']
-
         detalle_dpto = DetalleDpto.objects.all().get(id=detalle_dpto_id)
-
-            
+         
         for each_reservation in Reserva.objects.all().filter(detalle_dpto = detalle_dpto):
             if str(each_reservation.check_in) < str(request.POST['check_in']) and str(each_reservation.check_out) < str(request.POST['check_out']):
                 pass
             elif str(each_reservation.check_in) > str(request.POST['check_in']) and str(each_reservation.check_out) > str(request.POST['check_in']):
                 pass
             else:
-                messages.warning(request, "Lo siento este departamento no esta disponible para reservar")
+                messages.warning(request, "Lo sentimos este departamento no esta disponible para reservar")
                 return redirect("home_inicio")
 
         current_user = request.user
@@ -110,14 +123,40 @@ def home_reserva(request):
         reservation = Reserva()
         detalle_dpto_object = DetalleDpto.objects.all().get(id=detalle_dpto_id)
         detalle_dpto_object.status = '2'
-
         user_object = Usuario.objects.all().get(username=current_user)
         
+        #--------------------------------------Obtencion de servicios extra--------------------------------------
+        # detalle_tp_object = DetalleTP.objects.all().get(id=detalle_tp_id)
+        # detalle_tour_object = Tour.objects.all().get(id=detalle_tour_id)
+        
+        """
+        reservation.tour = request.POST.get('tourid', None)
+        reservation.detalle_tp = request.POST.get('detalletpid',None)
+        
+        """ #Lo que esta comentado en "" lo hice para evitar el error del "MultiValueDictKeyError" que provoca el id del transporte 
+        
+        #---------------------------------------------------------------------------------------------------------
+        
+        
+        
+        # Guardado de cliente y detalle departamento en bbdd 
         reservation.guest = user_object
         reservation.detalle_dpto = detalle_dpto_object
+
         reservation.huespedes = total_person
+        
+        
+        #--------------------------------------Guardado de servicios en bbdd----------------------------------------
+        reservation.detalle_tp = detalle_transporte  
+        reservation.tour = tour
+        
+        #-----------------------------------------------------------------------------------------------------------
+
+        
+        # person = total_person
 
 
+        
         # Guardado de fechas en bbdd
         reservation.check_in = request.POST['check_in']
         reservation.check_out = request.POST['check_out']
@@ -132,8 +171,9 @@ def home_reserva(request):
         # obtenemos la cantidad de dias
         days = diffdays.days
 
-        # obtenemos el precio total multiplicando los dias con el precio del dpto por noche
-        total_precio_reserva = days * reservation.detalle_dpto.precio
+        # obtenemos el precio total multiplicando los dias con el precio del dpto por noche + los costos de servicios extra
+        total_precio_reserva = (days * reservation.detalle_dpto.precio) + reservation.tour.costo + reservation.detalle_tp.costo_tp
+        # total_precio_reserva = (days * reservation.detalle_dpto.precio) + detalle_tour.costo + detalle_tp.costo_tp 
         
         # guardamos los dias en la bbdd
         reservation.cant_dias_reserva =  days
@@ -211,10 +251,10 @@ def login(request):
             messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
             return redirect("home")  
              
-        elif usuarios.is_funcionario:
-            lg(request, usuarios)
-            messages.success(request, f'Bienvenido {usuarios.username}')
-            return redirect('funcionario/check_in.html')
+        # elif usuarios.is_funcionario:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect('funcionario/check_in.html')
         
         else:
             messages.error(request, f'Datos incorrectos', extra_tags='Completa nuevamente los campos')
@@ -258,4 +298,3 @@ class RegistrarUsuario(CreateView):
             #return redirect('home')
         else:
             return render(request,self.template_name,{'form':form})
-# >>>>>>> origin/branch_SebastianZuniga

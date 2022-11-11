@@ -1,5 +1,7 @@
 {% extends "../layout/base.html" %}
+{% load static %}
 {% block content%}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}">
 <title href="{% url 'registro' %}">{% block title %}Registro de usuarios{% endblock %}</title>
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="container">
@@ -7,10 +9,11 @@
         <div class="col">
             <div class="row"> 
             <div class="col-12 col-md-8 offset-md-2"> 
-            <div class="card text-white bg-secondary mb-3">
+            <div class="card text-white bg-light mb-3">
             <div class="card-body">
-            <h2>Registro</h2>
+            <h2>Registro de usuarios</h2>
             <form method="POST">
+            <hr>
              {% csrf_token %}
                 {{form.as_p}}
                 <hr>
