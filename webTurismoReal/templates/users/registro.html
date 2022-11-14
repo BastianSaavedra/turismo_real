@@ -2,6 +2,8 @@
 {% load static %}
 {% block content%}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style3.css' %}">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-show-password/1.0.3/bootstrap-show-password.min.js"></script>
 <title href="{% url 'registro' %}">{% block title %}Registro de usuarios{% endblock %}</title>
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="container">
@@ -15,12 +17,102 @@
             <form method="POST">
             <hr>
              {% csrf_token %}
-                {{form.as_p}}
-                <hr>
-                <div class="d-grid gap-2 col-6 mx-auto">
-                    <button type="submit" class="btn btn-warning">Registrarse</button>
-                    <a href="{% url 'home' %}" type="submit" class="btn btn-danger">Cancelar</a>
+             <div class="row">
+                <div class="col-md-12">
+                  <div class="jumbotron">
+                    <label for="username">Correo Electrónico</label>
+                    {{form.correo}}
+                  </div>
                 </div>
+            </div>
+
+            <hr style="color:aliceblue ; height: 0.1px;">
+            
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                  <label for="username">Nombre de usuario</label>
+                    {{form.username}}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                    <label for="username">Nombre</label>
+                    {{form.nombre}}
+                  </div>
+                </div>
+            </div>
+
+            <hr style="color:aliceblue ; height: 0.1px;">
+
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                  <label for="username">Apellido paterno</label>
+                    {{form.ap_paterno}}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                    <label for="username">Apellido materno</label>
+                    {{form.ap_materno}}
+                  </div>
+                </div>
+            </div>
+
+            <hr style="color:aliceblue ; height: 0.1px;">
+
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                  <label for="username">RUT</label>
+                    {{form.rut}}
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                    <label for="username">Digito verificador</label>
+                    {{form.dv}}
+                  </div>
+                </div>
+            </div>
+
+            <hr style="color:aliceblue ; height: 0.1px;">
+
+            <div class="row">
+                <div class="col-md-12">
+                  <div class="jumbotron">
+                    <label for="username">Teléfono</label>
+                    {{form.telefono}}
+                  </div>
+                </div>
+            </div>
+
+            <hr style="color:aliceblue ; height: 0.1px;">
+            
+            <div class="row">
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                  <label for="username">Contraseña</label>
+                    {{form.password1}}       
+                    </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="jumbotron">
+                    <label for="username">Verificar contraseña</label>
+                    {{form.password2}}
+                  </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <div style="display: flex; justify-content: center;">
+                <a style="padding: 10px 32px; color:white; font-weight: 600;" href="{% url 'home' %}" type="submit" class="btn btn-danger">Cancelar</a>
+                <br style="margin: 10px;">
+                <button type="submit" class="btn btn-success" style="padding: 10px 32px; color:white;font-weight: 600;">Registrarse</button>   
+            </div>
+                
             </form>
         </form>
         </div>
@@ -32,5 +124,17 @@
 </div>
 </div>
 
+{% comment %}
+<script>
+    function showPassword(){
+        var x = document.getElementsById("password1");
+        if(x.type ==="password"){
+            x.type="text";
+        } else {
+            x.type="password";
+        }
+    }
+</script>
+{% endcomment %}
 
 {% endblock %}
