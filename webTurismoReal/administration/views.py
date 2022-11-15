@@ -359,6 +359,21 @@ class AdministracionClienteListView(ListView):
         )
         return context
 
+
+class AdministracionClienteReservasListView(ListView):
+    queryset = Reserva.objects.all()
+    template_name = 'administration/interfaces/clientes/reservas_por_cliente.html'
+    context_object_name = 'reservas'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['reservas_cliente'] = Reserva.objects.filter(guest = self.request.user)
+        context['title'] = 'Listado de Reservas'
+        return context
+
+    # def get_queryset(self):
+    #     return Reserva.objects.filter(guest=self.request.resolver_match.kwargs['pk'])
+
     
 
 

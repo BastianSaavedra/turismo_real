@@ -17,6 +17,7 @@ urlpatterns = [
 
     # Cliente Views
     path('cliente/list/', views.AdministracionClienteListView.as_view(), name="administration_cliente"),
+    path('cliente/reservas-list/<int:pk>', views.AdministracionClienteReservasListView.as_view(), name="administration_cliente_reservas"),
 
     # Conductor Views
     path('conductor/list/', views.AdministracionConductorListView.as_view(), name="administration_conductor"),
