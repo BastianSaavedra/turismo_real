@@ -24,6 +24,37 @@ class DepartamentoAdmin(admin.ModelAdmin):
     inlines = [
         ImagenDepartamentoAdmin
     ]
+    
+class ConductorAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nombre', 'apellido','edad','annio_experiencia')
+    ordering = ('id', 'nombre')
+    search_fields = ('id','nombre')
+
+class ModeloAdmin(admin.ModelAdmin):
+    list_display = ('id', 'modelo', 'marca')
+    ordering = ('id', 'marca')
+    search_fields = ('id','modelo', 'marca')
+    
+class TransporteAdmin(admin.ModelAdmin):
+    list_display = ('id', 'patente', 'tipo_transporte', 'modelo','conductor')
+    ordering = ('id', 'tipo_transporte')
+    search_fields = ('id','patente', 'tipo_transporte', 'conductor')
+    
+class DetalleTPAdmin(admin.ModelAdmin):
+    list_display = ('id', 'lugar_tp', 'costo_tp', 'transporte')
+    ordering = ('id', 'lugar_tp')
+    search_fields = ('id','lugar_tp', 'transporte')
+ 
+class TourAdmin(admin.ModelAdmin):
+    list_display = ('id', 'nombreTour', 'tipoTour', 'comuna')
+    ordering = ('id', 'nombreTour')
+    search_fields = ('id','nombreTour', 'tipoTour', 'comuna')   
+    
+class ReservaAdmin(admin.ModelAdmin):
+    list_display = ('id', 'guest', 'booking_id','check_in','check_out','status','tour','detalle_tp')
+    ordering = ('id', 'guest')
+    search_fields = ('id','guest','booking_id','status')
+
 
 # class DepartamentoAdmin(admin.ModelAdmin):
 #     list_display = ('id', 'direccion', 'precio')
@@ -59,10 +90,10 @@ admin.site.register(Usuario, UsuariosAdmin)
 admin.site.register(DetalleDpto)
 admin.site.register(Comuna, ComunaAdmin)
 admin.site.register(Region, RegionAdmin)
-admin.site.register(Reserva)
+admin.site.register(Reserva, ReservaAdmin)
 admin.site.register(Marca)
-admin.site.register(Modelo)
-admin.site.register(Conductor)
-admin.site.register(Transporte)
-admin.site.register(DetalleTP)
-admin.site.register(Tour)
+admin.site.register(Modelo, ModeloAdmin)
+admin.site.register(Conductor, ConductorAdmin)
+admin.site.register(Transporte, TransporteAdmin)
+admin.site.register(DetalleTP, DetalleTPAdmin)
+admin.site.register(Tour, TourAdmin)

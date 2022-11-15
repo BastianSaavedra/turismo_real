@@ -1,9 +1,8 @@
 from datetime import MINYEAR
 from django import forms
 from django.forms import CharField, EmailField, TextInput
-from .models import Usuario
-
-from home.models import Usuario
+from .models import *
+from home.models import Usuario, Reserva
 
 class Registro(forms.ModelForm):
     

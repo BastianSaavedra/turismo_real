@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login as lg
-from django.views.generic import CreateView
+from django.views.generic import CreateView, UpdateView
 from .forms import Registro
 from .models import Usuario
 from django.contrib import messages
@@ -125,20 +125,7 @@ def home_reserva(request):
         detalle_dpto_object.status = '2'
         user_object = Usuario.objects.all().get(username=current_user)
         
-        #--------------------------------------Obtencion de servicios extra--------------------------------------
-        # detalle_tp_object = DetalleTP.objects.all().get(id=detalle_tp_id)
-        # detalle_tour_object = Tour.objects.all().get(id=detalle_tour_id)
-        
-        """
-        reservation.tour = request.POST.get('tourid', None)
-        reservation.detalle_tp = request.POST.get('detalletpid',None)
-        
-        """ #Lo que esta comentado en "" lo hice para evitar el error del "MultiValueDictKeyError" que provoca el id del transporte 
-        
-        #---------------------------------------------------------------------------------------------------------
-        
-        
-        
+                
         # Guardado de cliente y detalle departamento en bbdd 
         reservation.guest = user_object
         reservation.detalle_dpto = detalle_dpto_object
@@ -217,8 +204,68 @@ def cancelar_reserva(request, id):
         extra_tags="Tu reserva ha sido cancelada"
     )
     return redirect("home_reservas_usuario")
+
+
+@require_http_methods(['POST'])
+def cancelar_tour(request, id):
+    Reserva.objects.filter(id=id).update(tour=None)
+    messages.success(
+        request,
+        "Tour Cancelado",
+        extra_tags="El servicio ha sido eliminado de tu reserva"
+    )
+    return redirect("home_reservas_usuario")
     
+
+@require_http_methods(['POST'])
+def cancelar_transporte(request, id):
+    Reserva.objects.filter(id=id).update(detalle_tp=None)
+    messages.success(
+        request,
+        "Transporte Cancelado",
+        extra_tags="El servicio ha sido eliminado de tu reserva"
+    )
+    return redirect("home_reservas_usuario")
+
+
+def detalle_reserva(request, id):
+    all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
+    all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+    user = Usuario.objects.all().get(id=request.user.id)
+    reservas = Reserva.objects.filter(id=id)
+    return HttpResponse(
+        render(
+            request,
+            'user/services.html',
+            { 'reservas': reservas,
+              'all_tours':all_tours,
+              'all_transp':all_transp,}
+        )
+    )
+  
+ 
+@require_http_methods(['POST'])
+def agregar_servicios(request,id):
+    reservation = Reserva()
     
+    lugar_transporte = request.POST['lugar']
+    detalle_tp = DetalleTP.objects.all().get(lugar_tp=lugar_transporte)
+    tipo_tour = request.POST['tour']
+    tour = Tour.objects.all().get(nombreTour=tipo_tour)
+    
+    reservation.tour = tour
+    reservation.detalle_tp = detalle_tp   
+    
+    Reserva.objects.filter(id=id).update(tour=reservation.tour)
+    Reserva.objects.filter(id=id).update(detalle_tp=reservation.detalle_tp)
+    messages.success(
+                    request,
+                    "Reserva actualizada",
+                    extra_tags="Tu reserva ha sido actualizada correctamente"
+                     )
+
+    return redirect("home_reservas_usuario")
+
 
 def login(request):     
     if request.user.is_authenticated:
@@ -228,6 +275,12 @@ def login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         usuarios = authenticate(username=username, password=password)
+        
+        if usuarios: 
+            lg(request,usuarios)
+            messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+            return redirect("home")  
+             
         # if usuarios.is_admin:
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
@@ -244,6 +297,7 @@ def login(request):
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect("home_inicio")
+<<<<<<< HEAD
 
 
         if usuarios: 
@@ -252,6 +306,9 @@ def login(request):
             return redirect("home_inicio")  
              
         # if usuarios.is_funcionario:
+=======
+        # elif usuarios.is_funcionario:
+>>>>>>> origin/branch_SebastianZuniga
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect('funcionario/inicio.html')

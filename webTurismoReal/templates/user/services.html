@@ -1,0 +1,205 @@
+{% extends '../layout/base.html' %}
+{% block title %}Confirmando cambios{% endblock %}
+{% block content %}
+{% load static %}
+{% load tags %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style4.css' %}">
+
+{%comment%}
+<form action="home_reservas_usuario" method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+</form>
+{%endcomment%}
+
+<div class="container">
+  {% for reserva in reservas %}
+  <hr style="color:aliceblue ; height: 0.1px;">
+  <h2 style="font-weight:600;">Detalles de la reserva</h2>
+  <hr style="color:aliceblue ; height: 0.1px;">
+      {%comment%}
+      <form action="/user/mis-reservas/reserva/edit/" method="POST"></form>
+      {%endcomment%}
+      <form action="{% url 'agregar_servicios' reserva.id %}" method="POST">
+      
+      {% csrf_token %}  
+       <div class="row">
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="username" id="lbl1">Servicio Turistico <label style="color:red; font-size: 13px;">*Costo extra</label></label>
+            <select class="btn btn-success btn-md" name="tour" id="tour">
+              <option>Seleccionar</option>
+                  {% for tour in all_tours %}
+                    <option placeholder=""value="{{ tour.nombreTour }}">{{ tour }}</option>  
+                  {% endfor %}
+            </select>
+          </div> 
+        </div>
+
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
+            <select class="btn btn-success btn-md" name="lugar" id="lugar">
+              <option>Seleccionar</option>
+                  {% for ts in all_transp %}
+                    <option value="{{ ts.lugar_tp }}">{{ ts.lugar_tp }}</option>  
+                  {% endfor %}
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <hr style="color:aliceblue ; height: 0.1px;">
+      
+        <div class="row">
+          <div class="col-md-6">
+            <div class="jumbotron">
+            <label for="username">Departamento</label>
+            <input 
+              type="text" 
+              class="form-control" 
+              id="departamento" 
+              name="departamento" 
+              disabled 
+              value="{{ reserva.detalle_dpto.departamento.titulo }}" />
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="jumbotron">
+              <label for="username">Ubicacion</label>
+              <input 
+                  type="text" 
+                  class="form-control" 
+                  id="ubicacion" 
+                  name="ubicacion" 
+                  disabled 
+                  value="{{ reserva.detalle_dpto.departamento.direccion }} - {{ reserva.detalle_dpto.departamento.comuna }}" 
+                />
+            </div>
+          </div>
+        </div>
+
+        <hr style="color:aliceblue ; height: 0.1px;">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="person">Nombre del Usuario</label>
+            <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required="true"
+                disabled
+                value="{{ request.user }}"
+            />
+         </div>
+        </div>
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="person">Correo</label>
+            <input
+                type="text"
+                class="form-control"
+                id="username"
+                name="username"
+                required="true"
+                disabled
+                value="{{ user.correo }}"
+            />
+          </div>
+        </div>
+      </div>
+
+      <hr  style="color:aliceblue ; height: 0.1px;">
+
+      <div class="row">
+        <div class="col-12 col-md-6 offset-md-3">
+          <div class="jumbotron">
+            <label for="" class="col-12 col-md-6 offset-md-5">Huéspedes</label>
+            <div class="input-group">
+            <input 
+                type="text" 
+                id="person"
+                name="capacidad" 
+                class="form-control input-number text-center rounded-pill border-secondary" 
+                value="1" 
+                min="1" 
+                max="{{ reserva.detalle_dpto.capacidad }}"
+                disabled="disabled"
+              />
+        </div>
+      </div>
+      </div>
+      </div>
+
+    <hr style="color:aliceblue ; height: 0.1px;">
+
+      <div class="row">
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="password2">Check-in</label>
+            <input 
+              class="form-control mr-sm-2 bg-blank rounded-pill border-dark text-center text-dark" 
+              type="datetime-local" 
+              id="cin"
+              name="check_in"
+              disabled="disabled"
+              required="true"
+              value ="{{reserva.check_in}}"
+            />
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="jumbotron">
+            <label for="password2">Check-out</label>
+            <input 
+              class="form-control mr-sm-2 bg-blank rounded-pill border-dark text-center text-dark"
+              type="datetime-local" 
+              id="cout"
+              name="check_out"
+              disabled="disabled"
+              required="True"
+              value ="{{reserva.check_out}}"
+              />
+        </div>
+      </div>
+      </div>
+
+      <hr style="color:aliceblue ; height: 0.1px;">
+
+
+      <div class="form-group">
+        <label for="password2">Precio</label>
+        <input
+            type="text"
+            class="form-control"
+            id="total_reserva"
+            name="total_reseva"
+            placeholder="0"
+            disabled
+        />
+      </div>
+      
+      <hr>
+      <div style="display: flex; justify-content: center;">
+        <a style="padding: 10px 32px;" href="{% url 'home_reservas_usuario' %}" type="submit" class="btn btn-danger">Cancelar</a>
+        <br style="margin: 10px;">
+        {%comment%}
+        <a href="{% url 'agregar_servicios' reserva.id %}"><button style="padding: 10px 32px;" class="btn btn-primary">Actualizar reserva</button></a>
+        {%endcomment%}
+        <button type="submit" class="btn btn-primary">Actualizar reserva</button>   
+        <input type="hidden" name="reservaid" value="{{ reserva.detalle_dpto.id }}" />  
+      </div>
+      
+      <hr style="color:aliceblue ; height: 0.1px;">
+      {%comment%}
+      {%endcomment%}  
+    </form> 
+    
+  </div>
+  {% endfor %}
+</div>
+</div>
+{% endblock %} 

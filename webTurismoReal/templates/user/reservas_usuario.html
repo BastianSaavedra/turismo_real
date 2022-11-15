@@ -2,38 +2,66 @@
 {% load static %}
 {% load tags %}
 {% block title %}Mis Reservas {% endblock %}
-
-
-
 {% block content %}
 <hr style="color:aliceblue ; height: 0.1px;">
-<h2 class="text-center" 
+<h2 class="text-center " 
     style="@import url('https://fonts.googleapis.com/css?family=Poppins');
            font-family: 'Poppins' ;
            font-weight: 400;
            text-transform: uppercase;">
   Mis Reservas
 </h2>
+<hr style="color:aliceblue ; height: 0.1px;">
 <div class="container px-0 mx-auto">
   {% for reserva in reservas %}
   {% if reserva.status == '1' %}
-  <div class="card mb-3" style="background-color: rgb(255, 255, 255); max-width: 600px;">
-    <div class="row g-0">
+  <div class="col-12 col-md-12 offset-md-2" style="background-color: rgb(255, 255, 255); max-width: 1000px; box-shadow: 5px 9px 10px #000;">
+    <div class="row">
       <div class="col-md-4">
-        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="330" width="190">
+        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="360" width="340">
       </div>
       <div class="col-md-8">
         <div class="card-body">
-          <h5>{{ reserva.detalle_dpto.departamento.titulo }}</h5>
+          <h5 style="font-weight:600">{{ reserva.detalle_dpto.departamento.titulo }} - {{reserva.detalle_dpto.departamento.comuna}}</h5>
           <p>Usuario: {{ reserva.guest }}</p>
-          <p>De: {{ reserva.check_in }}</p>
+          <p>Desde: {{ reserva.check_in }}</p>
           <p>Hasta: {{ reserva.check_out }}</p>
           <p>Precio: ${{ reserva.total_reserva|numberFormat}}</p>
           <p>Codigo Reserva: {{ reserva.booking_id }}</p>
-          <p>Tour: {{ reserva.tour }}</p>
-          <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
-          <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.tipo_transporte }}</p>
+
+          <!---------------------------------------------------Seccion de servicios extra--------------------------------------------------------->
+          {% if reserva.tour %}
+          <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
+            {% csrf_token %}
+            <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
+          </form>
+            <p>Tour: {{ reserva.tour }}</p>
+          {% comment %}
+          {% else %}
+            <select class="btn btn-success btn-md" style="float: center;width: 160px;" name="tour" id="tour">
+              <option>Añadir tour</option>
+                  {% for tour in all_tours %}
+                    <option value="{{ tour.nombreTour }}">{{ tour.nombreTour }}</option>  
+                  {% endfor %}
+            </select>
+          {% endcomment %}
+          {% endif %}
+          
+          {% if reserva.detalle_tp %}
+          <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
+            {% csrf_token %}
+            <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
+            <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
+            <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
+          </form>
+
+          {% else %}
+            <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 180px;">Añadir servicio extra</button></a>
+          {% endif %}
+          <!--------------------------------------------------------------------------------------------------------------------------------------->
+
         </div>
+
         <div class="card-footer bg-white text-end">
           <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
             {% csrf_token %}
@@ -65,8 +93,50 @@
         return false;
     }
   </script>
+
+  <script>
+    function cancelarTour(form) {
+      Swal.fire({
+        "title": "Estas seguro de cancelar el tour?",
+        "icon": "question",
+        "showCancelButton": true,
+        "cancelButtonText": "No, volver a mis reservas",
+        "confirmButtonText": "Si, Cancelar tour",
+        "dangerMode": true,
+      })
+        .then(function(result) {
+          if(result.isConfirmed) {
+            form.submit()
+            Swal.fire('Cancelado!', 'El servicio turistico ha sido cancelado', 'success')
+          } 
+        })
+        return false;
+    }
+  </script>
+
+  <script>
+    function cancelarTransporte(form) {
+      Swal.fire({
+        "title": "Estas seguro de cancelar el transporte?",
+        "icon": "question",
+        "showCancelButton": true,
+        "cancelButtonText": "No, volver a mis reservas",
+        "confirmButtonText": "Si, Cancelar el transporte",
+        "dangerMode": true,
+      })
+        .then(function(result) {
+          if(result.isConfirmed) {
+            form.submit()
+            Swal.fire('Cancelado!', 'El servicio de transporte ha sido cancelado', 'success')
+          } 
+        })
+        return false;
+    }
+  </script>
+  <hr style="color:aliceblue ; height: 10px;">
   {% endfor %}
 </div>
+
 
 {% endblock %}
 
