@@ -1,0 +1,40 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Clientes{% endblock %}
+{% block list_title %}{{ title }}{% endblock %}
+{% load tags %}
+
+{% block columns %}
+  <tr>
+    <th scope="col">Id</th>
+    <th scope="col">Nombre de Usuario</th>
+    <th scope="col">Nombre / Apellido Paterno y Materno</th>
+    <th scope="col">rut</th>
+    <th scope="col">telefono</th>
+    <th scope="col">Detalle</th>
+    <th>Reservas</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% if object_list %}
+    {% for user in object_list %}
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.nombre }} {{ user.ap_paterno }} {{ user.ap_materno }}</td>
+        <td>{{ user.rut }}-{{ user.dv }}</td>
+        <td>+569 {{ user.telefono }}</td>
+        <td>
+          <a href="#" type="button" class="btn btn-primary btn-sm">
+            <i class="fas fa-search"></i>
+            Ver reservas
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
+{% endblock %}

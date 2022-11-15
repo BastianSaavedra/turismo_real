@@ -68,18 +68,4 @@
 </main>
 {% endblock %}
 
-{% block script %}
-<script>
-  $(document).ready(function() {
-    $('#example').DataTable({
-      "bDestroy": true,
-      "autoWidth": false,
-      "language": {
-        "url": "{% static 'js/es-CL.json' %}"
-      }
-    })
-  })
-</script>
-
-{% endblock %}
 

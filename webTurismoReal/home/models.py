@@ -238,6 +238,12 @@ class Modelo(models.Model):
         verbose_name_plural = 'Modelos'
         
 class Transporte(models.Model):
+
+
+    TRANSPORTE_STATUS = (
+        ('1', 'Activo'),
+        ('2', 'Inactivo')
+    )
     
     TIPOS_TRANSPORTE = (
         ("0", "Seleccione"),
@@ -254,6 +260,7 @@ class Transporte(models.Model):
     kmRecorridos = models.PositiveIntegerField(default=0, blank=True, null=True)
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
     conductor = models.ForeignKey(Conductor, on_delete=models.CASCADE, related_name="transporte")
+    status = models.CharField(choices=TRANSPORTE_STATUS, max_length=12, default="1")
     
     def __str__(self):
         return self.patente

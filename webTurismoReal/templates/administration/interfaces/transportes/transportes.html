@@ -4,13 +4,14 @@
 
 {% block columns%}
   <tr>
-    <th class="col" style="width: 10%;">Id</th>
-    <th class="col">Tipo de Transporte</th>
-    <th class="col">Patente</th>
-    <th class="col">Año</th>
-    <th class="col">Marca / Modelo</th>
-    <th class="col">Id / Conductor Asignado</th>
-    <th style="width: 5%;">Editar</th>
+    <th scope="col" style="width: 10%;">Id</th>
+    <th scope="col">Tipo de Transporte</th>
+    <th scope="col">Patente</th>
+    <th scope="col">Año</th>
+    <th scope="col">Marca / Modelo</th>
+    <th scope="col">Id / Conductor Asignado</th>
+    <th scope="col">Estado</th>
+    <th scope="col" style="width: 5%;">Editar</th>
   </tr>
 {% endblock %}
 
@@ -35,9 +36,32 @@
       <td>{{ trans.modelo.marca }} / {{ trans.modelo }}</td>
       <td>{{ trans.conductor.id }} - {{ trans.conductor }} {{ trans.conductor.apellido }}</td>
       <td>
-        <a href="#" class="btn btn-warning btn-sm" type="button">
+        {% if trans.status == "1" %}
+        <span class="bg-success text-white rounded-pill px-2">
+          Activo
+        </span>
+        {% else %}
+        <span class="bg-secondary text-white rounded-pill px-2">
+          Inactivo
+        </span>
+        {% endif %}
+      </td>
+      <td>
+        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="editButton" data-bs-toggle="dropdown" aria-expanded="false">
           <i class="bi bi-pencil"></i>
-        </a>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="editButton">
+          <li>
+            <a href="{% url 'administration_transporte_update' trans.id %}" class="dropdown-item">
+              Editar registro
+            </a>
+          </li>
+          <li>
+            <button class="dropdown-item" onclick="abrir_modal_edicion('{% url 'administration_transporte_status_edit' trans.id %}')">
+              Cambiar Estado
+            </button>
+          </li>
+        </ul>
       </td>
     </tr>
     {% endfor %}
@@ -46,14 +70,25 @@
       No hay Datos para mostrar
     </div>
   {% endif %}
+  <div class="modal fade pt-5" id="edicion" role="dialog" data-bs-backdrop="static">
+
+  </div>
 {% endblock %}
 
-{% block button_create %}
 
+{% block button_create %}
 <a href="{% url 'administration_transporte_create' %}" class="btn btn-success">
   <i class="fas fa-plus"></i>
   Agregar Transporte
 </a>
-
 {% endblock %}
 
+{% block script %}
+<script type="text/javascript">
+  function abrir_modal_edicion(url){
+    $('#edicion').load(url, function(){
+      $(this).modal('show');
+    });
+  }
+</script> 
+{% endblock %}

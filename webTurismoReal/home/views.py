@@ -249,13 +249,20 @@ def login(request):
         if usuarios: 
             lg(request,usuarios)
             messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
-            return redirect("home")  
+            return redirect("home_inicio")  
              
-        # elif usuarios.is_funcionario:
+        # if usuarios.is_funcionario:
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect('funcionario/check_in.html')
-        
+        #     return redirect('funcionario/inicio.html')
+        # elif usuarios.is_admin:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect('administration/dashboard.html')
+        # elif usuarios.cliente:
+        #     lg(request, usuarios)
+        #     messages.success(request, f'Bienvenido {usuarios.username}')
+        #     return redirect("home_inicio")
         else:
             messages.error(request, f'Datos incorrectos', extra_tags='Completa nuevamente los campos')
     return render(request, 'users/login.html',{})

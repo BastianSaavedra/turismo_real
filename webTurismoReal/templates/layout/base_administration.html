@@ -7,6 +7,10 @@
 {% url 'administration_reserva' as reserva %}
 {% url 'administration_conductor' as conductores %}
 {% url 'administration_transporte' as transportes %}
+{% url 'administration_cliente' as clientes %}
+
+<!-- Servicios extras -->
+{% url 'administration_tour' as tours %}
 
 
 {% if request.user.is_admin %}
@@ -29,11 +33,14 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css"
     />
+    
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link rel="stylesheet" type="text/css" href="https://npmcdn.com/flatpickr/dist/themes/material_orange.css">
     <link rel="shortcut icon" href="{% static 'icons/dashboard.svg' %}"/>
+    {% comment %}
     <link rel="stylesheet" href="{% static 'css/administracion_style.css' %}"/>
+    {% endcomment %}
 
 
     <link rel="stylesheet" href="{% static 'css/style.css' %}" />
@@ -134,7 +141,7 @@
                 <span>Dashboard</span>
               </a>
             </li>
-            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+            <li class="my-4"><hr class="dropdown-divider" /></li>
             <li>
               <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
                Componentes
@@ -158,13 +165,13 @@
             </li>
 
             <li>
-              <a href="#" class="nav-link px-3">
+              <a href="{{ clientes }}" class="nav-link px-3">
                 <span class="me-2"><i class="bi bi-people-fill"></i></span>
                 <span>Clientes</span>
               </a>
             </li>
 
-            <li class="my-4"><hr class="dropdown-divider bg-light" /></li>
+            <li class="my-4"><hr class="dropdown-divider " /></li>
             <li>
               <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
                 Transporte
@@ -174,6 +181,24 @@
               <a href="{{ conductores }}" class="nav-link px-3">
                 <span class="me-2"><i class="fas fa-id-card"></i></span>
                 <span>Conductores</span>
+              </a>
+            </li>
+            <li>
+              <a href="{{ transportes }}" class="nav-link px-3">
+                <span class="me-2"><i class="fas fa-car"></i></span>
+                <span>Transportes</span>
+              </a>
+            </li>
+            <li class="my-4"><hr class="dropdown-divider " /></li>
+            <li>
+              <div class="text-muted small fw-bold text-uppercase px-3 mb-3">
+                Servicios
+              </div>
+            </li>
+            <li>
+              <a href="{{ tours }}" class="nav-link px-3">
+                <span class="me-2"><i class="far fa-map"></i></span>
+                <span>Tours</span>
               </a>
             </li>
             <li>
@@ -197,11 +222,26 @@
     <script src="https://kit.fontawesome.com/bf278f08a6.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 
+
+   
+
     <script src="{% static 'js/jquery-3.5.1.js' %}"></script>
     <!-- <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script> -->
     <script src="{% static 'js/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'js/dataTables.bootstrap5.min.js' %}"></script>
     <script src="{% static 'js/script.js' %}"></script>
+    <script>
+  $(document).ready(function() {
+    $('#example').DataTable({
+      "bDestroy": true,
+      "autoWidth": false,
+      "language": {
+        "url": "{% static 'js/es-CL.json' %}"
+      }
+    })
+  })
+</script><script src="{% static 'js/es-CL.json' %}"></script>
+    
     {% block script %}{% endblock %}
   </body>
 </html>

@@ -1,3 +1,4 @@
+from secrets import token_urlsafe
 from typing import List
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
@@ -9,11 +10,12 @@ from django.views.generic import ListView, View
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import (
     Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento,
-    Conductor, Transporte, Modelo, Marca
+    Conductor, Transporte, Modelo, Marca, Tour, Usuario
     )
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
-    DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm
+    DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm,
+    TransporteStatusForm, TourForm
     )
 
 from datetime import datetime
@@ -272,6 +274,20 @@ class AdministracionDepartamentoUpdateView(DepartamentoInline, UpdateView):
             )
         }
 
+
+class AdministracionDptoStatusUpdateView(UpdateView):
+    model = DetalleDpto
+    form_class = DepartamentoStatusForm
+    success_url = reverse_lazy('administration_departamento')
+    template_name = 'administration/interfaces/departamentos/departamento_status_edit.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionDptoStatusUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Estado del Departamento'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
 def delete_imagen(request, pk):
     try:
         imagen = ImagenDepartamento.objects.get(id=pk)
@@ -329,6 +345,22 @@ class AdministracionReservaUpdateView(UpdateView):
         context['object_list'] = Reserva.objects.all()
         return context
 
+## Cliente Views
+class AdministracionClienteListView(ListView):
+    model = Usuario
+    template_name = 'administration/interfaces/clientes/clientes.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de clientes'
+        context['object_list'] = Usuario.objects.all().filter(
+            usuario_cliente__gte = True, 
+            usuario_superAdministrador = False
+        )
+        return context
+
+    
+
 
 # Conductor Views
 class AdministracionConductorListView(ListView):
@@ -349,8 +381,13 @@ class AdministracionConductorCreateView(CreateView):
     template_name = 'administration/interfaces/conductores/conductor_create_update.html'
     success_url = reverse_lazy('administration_conductor')
 
+    # def get_context_data(self, **kwargs):
+    #     context = super(AdministracionConductorCreateView, self).get_context_data(**kwargs)
+    #     context['title'] = 'Agregando Nuevo Conductor'
+    #     context['icon'] = 'fa-solid fa-plus'
+    #     return context
     def get_context_data(self, **kwargs):
-        context = super(AdministracionConductorCreateView, self).get_context_data(**kwargs)
+        context = super().get_context_data(**kwargs)
         context['title'] = 'Agregando Nuevo Conductor'
         context['icon'] = 'fa-solid fa-plus'
         return context
@@ -368,17 +405,6 @@ class AdministracionConductorUpdateView(UpdateView):
         context['icon'] = 'fa-solid fa-pen-to-square'
         return context
 
-class AdministracionDptoStatusUpdateView(UpdateView):
-    model = DetalleDpto
-    form_class = DepartamentoStatusForm
-    success_url = reverse_lazy('administration_departamento')
-    template_name = 'administration/interfaces/departamentos/departamento_status_edit.html'
-
-    def get_context_data(self, **kwargs):
-        context = super(AdministracionDptoStatusUpdateView, self).get_context_data(**kwargs)
-        context['title'] = 'Editando Status del Departamento'
-        context['icon'] = 'fa-solid fa-pen-to-square'
-        return context
 
 
 # Transporte Views
@@ -407,17 +433,45 @@ class AdministracionTransporteCreateView(CreateView):
         return context
 
 
+class AdministracionTransporteUpdateView(UpdateView):
+    model = Transporte
+    form_class = TransporteForm
+    template_name = 'administration/interfaces/transportes/transporte_create_update.html'
+    success_url = reverse_lazy('administration_transporte')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTransporteUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Transporte'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
+class AdministracionTransporteStatusEdit(UpdateView):
+    model = Transporte
+    form_class = TransporteStatusForm
+    template_name = 'administration/interfaces/transportes/transporte_status_edit.html'
+    success_url = reverse_lazy('administration_transporte')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTransporteStatusEdit, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Estado del Transporte'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
 class AdministracionModeloCreateView(CreateView):
     model = Modelo
     form_class = ModeloForm
     template_name = 'administration/interfaces/transportes/modelo_create.html'
     success_url = reverse_lazy('administration_transporte_create')
 
+
     def get_context_data(self, **kwargs):
         context = super(AdministracionModeloCreateView, self).get_context_data(**kwargs)
         context['title'] = 'Agregando Nuevo Modelo del Transporte'
         context['icon'] = 'fa-solid fa-plus'
         return context
+
 
 class AdministracionMarcaCreateView(CreateView):
     model = Marca
@@ -430,4 +484,43 @@ class AdministracionMarcaCreateView(CreateView):
         context['title'] = 'Agregando Nueva Marca del Transporte'
         context['icon'] = 'fa-solid fa-plus'
         return context
+
+## Servicios
+class AdministracionTourListView(ListView):
+    model = Tour
+    template_name = 'administration/interfaces/servicios_extras/tours.html'
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Tours'
+        context['object_list'] = Tour.objects.all()
+        return context
+
+
+class AdministracionTourCreateView(CreateView):
+    model = Tour
+    form_class = TourForm
+    template_name = 'administration/interfaces/servicios_extras/tour_create_update.html'
+    success_url = reverse_lazy('administration_tour')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTourCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Servicio Extra'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
+
+
+class AdministracionTourUpdateView(UpdateView):
+    model = Tour
+    form_class = TourForm
+    template_name = 'administration/interfaces/servicios_extras/tour_create_update.html'
+    success_url = reverse_lazy('administration_tour')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTourUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Servicio Extra'
+        context['icon'] = 'fa-solid fa-plus'
+        return context
+
+
 

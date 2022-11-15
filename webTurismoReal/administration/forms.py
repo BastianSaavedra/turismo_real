@@ -4,7 +4,7 @@ from django.contrib.admin.options import widgets
 from django.forms.models import inlineformset_factory, modelformset_factory
 from home.models import (
     Departamento, DetalleDpto, ImagenDepartamento, Reserva, Conductor,
-    Transporte, Marca, Modelo
+    Transporte, Marca, Modelo, Tour
     )
 
 
@@ -22,7 +22,10 @@ class DepartamentoForm(forms.ModelForm):
                 attrs={'class':'form-control', 'placeholder': 'Ingresar direccion del departamento'}
             ),
             'comuna': forms.Select(
-                attrs={'class':'form-control select-search'}
+                attrs={
+                    'class':'form-control', 
+                    'id': 'comunas',
+                }
             ),
             'descripcion': forms.Textarea(
                 attrs={'class': 'form-control', 'placeholder': 'Agrega una descripcion del departamento'}
@@ -368,7 +371,8 @@ class ModeloForm(forms.ModelForm):
             ),
             'marca': forms.Select(
                 attrs={
-                    'class': 'form-control '
+                    'class': 'form-control',
+                    'id': 'marcas'
                 }
             )
         }
@@ -378,7 +382,11 @@ class TransporteForm(forms.ModelForm):
 
     class Meta:
         model = Transporte
-        fields = '__all__'
+        fields = (
+            'patente', 'tipo_transporte', 'annio',
+            'color', 'num_puertas', 'kmRecorridos',
+            'conductor', 'modelo'
+        )
         labels = {
             'patente': 'Patente',
             'tipo_transporte': 'Tipo de Transporte',
@@ -386,7 +394,7 @@ class TransporteForm(forms.ModelForm):
             'color': 'Color del Transporte',
             'num_puertas': 'Numero de Puertas del Transporte',
             'kmRecorridos': 'Kilometros Recorridos',
-            'Conductor': 'Conductor Asignado',
+            'conductor': 'Conductor Asignado',
             'modelo': 'Modelo del Transporte',
         }
         widgets = {
@@ -399,6 +407,7 @@ class TransporteForm(forms.ModelForm):
             'tipo_transporte': forms.Select(
                 attrs={
                     'class': 'form-control',
+                    'id': 'transporte'
                 }
             ),
             'annio': forms.NumberInput(
@@ -414,7 +423,7 @@ class TransporteForm(forms.ModelForm):
             ),
             'num_puertas': forms.NumberInput(
                 attrs={
-                    'class': 'form-control'
+                    'class': 'form-control',
                 }
             ),
             'kmRecorridos': forms.NumberInput(
@@ -424,17 +433,90 @@ class TransporteForm(forms.ModelForm):
             ),
             'conductor': forms.Select(
                 attrs={
-                    'class': 'form-control'
+                    'class': 'form-control',
+                    'id': 'conductores'
                 }
             ),
             'modelo': forms.Select(
                 attrs={
-                    'class': 'form-control'
+                    'class': 'form-control',
+                    'id': 'modelos'
                 },
             ),
         }
         
 
+class TransporteStatusForm(forms.ModelForm):
 
+    class Meta:
+        model = Transporte
+        fields = ('status',)
+        labels = {
+            'status': 'Estado del Transporte'
+        }
+        widgets = {
+            'status': forms.Select(
+                attrs = {
+                    'class': 'form-control select-search mb-4',
+                    'name': 'statusTransporte',
+                    'id': 'statusTransporte'
+
+                }
+            )
+        }
+
+
+class TourForm(forms.ModelForm):
+
+    class Meta:
+        model = Tour
+        fields = '__all__'
+        labels = {
+            'tipoTour': 'Tipo de Tour',
+            'nombreTour': 'Nombre del Tour',
+            'horario_in': 'Horario Inicio',
+            'horario_fin': 'Horario Termino',
+            'costo': 'Costo del Tour',
+            'comuna': 'Comuna donde se hará el Tour',
+        }
+        widgets = {
+            'tipoTour': forms.Select(
+                attrs = {
+                    'class': 'form-control',
+                    'id': 'tipoTour'
+                }
+            ),
+            'nombreTour': forms.TextInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Nombre del Tour'
+                }
+            ),
+            'horario_in': forms.TimeInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'type': 'timepicker'
+                }
+            ),
+            'horario_fin': forms.TimeInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'type': 'timepicker'
+                }
+            ),
+            'costo': forms.NumberInput(
+                attrs = {
+                    'class': 'form-control',
+                }
+            ),
+            'comuna': forms.TextInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Comuna donde se hará el Tour'
+
+                }
+            )
+
+        }
 
 

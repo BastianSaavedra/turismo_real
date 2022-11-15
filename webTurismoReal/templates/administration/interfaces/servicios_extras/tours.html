@@ -1,0 +1,59 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Tours{% endblock %}
+{% block list_title %}{{ title }}{% endblock %}
+{% load tags %}
+
+{% block columns %}
+  <tr>
+    <th scope="col">Id</th>
+    <th scope="col">Tipo de Tour</th>
+    <th scope="col">Nombre de Tour</th>
+    <th scope="col">Horario Inicio</th>
+    <th scope="col">Horario Termino</th>
+    <th scope="col">Costo del Tour</th>
+    <th scope="col">Comuna del Tour</th>
+    <th>Editar</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% if object_list %}
+    {% for tour in object_list %}
+      <tr>
+        <td>{{ tour.id }}</td>
+        <td>
+          {% if tour.tipoTour == "1" %}
+            Turismo Cultural
+          {% elif tour.tipoTour == "2" %}
+            Turismo de Naturaleza
+          {% elif tour.tipoTour == "3" %}
+            Turismo Gastronomico
+          {% else%}
+            Otro 
+          {% endif %}
+        </td>
+        <td>{{ tour.nombreTour}}</td>
+        <td>{{ tour.horario_in }}</td>
+        <td>{{ tour.horario_fin }}</td>
+        <td>${{ tour.costo | numberFormat }}</td>
+        <td>{{ tour.comuna }}</td>
+        <td>
+          <a href="{% url 'administration_tour_update' tour.id %}" type="button" class="btn btn-warning btn-sm ">
+            <i class="bi bi-pencil"></i>
+          </a>
+        </td>
+      </tr>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      No hay Datos para mostrar
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block button_create %}
+  <a href="{% url 'administration_tour_create' %}" class="btn btn-success">
+    <i class="fas fa-plus"></i>
+    Agregar Servicio
+  </a>
+{% endblock %}

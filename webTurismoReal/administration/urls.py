@@ -1,4 +1,3 @@
-from unicodedata import name
 from django.urls import path
 import administration.views as views
 
@@ -16,16 +15,28 @@ urlpatterns = [
     path('reserva/add/', views.AdministracionReservaCreateView.as_view(), name="administration_reserva_create"),
     path('reserva/edit/<int:pk>/', views.AdministracionReservaUpdateView.as_view(), name="administration_reserva_update"),
 
+    # Cliente Views
+    path('cliente/list/', views.AdministracionClienteListView.as_view(), name="administration_cliente"),
+
     # Conductor Views
     path('conductor/list/', views.AdministracionConductorListView.as_view(), name="administration_conductor"),
     path('conductor/add/', views.AdministracionConductorCreateView.as_view(), name="administration_conductor_create"),
     path('conductor/edit/<int:pk>/', views.AdministracionConductorUpdateView.as_view(), name="administration_conductor_update"),
 
     # Transporte Views
-    path('transporte/list', views.AdministracionTransporteListView.as_view(), name="administration_transporte"),
+    path('transporte/list/', views.AdministracionTransporteListView.as_view(), name="administration_transporte"),
     path('transporte/add/', views.AdministracionTransporteCreateView.as_view(), name="administration_transporte_create"),
+    # path('transporte/add/', views.agregar_transporte, name="administration_transporte_create"),
+    path('transporte/edit/<int:pk>/', views.AdministracionTransporteUpdateView.as_view(), name="administration_transporte_update"),
+    path('transporte/edit-status/<int:pk>/', views.AdministracionTransporteStatusEdit.as_view(), name="administration_transporte_status_edit"),
     path('transporte/add-modelo/', views.AdministracionModeloCreateView.as_view(), name="administration_modelo_create"),
+    # path('transporte/add-modelo/update/', views.AdministracionModeloUpdateView.as_view(), name="administration_modelo_update"),
     path('transporte/add-modelo/add-marca/', views.AdministracionMarcaCreateView.as_view(), name="administration_marca_create"),
+
+    # Tours Views
+    path('tour/list/', views.AdministracionTourListView.as_view(), name="administration_tour"),
+    path('tour/add/', views.AdministracionTourCreateView.as_view(), name="administration_tour_create"),
+    path('tour/edit/<int:pk>/', views.AdministracionTourUpdateView.as_view(), name="administration_tour_update"),
 
 
 
