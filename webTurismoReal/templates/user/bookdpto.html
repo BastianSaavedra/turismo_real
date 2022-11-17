@@ -170,11 +170,17 @@
             <div class="jumbotron">
               <label for="username" id="lbl1">Servicio Turistico <label style="color:red; font-size: 13px;">*Costo extra</label></label>
               <select class="btn btn-outline-success btn-md" name="tour" id="tour">
-                <option>Seleccionar</option>
+                <option value="0" label="Seleccionar">0</option>
                     {% for tour in all_tours %}
-                      <option placeholder=""value="{{ tour.nombreTour }}">{{ tour }}</option>  
+                    <option id="tour_id" value="{{ tour.id }}" label="{{ tour }} ${{ tour.costo | numberFormat}}">
+                    {{ tour.costo }}
+                    </option>
+                    {% comment %}
+                    <option id="tour_id" value="{{ tour.id }}">{{ tour }} ${{ tour.costo | numberFormat }}</option> 
+
+                    {% endcomment  %}
                     {% endfor %}
-              </select>
+                  </select>
             </div> 
           </div>
 
@@ -182,11 +188,14 @@
             <div class="jumbotron">
               <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
               <select class="btn btn-outline-success btn-md" name="lugar" id="lugar">
-                <option>Seleccionar</option>
+                <option value="0" label="Seleccionar">0</option>
                     {% for ts in all_transp %}
-                      <option value="{{ ts.lugar_tp }}">{{ ts.lugar_tp }}</option>  
+                    <option id="lugar_id" value="{{ ts.id }}" label="{{ ts.lugar_tp }} ${{ ts.costo_tp | numberFormat }}">
+                    {{ ts.costo_tp }}
+                    </option>  
                     {% endfor %}
               </select>
+              
             </div>
           </div>
         </div>
@@ -218,30 +227,57 @@
 </div>
 
 <script>
+
   function check() {
     let output = document.getElementById("total_reserva")
 
     let startDate = new Date(document.getElementById("cin").value);
     let endDate = new Date(document.getElementById("cout").value);
+
     let price_per_night = "{{ detalle_dpto.precio }}"
-    //let price_tour = "{{ costo_tour.costo }}"
-    //console.log(price_tour)
-    //let price_transporte = "{{ all_transp.costo_tp }}"
-    
+
+    let selectTour = document.querySelector("#tour");
+    let price_tour = selectTour.options[selectTour.selectedIndex].text;
+
+    let selectTransporte = document.querySelector('#lugar');
+    let price_transporte = selectTransporte.options[selectTransporte.selectedIndex].text;
+
+
 
     if (startDate.getTime() && endDate.getTime()) {
+
+      if (price_tour == 'Seleccionar') {
+        price_tour = 0
+        console.log(price_tour)
+      } else {
+        price_tour = parseInt(price_tour)
+        console.log(price_tour)
+      }
+
+      if (price_transporte == 'Seleccionar'){
+        price_transporte = 0
+        console.log(price_transporte)
+      } else {
+        price_transporte = parseInt(price_transporte)
+        console.log(price_transporte)
+      }
+      
       let timeDifference = endDate.getTime() - startDate.getTime();
 
       let dayDifference = Math.abs(timeDifference / (1000 * 3600 * 24));
-      output.value = "$ " + (dayDifference * price_per_night) + price_tour;
+      output.value = "$ " + (dayDifference * price_per_night + price_tour + price_transporte) ;
 
     } else {
       output.value = 0;
     }
+    
   };
   document.querySelector('#cin').addEventListener("change", check, false);
   document.querySelector('#cout').addEventListener("change", check, false);
+  document.querySelector('#tour').addEventListener("change", check, false);
+  document.querySelector('#lugar').addEventListener("change", check, false);
 
-</script>
+
+ </script>
 {% endblock %}
 

@@ -75,9 +75,11 @@ def home_inicio(request):
 def home_reserva_confirmacion(request, id):
     # Obtencion de los tours disponibles
     #all_tours = Tour.objects.values_list('nombreTour','comuna', 'id').distinct().order_by().filter(tipoTour = '1' and '2' and '3')
-    all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
+    # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
+    all_tours = Tour.objects.all()
     # all_transp = DetalleTP.objects.values_list('lugar_tp').filter(~Q(transporte__tipo_transporte='0'))
-    all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+    # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+    all_transp = DetalleTP.objects.all()
 
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
     return HttpResponse(
@@ -96,12 +98,8 @@ def home_reserva_confirmacion(request, id):
 # @login_required(login_url='/user')
 def home_reserva(request):
     if request.method == "POST":
-        #--------------------------------- SERVICIOS ---------------------------------
-        lugar_transporte = request.POST['lugar']
-        detalle_transporte = DetalleTP.objects.all().get(lugar_tp=lugar_transporte)
-        tipo_tour = request.POST['tour']
-        tour = Tour.objects.all().get(nombreTour=tipo_tour)
-        #--------------------------------- SERVICIOS ---------------------------------
+        
+        reservation = Reserva()
         
         
         detalle_dpto_id = request.POST['detalledptoid']
@@ -120,7 +118,6 @@ def home_reserva(request):
         total_person = int( request.POST['capacidad'])
         booking_id = str(detalle_dpto_id) + str(datetime.datetime.now())
 
-        reservation = Reserva()
         detalle_dpto_object = DetalleDpto.objects.all().get(id=detalle_dpto_id)
         detalle_dpto_object.status = '2'
         user_object = Usuario.objects.all().get(username=current_user)
@@ -132,18 +129,33 @@ def home_reserva(request):
 
         reservation.huespedes = total_person
         
+        #--------------------------------- SERVICIOS ---------------------------------
+        tipo_tour = request.POST['tour']
+        if tipo_tour == "0":
+            tipo_tour = None 
+            valor_tour = 0
+        else:
+            tipo_tour = request.POST['tour']
+            valor_tour = reservation.tour.costo
+
+        lugar_transporte = request.POST['lugar']
+        if lugar_transporte == "0":
+            lugar_transporte = None
+            valor_transporte = 0
+        else:
+            lugar_transporte = request.POST['lugar']
+            valor_transporte = reservation.detalle_tp.costo_tp
+
+        #--------------------------------- SERVICIOS ---------------------------------
         
         #--------------------------------------Guardado de servicios en bbdd----------------------------------------
-        reservation.detalle_tp = detalle_transporte  
-        reservation.tour = tour
-        
+        # reservation.detalle_tp = detalle_transporte  
+        # reservation.tour = tour
+
+        reservation.tour_id = tipo_tour
+        reservation.detalle_tp_id = lugar_transporte
         #-----------------------------------------------------------------------------------------------------------
 
-        
-        # person = total_person
-
-
-        
         # Guardado de fechas en bbdd
         reservation.check_in = request.POST['check_in']
         reservation.check_out = request.POST['check_out']
@@ -154,19 +166,18 @@ def home_reserva(request):
 
         # restamos la fecha de termino con la de inicio
         diffdays = endDate - startDate
-
         # obtenemos la cantidad de dias
         days = diffdays.days
-
-        # obtenemos el precio total multiplicando los dias con el precio del dpto por noche + los costos de servicios extra
-        total_precio_reserva = (days * reservation.detalle_dpto.precio) + reservation.tour.costo + reservation.detalle_tp.costo_tp
-        # total_precio_reserva = (days * reservation.detalle_dpto.precio) + detalle_tour.costo + detalle_tp.costo_tp 
-        
+        costo_reserva = (days * reservation.detalle_dpto.precio) 
         # guardamos los dias en la bbdd
         reservation.cant_dias_reserva =  days
 
-        # guardamos el total de la reserva en la bbdd
+        reservation.costo_reserva = costo_reserva
+
+        total_precio_reserva = costo_reserva + valor_tour + valor_transporte + reservation.costo_multa
+
         reservation.total_reserva = total_precio_reserva
+
 
         # guardamos el id de la reserva creada en la variable booking_id
         reservation.booking_id = booking_id
@@ -208,7 +219,16 @@ def cancelar_reserva(request, id):
 
 @require_http_methods(['POST'])
 def cancelar_tour(request, id):
+
+    reservation = Reserva.objects.get(id=id)
+    valor_total = reservation.total_reserva
+    valor_tour = reservation.tour.costo
+
+    resta_tour = valor_total - valor_tour
+
+
     Reserva.objects.filter(id=id).update(tour=None)
+    Reserva.objects.filter(id=id).update(total_reserva = resta_tour)
     messages.success(
         request,
         "Tour Cancelado",
@@ -219,7 +239,17 @@ def cancelar_tour(request, id):
 
 @require_http_methods(['POST'])
 def cancelar_transporte(request, id):
+    
+    reservation = Reserva.objects.get(id=id)
+
+    valor_total = reservation.total_reserva
+    valor_transporte = reservation.detalle_tp.costo_tp
+
+    resta_transporte = valor_total - valor_transporte
+
     Reserva.objects.filter(id=id).update(detalle_tp=None)
+    Reserva.objects.filter(id=id).update(total_reserva = resta_transporte)
+
     messages.success(
         request,
         "Transporte Cancelado",
@@ -229,8 +259,10 @@ def cancelar_transporte(request, id):
 
 
 def detalle_reserva(request, id):
-    all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
-    all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+    # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
+    # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
+    all_tours = Tour.objects.all()
+    all_transp = DetalleTP.objects.all()
     user = Usuario.objects.all().get(id=request.user.id)
     reservas = Reserva.objects.filter(id=id)
     return HttpResponse(
@@ -246,26 +278,48 @@ def detalle_reserva(request, id):
  
 @require_http_methods(['POST'])
 def agregar_servicios(request,id):
-    reservation = Reserva()
-    
-    lugar_transporte = request.POST['lugar']
-    detalle_tp = DetalleTP.objects.all().get(lugar_tp=lugar_transporte)
-    tipo_tour = request.POST['tour']
-    tour = Tour.objects.all().get(nombreTour=tipo_tour)
-    
-    reservation.tour = tour
-    reservation.detalle_tp = detalle_tp   
-    
-    Reserva.objects.filter(id=id).update(tour=reservation.tour)
-    Reserva.objects.filter(id=id).update(detalle_tp=reservation.detalle_tp)
-    messages.success(
-                    request,
-                    "Reserva actualizada",
-                    extra_tags="Tu reserva ha sido actualizada correctamente"
-                     )
+    if request.method == 'POST':
 
-    return redirect("home_reservas_usuario")
+        reservation = Reserva.objects.get(id=id)
+        
+        tipo_tour = request.POST['tour']
+        if tipo_tour == "0":
+            tipo_tour = None 
+            valor_tour = 0
+        else:
+            tipo_tour = request.POST['tour']
+            tour = Tour.objects.get(id=tipo_tour)
+            valor_tour = tour.costo
 
+
+        lugar_transporte = request.POST['lugar']
+        if lugar_transporte == "0":
+            lugar_transporte = None
+            valor_transporte = 0
+        else:
+            lugar_transporte = request.POST['lugar']
+            transporte = DetalleTP.objects.get(id=lugar_transporte)
+            valor_transporte = transporte.costo_tp
+
+        costo_reserva = reservation.costo_reserva 
+        costo_multa = reservation.costo_multa
+       
+
+        total_precio_reserva = costo_reserva + valor_tour + valor_transporte + costo_multa
+        
+        Reserva.objects.filter(id=id).update(tour = tipo_tour)
+        Reserva.objects.filter(id=id).update(detalle_tp = lugar_transporte)
+
+        Reserva.objects.filter(id=id).update(total_reserva = total_precio_reserva)
+        messages.success(
+                        request,
+                        "Reserva actualizada",
+                        extra_tags="Tu reserva ha sido actualizada correctamente"
+                         )
+
+        return redirect("home_reservas_usuario")
+    else:
+        return HttpResponse('Acceso Denegado')
 
 def login(request):     
     if request.user.is_authenticated:
@@ -297,7 +351,6 @@ def login(request):
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect("home_inicio")
-<<<<<<< HEAD
 
 
         if usuarios: 
@@ -306,9 +359,9 @@ def login(request):
             return redirect("home_inicio")  
              
         # if usuarios.is_funcionario:
-=======
+
         # elif usuarios.is_funcionario:
->>>>>>> origin/branch_SebastianZuniga
+
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect('funcionario/inicio.html')
@@ -337,7 +390,6 @@ class RegistrarUsuario(CreateView):
     template_name = 'users/registro.html'
     success_url = reverse_lazy('home/home.html')
     
-
     
     def post(self,request,*args,**kwargs):      
         form = self.form_class(request.POST)

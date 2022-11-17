@@ -28,9 +28,11 @@
           <div class="jumbotron">
             <label for="username" id="lbl1">Servicio Turistico <label style="color:red; font-size: 13px;">*Costo extra</label></label>
             <select class="btn btn-success btn-md" name="tour" id="tour">
-              <option>Seleccionar</option>
+              <option value="0" label="Seleccionar">0</option>
                   {% for tour in all_tours %}
-                    <option placeholder=""value="{{ tour.nombreTour }}">{{ tour }}</option>  
+                    <option id="tour_id" value="{{ tour.id }}" label="{{ tour }} ${{ tour.costo | numberFormat}}">
+                    {{ tour.costo }}
+                    </option>
                   {% endfor %}
             </select>
           </div> 
@@ -40,10 +42,12 @@
           <div class="jumbotron">
             <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
             <select class="btn btn-success btn-md" name="lugar" id="lugar">
-              <option>Seleccionar</option>
-                  {% for ts in all_transp %}
-                    <option value="{{ ts.lugar_tp }}">{{ ts.lugar_tp }}</option>  
-                  {% endfor %}
+              <option value="0" label="Seleccionar">0</option>
+              {% for ts in all_transp %}
+                <option id="lugar_id" value="{{ ts.id }}" label="{{ ts.lugar_tp }} ${{ ts.costo_tp | numberFormat }}">
+                  {{ ts.costo_tp }}
+                </option>  
+              {% endfor %}
             </select>
           </div>
         </div>
@@ -175,6 +179,18 @@
         <input
             type="text"
             class="form-control"
+            id="monto_reserva"
+            name="monto_reseva"
+            placeholder="0"
+            value="{{ reserva.total_reserva }}"
+            disabled
+        />
+      </div>
+      <div class="form-group">
+        <label for="password2">Precio al Seleccionar Servicios</label>
+        <input
+            type="text"
+            class="form-control"
             id="total_reserva"
             name="total_reseva"
             placeholder="0"
@@ -203,3 +219,51 @@
 </div>
 </div>
 {% endblock %} 
+
+{% block js %}
+<script>
+  function check() {
+    let output = document.getElementById("total_reserva")
+
+    let monto_reserva = document.getElementById("monto_reserva").value;
+
+    let selectTour = document.querySelector("#tour");
+    let price_tour = selectTour.options[selectTour.selectedIndex].text;
+
+    let selectTransporte = document.querySelector('#lugar');
+    let price_transporte = selectTransporte.options[selectTransporte.selectedIndex].text;
+
+    price_reserva = parseInt(monto_reserva)
+    console.log(price_reserva)
+
+
+
+    
+    if (selectTour) {
+      if (price_tour == 'Seleccionar') {
+        price_tour = 0
+        console.log(price_tour)
+      } else {
+        price_tour = parseInt(price_tour)
+        console.log(price_tour)
+      }
+
+      if (price_transporte == 'Seleccionar'){
+        price_transporte = 0
+        console.log(price_transporte)
+      } else {
+        price_transporte = parseInt(price_transporte)
+        console.log(price_transporte)
+      }
+
+      output.value = "$ " + (price_reserva + price_tour + price_transporte) ;
+    } else {
+      output.value = 0;
+    }
+
+  };
+  document.querySelector('#tour').addEventListener("change", check, false);
+  document.querySelector('#lugar').addEventListener("change", check, false);
+
+</script>
+{% endblock %}

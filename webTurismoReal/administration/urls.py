@@ -14,6 +14,9 @@ urlpatterns = [
     path('reserva/list/', views.AdministracionReservaListView.as_view(), name="administration_reserva"),
     path('reserva/add/', views.AdministracionReservaCreateView.as_view(), name="administration_reserva_create"),
     path('reserva/edit/<int:pk>/', views.AdministracionReservaUpdateView.as_view(), name="administration_reserva_update"),
+    path('reserva/detail/<int:pk>/', views.AdministracionReservaDetailView.as_view(), name="administration_reserva_detail"),
+    path('reserva/edit-status/<int:pk>/', views.AdministracionReservaStatusEdit.as_view(), name="administration_reserva_status_edit"),
+    path('reserva/detail/pdf/<int:pk>/', views.ReservaDetailPdfView.as_view(), name="reserva_detail_pdf"),
 
     # Cliente Views
     path('cliente/list/', views.AdministracionClienteListView.as_view(), name="administration_cliente"),

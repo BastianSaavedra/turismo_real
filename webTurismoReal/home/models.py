@@ -157,11 +157,11 @@ class DetalleDpto(models.Model):
     aire_acondicionado = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
     bodega = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
     bannio = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
-    cant_bannio = models.PositiveIntegerField(default=0)
+    cant_bannio = models.PositiveIntegerField(default=0, blank=True)
     dormitorio = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
-    cant_dormitorio = models.PositiveIntegerField(default=0)
+    cant_dormitorio = models.PositiveIntegerField(default=0, blank=True)
     estacionamiento = models.CharField(max_length=2, choices=OPCIONES, blank=False, default="se")
-    cant_estacionamiento = models.PositiveIntegerField(default=0)
+    cant_estacionamiento = models.PositiveIntegerField(default=0, blank=True)
 
     status = models.CharField(choices=DPTO_STATUS, max_length=13, default="1")
     inicio_mantencion = models.DateTimeField(default=datetime.now, blank=True)
@@ -305,6 +305,7 @@ class Reserva(models.Model):
     guest = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     booking_id = models.CharField(max_length=100, default="null")
     cant_dias_reserva = models.IntegerField(default=0)
+    costo_reserva = models.IntegerField(default=0)
     total_reserva = models.IntegerField(default=0)
     huespedes = models.IntegerField(default=0)
 

@@ -4,9 +4,10 @@ from django.db.models.functions import Coalesce
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.template.loader import get_template
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView, View
+from django.views.generic import ListView, View, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import (
     Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento,
@@ -15,10 +16,11 @@ from home.models import (
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
     DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm,
-    TransporteStatusForm, TourForm
+    TransporteStatusForm, TourForm, ReservaStatusForm
     )
 
 from datetime import datetime
+from xhtml2pdf import pisa
 from django.db import transaction
 
 # Create your views here.
@@ -345,6 +347,45 @@ class AdministracionReservaUpdateView(UpdateView):
         context['object_list'] = Reserva.objects.all()
         return context
 
+
+class AdministracionReservaDetailView(DetailView):
+    model = Reserva
+    template_name = 'administration/interfaces/reservas/reserva_detail.html'
+    context_object_name = 'obj'
+
+
+class ReservaDetailPdfView(View):
+    def get(self, request, *args, **kwargs):
+        try:
+            template = get_template('administration/interfaces/reservas/reserva_detail_pdf.html')
+            context = {'obj': Reserva.objects.get(pk=self.kwargs['pk'])}
+            html = template.render(context)
+            response = HttpResponse(content_type='application/pdf')
+            response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+            pisaStatus = pisa.CreatePDF(
+              html, dest=response
+            )
+
+            return response
+        except:
+            pass
+        return HttpResponseRedirect(reverse_lazy('administration_reserva'))
+
+
+
+class AdministracionReservaStatusEdit(UpdateView):
+    model = Reserva
+    form_class = ReservaStatusForm
+    template_name = 'administration/interfaces/reservas/reserva_status_edit.html'
+    success_url = reverse_lazy('administration_reserva')
+    
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionReservaStatusEdit, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Estado de la Reserva'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
 ## Cliente Views
 class AdministracionClienteListView(ListView):
     model = Usuario
@@ -367,12 +408,11 @@ class AdministracionClienteReservasListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['reservas_cliente'] = Reserva.objects.filter(guest = self.request.user)
         context['title'] = 'Listado de Reservas'
         return context
 
-    # def get_queryset(self):
-    #     return Reserva.objects.filter(guest=self.request.resolver_match.kwargs['pk'])
+    def get_queryset(self):
+        return Reserva.objects.filter(guest=self.request.resolver_match.kwargs['pk'])
 
     
 
@@ -472,6 +512,7 @@ class AdministracionTransporteStatusEdit(UpdateView):
         context['title'] = 'Editando Estado del Transporte'
         context['icon'] = 'fa-solid fa-pen-to-square'
         return context
+
 
 
 class AdministracionModeloCreateView(CreateView):

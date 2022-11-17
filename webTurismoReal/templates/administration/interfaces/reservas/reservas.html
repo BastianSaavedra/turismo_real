@@ -14,7 +14,7 @@
     <th scope="col">Cod Reserva</th>
     <th scope="col">Monto Reserva</th>
     <th scope="col">Estado</th>
-    <th scope="col">Editar</th>
+    <th scope="col">Opciones</th>
   </tr>
 {% endblock %}
 
@@ -23,30 +23,58 @@
     {% for r in object_list %}
       <tr>
         <td>{{ r.id }}</td>
-        <td>{{ r.check_in }}</td>
-        <td>{{ r.check_out }}</td>
-        <td>{{ r.date_joined }}</td>
-        <td>{{ r.detalle_dpto.departamento.id }}</td>
+        <td>{{ r.check_in | date:"d/m/Y" }}</td>
+        <td>{{ r.check_out | date:"d/m/Y" }}</td>
+        <td>{{ r.date_joined | date:"d/m/Y" }}</td>
+        <td>{{ r.detalle_dpto.departamento }}</td>
         <td>{{ r.guest }}</td>
-        <td>{{ r.booking_id }}</td>
-        <td>${{ r.total_reserva | numberFormat }}</td>
+        <td disabled>{{ r.booking_id }}</td>
+        {% if r.status == '1' %}
+          <td>
+            ${{ r.total_reserva | numberFormat }}
+          </td>
+          <td>
+            <span class="bg-success text-white rounded-pill px-2">
+              Activa
+            </span>
+          </td>
+        {% elif r.status == '2' %}
+          <td>
+            <del>
+              ${{ r.total_reserva | numberFormat }}
+            </del>
+          </td>
+          <td>
+            <span class="bg-danger text-white rounded-pill px-2">
+              Cancelada
+            </span>
+          </td>
+        {% else %}
+          <td>Error</td>
+          <td>Error</td>
+        {% endif %}
+
         <td>
-          {% if r.status == '1' %}
-          <span class="bg-success text-white rounded-pill px-2">
-            Activa
-          </span>
-          {% elif r.status == '2' %}
-          <span class="bg-danger text-white rounded-pill px-2">
-            Cancelada
-          </span>
-          {% else %}
-          Error
-          {% endif %}
-        </td>
-        <td>
-          <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
+          <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="editButton" data-bs-toggle="dropdown" aria-expanded="false">
             <i class="bi bi-pencil"></i>
-          </a>
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="editButton">
+            <li>
+              <a href="{% url 'administration_reserva_detail' r.id %}" class="dropdown-item">
+                Detalle de Reserva
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'administration_reserva_update' r.id %}" class="dropdown-item">
+                Editar Reserva
+              </a>
+            </li>
+            <li>
+              <button class="dropdown-item" onclick="abrir_modal_edicion('{% url 'administration_reserva_status_edit' r.id %}')">
+                Cambiar Estado
+              </button>
+            </li>
+          </ul>
           
         </td>
       </tr>
@@ -56,7 +84,12 @@
       No hay Datos para mostrar
     </div>
   {% endif %}
+  <div class="modal fade pt-5" id="edicion" role="dialog" data-bs-backdrop="static">
+
+  </div>
 {% endblock %}
+
+
 
 {% block footer %}
 <tr>
@@ -75,11 +108,19 @@
 
 {% endblock %}
 
-{% comment %}
 {% block button_create %}
-<a href="{% url 'administration_reserva_create' %}" class="btn btn-success">
-  <i class="fas fa-plus"></i>
-  Agregar reserva
+<a class="btn btn-success" type="button" href="#">
+  <i class="fas fa-file-excel"></i>
+  Descargar datos Reserva
 </a>
 {% endblock %}
-{% endcomment %}
+
+{% block script %}
+<script type="text/javascript">
+  function abrir_modal_edicion(url){
+    $('#edicion').load(url, function(){
+      $(this).modal('show');
+    });
+  }
+</script> 
+{% endblock %}

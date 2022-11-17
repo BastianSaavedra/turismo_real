@@ -1,0 +1,413 @@
+{% extends 'layout/base_administration.html' %}
+{% load static %}
+{% load tags %}
+{% block content %}
+<main class="mt-5 pt-3">
+  <div class="container">
+    <div class="row text-center">
+      <div class="mt-2 pt-3">
+        <h2>Reserva: ID-{{ obj.id }}</h2>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="row">
+
+        <div class="row justify-content-between">
+          <div class="col-2">
+            <a class="btn btn-primary" href="{% url 'administration_reserva' %}">
+              <i class="fas fa-undo-alt"></i>
+              Volver a la Lista
+            </a>
+          </div>
+          <div class="col-2 ms-auto">
+            <div>
+            <a class="btn btn-danger" type="button" href="{% url 'reserva_detail_pdf' obj.id %}">
+              <i class="fas fa-file-pdf"></i>
+              Descargar Reserva
+            </a>
+            </div>
+          </div>
+        </div>
+
+        <div class="row row-cols-1 row-cols-md-2">
+
+
+          <div class="col g-3">
+            <div class="card card-default h-100">
+
+              <div class="card-header">
+                <h4 class="card-title">
+                  Detalle de la Reserva
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <td>ID</td>
+                        <td>{{ obj.id }}</td>
+                      </tr>
+                      <tr>
+                        <td>Check In</td>
+                        <td>{{ obj.check_in }}</td>
+                      </tr>
+                      <tr>
+                        <td>Check Out</td>
+                        <td>{{ obj.check_out}}</td>
+                      </tr>
+                      <tr>
+                        <td>Fecha de Crecion</td>
+                        <td>{{ obj.date_joined }}</td>
+                      </tr>
+                      <tr>
+                        <td>Nombre del Departamento</td>
+                        <td>{{ obj.detalle_dpto.departamento.titulo }}</td>
+                      </tr>
+                      <tr>
+                        <td>Huesped</td>
+                        <td>
+                          {{ obj.guest.nombre }} {{ obj.guest.ap_paterno }} {{ obj.guest.ap_materno }}
+                        </td>
+                      </tr>
+                      
+                      <tr>
+                        <td>Rut Cliente</td>
+                        <td>{{ obj.guest.rut }}-{{ obj.guest.dv }}</td>
+                      </tr>
+                      <tr>
+                        <td>Codigo Reserva</td>
+                        <td>{{ obj.booking_id }}</td>
+                      </tr>
+                      <tr>
+                        <td>Cantidad Huespedes</td>
+                        <td>{{ obj.huespedes }}</td>
+                      </tr>
+                      <tr>
+                        <td>Estado Reserva</td>
+                        <td>
+                          {% if obj.status == '1'%}
+                            <span class="bg-success text-white rounded-pill px-2">
+                              Activa
+                            </span>
+                          {% else %}
+                            <span class="bg-danger text-white rounded-pill px-2">
+                              Cancelada
+                            </span>
+                          {% endif %}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="col g-3">
+
+            <div class="card card-default h-100">
+              <div class="card-header">
+                <h4 class="card-title">
+                  Detalle Check in y Check out
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <tbody>
+                      <tr>
+                        <td style="width: 30%;">Estado de la Estadia</td>
+                        <td>
+                          {% if obj.status_estadia == '1' %}
+                            <span class="bg-success text-white rounded-pill px-2">
+                              Cliente Arribado
+                            </span>
+                          {% elif obj.status_estadia == '2' %}
+                            <span class="bg-danger text-white rounded-pill px-2">
+                              Cliente No Arribado
+                            </span>
+                          {% else %}
+                            No Efectuado
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Mensaje Check In</td>
+                        <td>
+                          {% if obj.mensaje_check_in %}
+                            {{ obj.mensaje_check_in }}
+                          {% else %}
+                            En Proceso...
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Mensaje Check Out</td>
+                        <td>
+                          {% if obj.mensaje_check_out %}
+                            {{ obj.mensaje_check_out }}
+                          {% else %}
+                            En Proceso...
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                    </tbody>
+                  </table>
+
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+                
+
+
+
+          <div class="col g-3">
+
+            <div class="card card-default h-100">
+              <div class="card-header">
+                <h4 class="card-title">
+                  Detalle Movilizacion del Cliente
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    <tbody>
+                      {% if obj.detalle_tp %}
+                      <tr>
+                        <td>Lugar del Transporte</td>
+                        <td>
+                          {% if obj.detalle_tp %}
+                            {{ obj.detalle_tp.lugar_tp }}
+                          {% else %}
+                            No hay transporte seleccionado
+                          {% endif %}
+                        </td>
+                      </tr>
+                      <tr>
+                        <td>Hora Inicio</td>
+                        <td>{{ obj.detalle_tp.horario_in }}</td>
+                      </tr>
+                      <tr>
+                        <td>Hora Fin</td>
+                        <td>{{ obj.detalle_tp.horario_fin }}</td>
+                      </tr>
+                      <tr>
+                        <td>Transporte a Cargo de recoger al Cliente</td>
+                        <td>{{ obj.detalle_tp.transporte.patente }}</td>
+                      </tr>
+
+                      {% else %}
+                        <p>No hay transporte en esta reserva</p>
+                      {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+          <div class="col g-3">
+
+            <div class="card card-default h-100">
+              <div class="card-header">
+                <h4 class="card-title">
+                  Detalle del Transporte
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+                  <table class="table table-striped">
+                    {% if obj.detalle_tp %}
+                      <tr>
+                        <td>Patente</td>
+                        <td>{{ obj.detalle_tp.transporte.patente }}</td>
+                      </tr>
+                      <tr>
+                        <td>Tipo Transporte</td>
+                        <td>
+                          {% if obj.detalle_tp.transporte.tipo_transporte == '1' %}
+                            Taxi
+                          {% elif obj.detalle_tp.transporte.tipo_transporte == '2' %}
+                            Furgoneta
+                          {% elif obj.detalle_tp.transporte.tipo_transporte == '3' %}
+                            Bus
+                          {% else %}
+                            Otro
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Conductor</td>
+                        <td>
+                          {{ obj.detalle_tp.transporte.conductor.nombre }} {{ obj.detalle_tp.transporte.conductor.apellido }}
+                        </td>
+                      </tr>
+                    {% else %}
+                    <p>No hay transporte en esta reserva</p>
+                    {% endif %}
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <div class="col g-3">
+            <div class="card card-default h-100">
+              <div class="card-header">
+                <h4 class="card-title">
+                  Detalle Tour
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive py-3">
+                  <table class="table table-striped">
+                    <tbody>
+                    {% if obj.tour %}
+                      <tr>
+                        <td>Tour Seleccionado</td>
+                        <td>
+                          {% if obj.tour %}
+                            {{ obj.tour.nombreTour }}
+                          {% else %}
+                            No hay tour seleccionado
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Tipo del Tour</td>
+                        <td>
+                          {% if obj.tour.tipoTour == '1' %}
+                            Turismo Cultural
+                          {% elif obj.tour.tipoTour == '2' %}
+                            Turismo de Naturaleza
+                          {% elif obj.tour.tipoTour == '3' %}
+                            Turismo Gastronomico
+                          {% else %}
+                            Otro Tipo de Tour
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Horario Inicio</td>
+                        <td>{{ obj.tour.horario_in | time:"H:i a" }}</td>
+                      </tr>
+
+                      <tr>
+                        <td>Horario Termino</td>
+                        <td>{{ obj.tour.horario_fin | time:"H:i a"}}</td>
+                      </tr>
+
+                      <tr>
+                        <td>Comuna del Tour</td>
+                        <td>{{ obj.tour.comuna }}</td>
+                      </tr>
+                    {% else %}
+                      <p>No hay tour en esta reserva</p>
+                    {% endif %}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+
+
+          <div class="col g-3">
+            <div class="card card-default h-100">
+              <div class="card-header">
+                <h4 class="card-title">
+                  Total Reserva
+                </h4>
+              </div>
+
+              <div class="card-body">
+                <div class="table-responsive">
+
+                  <table class="table table-striped mb-2">
+                    <thead>
+                      <tr class="">
+                        <th>Tipo de Monto</th>
+                        <th>Monto</th>
+                      </tr>
+                    </thead>
+
+                    <tbody>
+                      <tr>
+                        <td>Reserva</td>
+                        <td>$ {{ obj.costo_reserva | numberFormat }}</td>
+                      </tr>
+
+                      <tr>
+                        <td>Multa</td>
+                        <td>$ {{ obj.costo_multa | numberFormat }}</td>
+                      </tr>
+
+                      <tr>
+                        <td>Tour</td>
+                        <td>
+                          {% if obj.tour.costo %}
+                            $ {{ obj.tour.costo | numberFormat }}
+                          {% else %}
+                            $ 0
+                          {% endif %}
+                        </td>
+                      </tr>
+
+                      <tr>
+                        <td>Transporte</td>
+                        <td>
+                          {% if obj.detalle_tp.costo_tp %}
+                            $ {{ obj.detalle_tp.costo_tp | numberFormat }}
+                          {% else %}
+                            $ 0
+                          {% endif %}
+                        </td>
+                      </tr>
+                    </tbody>
+
+                    <tfoot>
+                      <tr>
+                        <td><b>Total a pagar</b></td>
+                        <td>$ {{ obj.total_reserva | numberFormat }}</td>
+                      </tr>
+
+                    </tfoot>
+                  </table>
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+{% endblock %}

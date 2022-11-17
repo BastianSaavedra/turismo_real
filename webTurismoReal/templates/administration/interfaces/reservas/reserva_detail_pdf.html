@@ -1,0 +1,304 @@
+{% load tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle Reserva </title>
+</head>
+  <style>
+    .head {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+      
+  </style>
+<body>
+    <p class="head">
+      TURISMO REAL
+    </p>
+
+    <h2>Detalle de la Reserva</h2>
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 70%;">ID</td>
+        <td style="width: 30%;">{{ obj.id }}</td>
+      </tr>
+      <tr>
+        <td>Check In</td>
+        <td>{{ obj.check_in }}</td>
+      </tr>
+      <tr>
+        <td>Check Out</td>
+        <td>{{ obj.check_out}}</td>
+      </tr>
+      <tr>
+        <td>Fecha de Crecion</td>
+        <td>{{ obj.date_joined }}</td>
+      </tr>
+
+      <tr>
+        <td>Nombre del Departamento</td>
+        <td>{{ obj.detalle_dpto.departamento.titulo }}</td>
+      </tr>
+      <tr>
+        <td>Huesped</td>
+        <td>{{ obj.guest.nombre }} {{ obj.guest.ap_paterno }} {{ obj.guest.ap_materno }}</td>
+      </tr>
+      <tr>
+        <td>Rut Cliente</td>
+        <td>{{ obj.guest.rut }}-{{ obj.guest.dv }}</td>
+      </tr>
+      <tr>
+        <td>Codigo Reserva</td>
+        <td>{{ obj.booking_id }}</td>
+      </tr>
+      <tr>
+        <td>Cantidad Huespedes</td>
+        <td>{{ obj.huespedes }}</td>
+      </tr>
+
+    </table>
+    <hr/>
+
+
+    <h2>Detalle Check In y Check Out</h2>
+    <table>
+      <tr>
+        <td style="width: 70%;">Estado de la Estadia</td>
+        <td style="width: 30%;">
+          {% if obj.status_estadia == '1' %}
+              Cliente Arribado
+          {% elif obj.status_estadia == '2' %}
+
+            Cliente No Arribado
+          {% else %}
+            No Efectuado
+          {% endif %}
+        </td>
+      </tr>
+
+      <tr>
+        <td>Mensaje Check In</td>
+      </tr>
+
+      <tr>
+        <td>
+          <h6>Inicio mensaje Check In</h6>
+          {% if obj.mensaje_check_in %}
+            {{ obj.mensaje_check_in }}
+          {% else %}
+            En Proceso...
+          {% endif %}
+          <h6>Fin mensaje Check In</h6>
+        </td>
+
+      </tr>
+
+      <tr>
+        <td>Mensaje Check Out</td>
+      </tr>
+
+      <tr>
+        <td>
+          <h6>Inicio mensaje Check Out</h6>
+            {% if obj.mensaje_check_out %}
+              {{ obj.mensaje_check_out }}
+            {% else %}
+              En Proceso...
+            {% endif %}
+          <h6>Fin mensaje Check Out</h6>
+        </td>
+      </tr>
+
+    </table>
+    <hr/>
+    <h2>Detalle Tour</h2>
+
+    <table>
+      {% if obj.tour %}
+        <tr>
+          <td style="width: 70%;">Tour Seleccionado</td>
+          <td style="width: 30%;">
+            {% if obj.tour %}
+              {{ obj.tour.nombreTour }}
+            {% else %}
+              No hay tour seleccionado
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <td>Tipo del Tour</td>
+          <td>
+            {% if obj.tour.tipoTour == '1' %}
+              Turismo Cultural
+            {% elif obj.tour.tipoTour == '2' %}
+              Turismo de Naturaleza
+            {% elif obj.tour.tipoTour == '3' %}
+              Turismo Gastronomico
+            {% else %}
+              Otro Tipo de Tour
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <td>Horario Inicio</td>
+          <td>{{ obj.tour.horario_in | time:"H:i a" }}</td>
+        </tr>
+
+        <tr>
+          <td>Horario Termino</td>
+          <td>{{ obj.tour.horario_fin | time:"H:i a" }}</td>
+        </tr>
+
+        <tr>
+          <td>Comuna del Tour</td>
+          <td>{{ obj.tour.comuna }}</td>
+        </tr>
+        
+      {% else %}
+        <p>No hay tour en esta reserva</p>
+      {% endif %}
+    </table>
+    <hr/>
+
+    <h2>Detalle Movilizacion del Cliente</h2>
+    <p>
+        Este detalle muestra informacion del transporte encargado de<br/>
+        movilizar con el cliente
+    </p>
+    <table>
+      {% if obj.detalle_tp %}
+        <tr>
+          <td>Lugar del Transporte</td>
+          <td>
+            {% if obj.detalle_tp %}
+              {{ obj.detalle_tp.lugar_tp }}
+            {% else %}
+              No hay transporte seleccionado
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>Hora Inicio</td>
+          <td>{{ obj.detalle_tp.horario_in }}</td>
+        </tr>
+
+        <tr>
+          <td>Hora Fin</td>
+          <td>{{ obj.detalle_tp.horario_fin }}</td>
+        </tr>
+
+        <tr>
+          <td>Transporte a Cargo de recoger al Cliente</td>
+          <td>{{ obj.detalle_tp.transporte.patente }}</td>
+        </tr>
+
+      {% else %}
+        <p>No hay transporte en esta reserva</p>
+      {% endif %}
+    </table>
+    <hr/>
+
+    <h2>Detalle del Transporte</h2>
+    <table>
+      {% if obj.detalle_tp %}
+        <tr>
+          <td>Patente</td>
+          <td>{{ obj.detalle_tp.transporte.patente }}</td>
+        </tr>
+        <tr>
+          <td>Tipo Transporte</td>
+          <td>
+            {% if obj.detalle_tp.transporte.tipo_transporte == '1' %}
+              Taxi
+            {% elif obj.detalle_tp.transporte.tipo_transporte == '2' %}
+              Furgoneta
+            {% elif obj.detalle_tp.transporte.tipo_transporte == '3' %}
+              Bus
+            {% else %}
+              Otro
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>Conductor</td>
+          <td>
+            {{ obj.detalle_tp.transporte.conductor.nombre }} {{ obj.detalle_tp.transporte.conductor.apellido }}
+          </td>
+        </tr>
+      {% else %}
+        <p>No hay transporte en esta reserva</p>
+      {% endif %}
+    </table>
+
+    <br/>
+    <table id="invoice">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Tipo de Monto</th>
+          <th style="width: 20%;">Monto</th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Reserva</td>
+          <td>${{ obj.costo_reserva | numberFormat }}</td>
+
+        </tr>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Multa</td>
+          <td>${{ obj.costo_multa | numberFormat }}</td>
+        </tr>
+        
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Tour</td>
+          <td>
+            {% if obj.tour.costo %}
+              ${{ obj.tour.costo | numberFormat }}
+            {% else %}
+              $0
+            {% endif %}
+          </td>
+        </tr>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Transporte</td>
+          <td>
+            {% if obj.detalle_tp.costo_tp %}
+              ${{ obj.detalle_tp.costo_tp | numberFormat }}
+            {% else %}
+              $0
+            {% endif %}
+
+          </td>
+        </tr>
+        <tr style="border-top: 1px solid black; padding-top: 4px;">
+          <td style="width: 80%;"><b>TOTAL A PAGAR</b></td>
+          <td style="width: 20%;">${{ obj.total_reserva | numberFormat }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+</body>
+</html>
