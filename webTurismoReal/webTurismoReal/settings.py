@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # Libs
     'widget_tweaks',
+    'import_export',
     # apps
     'home',
     'funcionario',

@@ -10,7 +10,6 @@
     <th scope="col">Nombre / Apellido Paterno y Materno</th>
     <th scope="col">rut</th>
     <th scope="col">telefono</th>
-    <th scope="col">Detalle</th>
     <th>Reservas</th>
   </tr>
 {% endblock %}
@@ -25,10 +24,10 @@
         <td>{{ user.rut }}-{{ user.dv }}</td>
         <td>+569 {{ user.telefono }}</td>
         <td>
-          <a href="{% url 'administration_cliente_reservas' user.id %}" type="button" class="btn btn-primary btn-sm">
+          <button class="btn btn-primary btn-sm" onclick="abrir_modal_reservas('{% url 'administration_cliente_reservas' user.id %}')">
             <i class="fas fa-search"></i>
             Ver reservas
-          </a>
+          </button>
         </td>
       </tr>
     {% endfor %}
@@ -37,4 +36,30 @@
       No hay Datos para mostrar
     </div>
   {% endif %}
+
+  <div class="modal fade pt-5" id="reservas" role="dialog" data-bs-backdrop="static">
+
+  </div>
+{% endblock %}
+
+{% block button_create %}
+  {% if object_list %}
+    <a class="btn btn-success" type="button" href="{% url 'clientes_excel_report' %}">
+      <i class="fas fa-file-excel"></i>
+      Exportar datos a Excel
+    </a>
+  {% endif %}
+{% endblock %}
+
+
+{% block script %}
+<script type="text/javascript">
+  function abrir_modal_reservas(url){
+    $("#reservas").load(url, function() {
+      $(this).modal('show');
+    });
+  }
+</script>
+
+
 {% endblock %}

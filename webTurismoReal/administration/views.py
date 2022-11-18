@@ -20,8 +20,11 @@ from .forms import (
     )
 
 from datetime import datetime
-from xhtml2pdf import pisa
 from django.db import transaction
+
+# Reportes
+from xhtml2pdf import pisa
+
 
 # Create your views here.
 
@@ -405,16 +408,18 @@ class AdministracionClienteReservasListView(ListView):
     queryset = Reserva.objects.all()
     template_name = 'administration/interfaces/clientes/reservas_por_cliente.html'
     context_object_name = 'reservas'
+    success_url = reverse_lazy('administration_cliente')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Listado de Reservas'
+        context['title'] = 'Listado de Reservas del cliente'
+        context['cliente'] = Usuario.objects.filter(id=self.request.resolver_match.kwargs['pk'])
+        context['icon'] = 'far fa-address-book'
         return context
 
     def get_queryset(self):
         return Reserva.objects.filter(guest=self.request.resolver_match.kwargs['pk'])
 
-    
 
 
 # Conductor Views
@@ -436,11 +441,6 @@ class AdministracionConductorCreateView(CreateView):
     template_name = 'administration/interfaces/conductores/conductor_create_update.html'
     success_url = reverse_lazy('administration_conductor')
 
-    # def get_context_data(self, **kwargs):
-    #     context = super(AdministracionConductorCreateView, self).get_context_data(**kwargs)
-    #     context['title'] = 'Agregando Nuevo Conductor'
-    #     context['icon'] = 'fa-solid fa-plus'
-    #     return context
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Agregando Nuevo Conductor'

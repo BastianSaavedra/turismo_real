@@ -28,7 +28,7 @@
         <td>{{ r.date_joined | date:"d/m/Y" }}</td>
         <td>{{ r.detalle_dpto.departamento }}</td>
         <td>{{ r.guest }}</td>
-        <td disabled>{{ r.booking_id }}</td>
+        <td>{{ r.booking_id }}</td>
         {% if r.status == '1' %}
           <td>
             ${{ r.total_reserva | numberFormat }}
@@ -56,7 +56,7 @@
 
         <td>
           <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="editButton" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="bi bi-pencil"></i>
+            <i class="fas fa-sliders-h"></i>
           </button>
           <ul class="dropdown-menu" aria-labelledby="editButton">
             <li>
@@ -109,10 +109,12 @@
 {% endblock %}
 
 {% block button_create %}
-<a class="btn btn-success" type="button" href="#">
-  <i class="fas fa-file-excel"></i>
-  Descargar datos Reserva
-</a>
+  {% if object_list %}
+    <a class="btn btn-success" type="button" href="{% url 'reservas_excel_report' %}">
+      <i class="fas fa-file-excel"></i>
+      Exportar datos a Excel
+    </a>
+  {% endif %}
 {% endblock %}
 
 {% block script %}

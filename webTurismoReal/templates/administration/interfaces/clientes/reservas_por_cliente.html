@@ -1,8 +1,115 @@
-{% extends 'administration/layout_administration/list_base.html' %}
-{% block interface_title %}Reservas del cliente{% endblock %}
-{% block list_title %}{{ title }}{% endblock %}
-{% load tags %}
 
+{% load static %}
+{% load tags %}
+<div class="modal-dialog modal-xl" role="document">
+  <div class="modal-content border border-2 border-warning">
+    <div class="modal-header">
+      <h3>
+        <span>
+          <i class="{{ icon }}"></i>
+        </span>
+        {{ title }}: {% for c in cliente %}{{ c.nombre }} {{ c.ap_paterno }} {{ c.ap_materno }}{% endfor %}
+      </h3>
+    </div>
+
+    <div class="modal-body">
+
+      <div class="table-responsive">
+        <table id="example" class="table table-striped data-table">
+          <thead class="table-warning">
+            <tr>
+              <th scope="col" style="width: 5%;">Id</th>
+              <th scope="col">Check-in</th>
+              <th scope="col">Check-out</th>
+              <th scope="col">Departamento</th>
+              <th scope="col">Tour</th>
+              <th scope="col">Traslado</th>
+              <th scope="col">Monto Reserva</th>
+              <th scope="col">Estado</th>
+              <th>Ver Detalle</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if reservas %}
+              {% for r in reservas %}
+                <tr>
+                  <td>{{ r.id }}</td>
+                  <td>{{ r.check_in | date:"d/m/Y" }}</td>
+                  <td>{{ r.check_out | date:"d/m/Y" }}</td>
+                  <td>{{ r.detalle_dpto.departamento }}</td>
+                  <td>
+                    {% if r.tour == Null %}
+                      No Hay
+                    {% else %}
+                      {{ r.tour }}
+                    {% endif %}
+                  </td>
+                  <td>
+                    {% if r.detalle_tp == Null %}
+                      No Hay 
+                    {% else %}
+                      {{ r.detalle_tp }}
+                    {% endif %}
+                  </td>
+                  {% if r.status == '1' %}
+                    <td>
+                      ${{ r.total_reserva | numberFormat }}
+                    </td>
+                    <td>
+                      <span class="bg-success text-white rounded-pill px-2">
+                        Activa
+                      </span>
+                    </td>
+                  {% elif r.status == '2' %}
+                    <td>
+                      <del>
+                        ${{ r.total_reserva | numberFormat }}
+                      </del>
+                    </td>
+                    <td>
+                      <span class="bg-danger text-white rounded-pill px-2">
+                        Cancelada
+                      </span>
+                    </td>
+                  {% else %}
+                    <td>Error</td>
+                    <td>Error</td>
+                  {% endif %}
+                  <td>
+                    <a class="btn btn-primary btn-sm" type="button" href="{% url 'administration_reserva_detail' r.id %}">
+                      <i class="fas fa-info-circle"></i>
+                      Detalle
+                    </a>
+                  </td>
+                </tr>
+              {% endfor %}
+            {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+              Este cliente no tiene reservas
+            </div>
+            {% endif %}
+          </tbody>
+
+        </table>
+      </div>
+      
+
+
+    </div>
+
+    <div class="modal-footer d-flex justify-content-start ">
+      <button class="btn btn-warning" type="button" data-bs-dismiss="modal">
+        <i class="fas fa-undo-alt"></i>
+        Volver 
+      </button>
+
+    </div>
+
+  </div>
+</div>
+
+{% comment %}
 {% block columns %}
   <tr>
     <th scope="col">Id</th>
@@ -24,61 +131,13 @@
   <td>{{ r.check_in }}</td>
   <td>{{ r.check_out }}</td>
   <td>{{ r.date_joined }}</td>
+  <td></td>
 
 </tr>
 {% endfor %}
 {% endblock %}
-
-
-
-{% comment %}
-{% block rows %}
-  {% if reservas %}
-    {% for r in reservas %}
-      <tr>
-        <td>{{ r.id }}</td>
-        <td>{{ r.check_in }}</td>
-        <td>{{ r.check_out }}</td>
-        <td>{{ r.date_joined }}</td>
-        <td>{{ r.detalle_dpto.departamento.id }}</td>
-        <td>{{ r.guest }}</td>
-        <td>{{ r.booking_id }}</td>
-        <td>${{ r.total_reserva | numberFormat }}</td>
-        <td>
-          {% if r.status == '1' %}
-          <span class="bg-success text-white rounded-pill px-2">
-            Activa
-          </span>
-          {% elif r.status == '2' %}
-          <span class="bg-danger text-white rounded-pill px-2">
-            Cancelada
-          </span>
-          {% else %}
-          Error
-          {% endif %}
-        </td>
-        <td>
-          <a href="{% url 'administration_reserva_update' r.id %}" type="button" class="btn btn-warning btn-sm ">
-            <i class="bi bi-pencil"></i>
-          </a>
-          
-        </td>
-      </tr>
-    {% endfor %}
-  {% else %}
-    <div class="alert alert-warning text-center" role="alert">
-      No hay Datos para mostrar
-    </div>
-  {% endif %}
-{% endblock %}
-
-{% block footer %}
-{% endblock %}
-
-{% block button_create %}
-<a href="{% url 'administration_reserva_create' %}" class="btn btn-success">
-  <i class="fas fa-plus"></i>
-  Agregar reserva
-</a>
-{% endblock %}
 {% endcomment %}
+
+
+
+
