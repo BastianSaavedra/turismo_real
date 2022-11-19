@@ -4,7 +4,7 @@ from django.contrib.admin.options import widgets
 from django.forms.models import inlineformset_factory, modelformset_factory
 from home.models import (
     Departamento, DetalleDpto, ImagenDepartamento, Reserva, Conductor,
-    Transporte, Marca, Modelo, Tour
+    Transporte, Marca, Modelo, Tour, DetalleTP
     )
 
 
@@ -533,5 +533,52 @@ class TourForm(forms.ModelForm):
             )
 
         }
+
+
+class DetalleTPForm(forms.ModelForm):
+
+    class Meta:
+        model = DetalleTP
+        fields = '__all__'
+        labels = {
+            'lugar_tp': 'Lugar Traslado',
+            'horario_in': 'Horario Inicio',
+            'horario_fin': 'Horario Termino',
+            'costo_tp': 'Costo del Traslado',
+            'transporte': 'Transporte encargado de trasladar al cliente'
+        }
+        widgets = {
+            'lugar_tp': forms.TextInput(
+                attrs = {
+                    'class': 'form-control',
+                    'placeholder': 'Lugar Traslado'
+                }
+            ),
+            'horario_in': forms.TimeInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'type': 'timepicker'
+                }
+            ),
+            'horario_fin': forms.TimeInput(
+                attrs = {
+                    'class': 'form-control bg-white',
+                    'type': 'timepicker'
+                }
+            ),
+            'costo_tp': forms.NumberInput(
+                attrs = {
+                    'class': 'form-control',
+                }
+            ),
+            'transporte': forms.Select(
+                attrs = {
+                    'class': 'form-control',
+                    'id': 'tipoTransporte'
+                }
+
+            )
+        }
+
 
 

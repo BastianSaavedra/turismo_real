@@ -42,6 +42,11 @@ urlpatterns = [
     path('tour/add/', views.AdministracionTourCreateView.as_view(), name="administration_tour_create"),
     path('tour/edit/<int:pk>/', views.AdministracionTourUpdateView.as_view(), name="administration_tour_update"),
 
+    # Traslado Views
+    path('traslado/list/', views.AdministracionDetalleTPListView.as_view(), name="administration_traslado"),
+    path('traslado/add/', views.AdministracionDetalleTPCreateView.as_view(), name="administration_traslado_create"),
+    path('traslado/edit/<int:pk>/', views.AdministracionDetalleTPUpdateView.as_view(), name="administration_traslado_update")
+
 
 
 

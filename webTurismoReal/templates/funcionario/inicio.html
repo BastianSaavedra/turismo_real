@@ -30,7 +30,11 @@
             <hr>
             <div class="d-grid gap-2 col-6 mx-auto">
             <a href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
+            {% comment %}
             <a href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>
+            {% endcomment %}
+            <a href="{% url 'reserva_check_out' reserva.id %}" class="btn btn-danger">CHECK OUT</a>
+
           </div>
 
           </div>

@@ -130,13 +130,31 @@ def home_reserva(request):
         reservation.huespedes = total_person
         
         #--------------------------------- SERVICIOS ---------------------------------
+        # tipo_tour = request.POST['tour']
+        # if tipo_tour == "0":
+        #     tipo_tour = None 
+        #     valor_tour = 0
+        # else:
+        #     tipo_tour = request.POST['tour']
+        #     valor_tour = reservation.tour.costo
+        #
+        # lugar_transporte = request.POST['lugar']
+        # if lugar_transporte == "0":
+        #     lugar_transporte = None
+        #     valor_transporte = 0
+        # else:
+        #     lugar_transporte = request.POST['lugar']
+        #     valor_transporte = reservation.detalle_tp.costo_tp
+
         tipo_tour = request.POST['tour']
         if tipo_tour == "0":
             tipo_tour = None 
             valor_tour = 0
         else:
             tipo_tour = request.POST['tour']
-            valor_tour = reservation.tour.costo
+            tour = Tour.objects.get(id=tipo_tour)
+            valor_tour = tour.costo
+
 
         lugar_transporte = request.POST['lugar']
         if lugar_transporte == "0":
@@ -144,8 +162,8 @@ def home_reserva(request):
             valor_transporte = 0
         else:
             lugar_transporte = request.POST['lugar']
-            valor_transporte = reservation.detalle_tp.costo_tp
-
+            transporte = DetalleTP.objects.get(id=lugar_transporte)
+            valor_transporte = transporte.costo_tp
         #--------------------------------- SERVICIOS ---------------------------------
         
         #--------------------------------------Guardado de servicios en bbdd----------------------------------------

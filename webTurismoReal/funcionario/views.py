@@ -1,5 +1,5 @@
 from audioop import reverse
-from django.shortcuts import render
+from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -38,6 +38,51 @@ class FuncionarioReservaUpdateView2(UpdateView):
     form_class = FormularioCheckOut
     template_name = 'funcionario/reserva_CO.html'
     success_url = reverse_lazy('funcionario_home')
+
     def get_context_data(self, **kwargs):
         context = super(FuncionarioReservaUpdateView2, self).get_context_data(**kwargs)
         return context
+
+    def suma(self):
+        reservation = Reserva.objects.get(id=self.request.pk)
+        valor_total = reservation.total_reserva
+        valor_multa = reservation.costo_multa
+
+        suma = valor_total + valor_multa 
+        return Reserva.objects.filter(id=self.request.pk).update( total_reserva = suma)
+
+
+def reserva_check_out(request, id):
+
+    reservas = Reserva.objects.filter(id=id)
+    return HttpResponse(
+        render(
+            request,
+            'funcionario/reserva_CO.html',
+            {
+                'reservas': reservas
+            }
+        )
+    )
+
+def guardar_reserva_check_out(request, id):
+   
+    if request.method == 'POST':
+
+        reservation = Reserva.objects.get(id=id)
+
+        comentario = request.POST['comentario_checkout']
+
+        costo_reserva = reservation.total_reserva
+
+        costo_multa = request.POST['monto_multa']
+
+        multa_agregada = costo_reserva + costo_multa
+
+        Reserva.objects.filter(id=id).update(mensaje_check_out=comentario)
+        Reserva.objects.filter(id=id).update(total_reserva=multa_agregada)
+
+        return redirect("funcionario_home")
+    else:
+        return HttpResponse('Guardado Fallido')
+        

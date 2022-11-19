@@ -11,6 +11,7 @@
 
 <!-- Servicios extras -->
 {% url 'administration_tour' as tours %}
+{% url 'administration_traslado' as traslados %}
 
 
 {% if request.user.is_admin %}
@@ -204,9 +205,9 @@
               </a>
             </li>
             <li>
-              <a href="#" class="nav-link px-3 ">
+              <a href="{{ traslados }}" class="nav-link px-3 ">
                 <span class="me-2"><i class="fas fa-route"></i></span>
-                <span>Traslado Cliente</span>
+                <span>Traslado Clientes</span>
               </a>
             </li>
           </ul>

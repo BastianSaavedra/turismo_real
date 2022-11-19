@@ -1,0 +1,43 @@
+{% extends 'administration/layout_administration/list_base.html' %}
+{% block interface_title %}Traslados{% endblock %}
+{% block list_title %} {{ title }} {% endblock %}
+{% load tags %}
+
+{% block columns %}
+  <tr>
+    <th scope="col">Id</th>
+    <th scope="col">Lugar Traslado</th>
+    <th scope="col">Horario Inicio</th>
+    <th scope="col">Horario Termino</th>
+    <th scope="col">Costo Traslado</th>
+    <th scope="col">Transporte</th>
+    <th>Editar</th>
+  </tr>
+{% endblock %}
+
+{% block rows %}
+  {% if object_list %}
+    {% for traslado in object_list %}
+    <tr>
+      <td>{{ traslado.id }}</td>
+      <td>{{ traslado.lugar_tp }}</td>
+      <td>{{ traslado.horario_in | time:"H:i a"}}</td>
+      <td>{{ traslado.horario_fin | time:"H:i a"}}</td>
+      <td>$ {{ traslado.costo_tp | numberFormat }}</td>
+      <td>{{ traslado.transporte }}</td>
+      <td>
+        <a class="btn btn-warning btn-sm" type="button" href="{% url 'administration_traslado_update' traslado.id %}">
+          <i class="bi bi-pencil"></i>
+        </a>
+      </td>
+    </tr>
+    {% endfor %}
+  {% endif %}
+{% endblock%}
+
+{% block button_create %}
+<a href="{% url 'administration_traslado_create' %}" class="btn btn-success">
+  <i class="fas fa-plus"></i>
+  Agregar Traslado
+</a>
+{% endblock %}

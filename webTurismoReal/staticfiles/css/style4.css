@@ -1,0 +1,45 @@
+@import url("https://fonts.googleapis.com/css?family=Poppins");
+
+.h2{
+    font-family: "Poppins";
+    font-weight: 500;
+    text-transform: capitalize;
+    color:#000;
+    text-align: center;
+}
+
+#h5 .h5{
+    font-family: "Poppins";
+    font-weight: 500;
+    background-color: black;
+    text-align: center;
+}
+
+label{
+    font-family: "Poppins";
+    font-weight: 400; 
+    color:#000;
+}
+
+#cin::placeholder{
+    color: #fff;
+}
+
+#cout::placeholder{
+    color: #000;
+}
+
+input, #lbl1, #lbl2{
+    display:block;
+}
+
+
+#tour{
+    width: 500px;
+    height: 35px;
+  }
+
+#lugar{
+    width: 500px;
+    height: 35px;
+  }

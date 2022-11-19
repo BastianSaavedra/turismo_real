@@ -1,5 +1,7 @@
+import os
 from secrets import token_urlsafe
 from typing import List
+from django.contrib.admin.options import reverse
 from django.db.models.functions import Coalesce
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404, render, redirect
@@ -11,16 +13,17 @@ from django.views.generic import ListView, View, DetailView
 from django.views.generic.edit import CreateView, UpdateView
 from home.models import (
     Comuna, Departamento, DetalleDpto, Reserva, ImagenDepartamento,
-    Conductor, Transporte, Modelo, Marca, Tour, Usuario
+    Conductor, Transporte, Modelo, Marca, Tour, Usuario, DetalleTP
     )
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
     DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm,
-    TransporteStatusForm, TourForm, ReservaStatusForm
+    TransporteStatusForm, TourForm, ReservaStatusForm, DetalleTPForm
     )
 
 from datetime import datetime
 from django.db import transaction
+from webTurismoReal import settings
 
 # Reportes
 from xhtml2pdf import pisa
@@ -46,7 +49,7 @@ def total_reserva():
 
 def administration_dashboard(request):
 
-    # if request.user.is_staff == False:
+    # if request.user.is_staff == False
     #     return HttpResponse('Acceso Denegado')
 
     detalles_dptos = DetalleDpto.objects.all()
@@ -358,15 +361,42 @@ class AdministracionReservaDetailView(DetailView):
 
 
 class ReservaDetailPdfView(View):
+
+    def link_callback(self, uri, rel):
+        sUrl = settings.STATIC_URL
+        sRoot = settings.STATIC_ROOT
+        mUrl = settings.MEDIA_URL
+        mRoot = settings.MEDIA_ROOT
+
+        if uri.startswith(mUrl):
+            path = os.path.join(mRoot, uri.replace(mUrl, ""))
+        elif uri.startswith(sUrl):
+            path = os.path.join(sRoot, uri.replace(sUrl, ""))
+        else:
+            return uri
+
+        if not os.path.isfile(path):
+            raise Exception(
+                'media Uri must start with %s or %s' % (sUrl, mUrl)
+            )
+        return path
+
+ 
     def get(self, request, *args, **kwargs):
         try:
             template = get_template('administration/interfaces/reservas/reserva_detail_pdf.html')
-            context = {'obj': Reserva.objects.get(pk=self.kwargs['pk'])}
+            context = {
+                'obj': Reserva.objects.get(pk=self.kwargs['pk']),
+                'icon': '{}{}'.format(settings.STATIC_ROOT, 'img/logo_2.png')
+            }
             html = template.render(context)
             response = HttpResponse(content_type='application/pdf')
             response['Content-Disposition'] = 'attachment; filename="report.pdf"'
             pisaStatus = pisa.CreatePDF(
-              html, dest=response
+                html, 
+                dest=response,
+                link_callback=self.link_callback
+
             )
 
             return response
@@ -561,7 +591,7 @@ class AdministracionTourCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdministracionTourCreateView, self).get_context_data(**kwargs)
-        context['title'] = 'Agregando Nuevo Servicio Extra'
+        context['title'] = 'Agregando Nuevo Tour'
         context['icon'] = 'fa-solid fa-plus'
         return context
 
@@ -574,9 +604,48 @@ class AdministracionTourUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super(AdministracionTourUpdateView, self).get_context_data(**kwargs)
-        context['title'] = 'Agregando Nuevo Servicio Extra'
+        context['title'] = 'Editando Tour'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+# DetalleTP
+class AdministracionDetalleTPListView(ListView):
+    model = DetalleTP
+    template_name = 'administration/interfaces/servicios_extras/traslados.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Listado de Traslado de Clientes'
+        context['object_list'] = DetalleTP.objects.all()
+        return context
+
+
+class AdministracionDetalleTPCreateView(CreateView):
+    model = DetalleTP
+    form_class = DetalleTPForm
+    template_name = 'administration/interfaces/servicios_extras/traslado_create_update.html'
+    success_url = reverse_lazy('administration_traslado')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionDetalleTPCreateView, self).get_context_data(**kwargs)
+        context['title'] = 'Agregando Nuevo Traslado'
         context['icon'] = 'fa-solid fa-plus'
         return context
+
+
+class AdministracionDetalleTPUpdateView(UpdateView):
+    model = DetalleTP
+    form_class = DetalleTPForm
+    template_name = 'administration/interfaces/servicios_extras/traslado_create_update.html'
+    success_url = reverse_lazy('administration_traslado')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionDetalleTPUpdateView, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Traslado'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
+
 
 
 

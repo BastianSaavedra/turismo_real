@@ -25,6 +25,7 @@ class FormularioCheckIn(forms.ModelForm):
                     'placeholder': 'Cliente',
                     'id': 'Cliente',
                     'name':'guest',
+                    'disabled': 'true'
                 }
             ),
             'booking_id':forms.TextInput(
@@ -33,6 +34,7 @@ class FormularioCheckIn(forms.ModelForm):
                     'placeholder': 'ID_Reserva',
                     'id': 'identificador',
                     'name':'id_reserva',
+                    'disabled': 'true'
                     }
             ),
             

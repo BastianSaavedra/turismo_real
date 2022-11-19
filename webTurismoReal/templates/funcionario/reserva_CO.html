@@ -1,6 +1,7 @@
 {% extends '../layout/base_funcionario.html' %}
 {% block title %}Check OUT{% endblock %}
 {% block content %}
+{% comment %}
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="col" style="color:black">
     <form action="." method="POST">
@@ -23,5 +24,41 @@
           </div>
     </form>
 </div>
+
+
+{% endcomment %}
+
+<div class="col" style="color:black">
+  {% for reserva in reservas %}
+  <form action="{% url 'guardar_reserva_check_out' reserva.id %}" method="POST">
+    {% csrf_token %}
+    <div class="card card-default">
+
+      <div class="card-body">
+        <label class="text-dark">Cliente</label>
+        <input class="form-control" type="text" value="{{ reserva.guest }}" disabled/>
+
+        <label class="text-dark">Codigo Reserva</label>
+        <input class="form-control" type="text" value="{{ reserva.booking_id }}" disabled/>
+        
+        <label class="text-dark">Comentarios</label>
+        <textarea style="height: 250px;" class="form-control" placeholder="Realizar comentario sobre la reserva" id="comentario_checkout"></textarea>
+
+        <label class="text-dark">Costo multa</label>
+        <input type="number" class="form-control" id="monto_multa" placeholder="$ 0" />
+      </div>
+
+      <div class="card-footer">
+        <button class="btn btn-primary" type="submit">
+          Guardar
+        </button>
+      </div>
+
+
+    </div>
+  </form>
+  {% endfor %}
+</div>
+
 
 {% endblock%}

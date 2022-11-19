@@ -33,9 +33,9 @@
           {% endif %}
         </td>
         <td>{{ tour.nombreTour}}</td>
-        <td>{{ tour.horario_in }}</td>
-        <td>{{ tour.horario_fin }}</td>
-        <td>${{ tour.costo | numberFormat }}</td>
+        <td>{{ tour.horario_in | time:"H:i a" }}</td>
+        <td>{{ tour.horario_fin | time:"H:i a" }}</td>
+        <td>$ {{ tour.costo | numberFormat }}</td>
         <td>{{ tour.comuna }}</td>
         <td>
           <a href="{% url 'administration_tour_update' tour.id %}" type="button" class="btn btn-warning btn-sm ">
