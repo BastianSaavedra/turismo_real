@@ -136,7 +136,8 @@ def home_reserva(request):
             valor_tour = 0
         else:
             tipo_tour = request.POST['tour']
-            valor_tour = reservation.tour.costo
+            tour = Tour.objects.get(id=tipo_tour)
+            valor_tour = tour.costo
 
         lugar_transporte = request.POST['lugar']
         if lugar_transporte == "0":
@@ -144,13 +145,12 @@ def home_reserva(request):
             valor_transporte = 0
         else:
             lugar_transporte = request.POST['lugar']
-            valor_transporte = reservation.detalle_tp.costo_tp
+            transp = DetalleTP.objects.get(id=lugar_transporte)
+            valor_transporte = transp.costo_tp
 
         #--------------------------------- SERVICIOS ---------------------------------
         
         #--------------------------------------Guardado de servicios en bbdd----------------------------------------
-        # reservation.detalle_tp = detalle_transporte  
-        # reservation.tour = tour
 
         reservation.tour_id = tipo_tour
         reservation.detalle_tp_id = lugar_transporte

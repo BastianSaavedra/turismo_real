@@ -30,34 +30,41 @@
           <p>Codigo Reserva: {{ reserva.booking_id }}</p>
 
           <!---------------------------------------------------Seccion de servicios extra--------------------------------------------------------->
-          {% if reserva.tour %}
-          <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
-            {% csrf_token %}
-            <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
-          </form>
+          {% if reserva.tour and reserva.detalle_tp%}
+            <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
+              {% csrf_token %}
+              <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
+            </form>
             <p>Tour: {{ reserva.tour }}</p>
-          {% comment %}
-          {% else %}
-            <select class="btn btn-success btn-md" style="float: center;width: 160px;" name="tour" id="tour">
-              <option>Añadir tour</option>
-                  {% for tour in all_tours %}
-                    <option value="{{ tour.nombreTour }}">{{ tour.nombreTour }}</option>  
-                  {% endfor %}
-            </select>
-          {% endcomment %}
-          {% endif %}
-          
-          {% if reserva.detalle_tp %}
-          <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
-            {% csrf_token %}
-            <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
-            <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
-            <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
-          </form>
+
+            <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
+              {% csrf_token %}
+              <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
+              <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
+              <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
+            </form>
+
+           {% elif reserva.tour and not reserva.detalle_tp %}
+              <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
+                {% csrf_token %}
+                <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
+                </form>
+                <p>Tour: {{ reserva.tour }}</p>
+                <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 160px;">Añadir transporte</button></a>
+
+            {% elif not reserva.tour and reserva.detalle_tp %}
+              <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: right;width: 160px;">Añadir tour</button></a>
+              <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
+                {% csrf_token %}
+                <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
+                <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
+                <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
+              </form>
 
           {% else %}
-            <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 180px;">Añadir servicio extra</button></a>
+            <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 180px;">Añadir servicios extra</button></a>
           {% endif %}
+
           <!--------------------------------------------------------------------------------------------------------------------------------------->
 
         </div>

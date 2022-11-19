@@ -1,14 +1,20 @@
 from audioop import reverse
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
-from django.views.generic import ListView
+from django.views.generic import ListView, View
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView
+from django.template.loader import get_template
 from home.models import DetalleDpto, Reserva, ImagenDepartamento
+from django.contrib import messages
 from funcionario import urls
 from funcionario.forms import *
+
+#PDF related
+from io import BytesIO
+from xhtml2pdf import pisa
 
 # Create your views here.
 
@@ -31,8 +37,7 @@ class FuncionarioReservaUpdateView1(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(FuncionarioReservaUpdateView1, self).get_context_data(**kwargs)
         return context
-    
-    
+     
 class FuncionarioReservaUpdateView2(UpdateView):
     model = Reserva
     form_class = FormularioCheckOut
@@ -41,3 +46,20 @@ class FuncionarioReservaUpdateView2(UpdateView):
     def get_context_data(self, **kwargs):
         context = super(FuncionarioReservaUpdateView2, self).get_context_data(**kwargs)
         return context
+
+
+def funcionarioReserva_Check_PDF(request,*args, **kwargs):
+    pk = kwargs.get('pk')
+    reserva = get_object_or_404(Reserva,pk=pk)
+    template_path = 'funcionario/reserva_Check_pdf.html'
+    context = {'reserva': reserva}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="estado.pdf"'
+    template = get_template(template_path)
+    html = template.render(context)
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    
+    if pisa_status.err:
+       return HttpResponse('Intente nuevamente <pre>' + html + '</pre>')
+    return response

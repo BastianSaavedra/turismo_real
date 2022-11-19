@@ -3,41 +3,51 @@
 {% load tags %}
 {% block title %}Revision de Reservas {% endblock %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style5.css' %}">
 <form action="" method="POST">
 <hr style="color:aliceblue ; height: 0.1px;">
+<div class="container">
 <div class="col ms-5">
-<h2 style="font-weight:600">Reservas concretadas: </h2>
+<h2 style="font-weight:600; color:#fff;">Reservas concretadas: </h2>
   <div class="row">
     {% for reserva in reserva_list %}
       <div class="col-4 mt-4 ">
-        <div class="card h-100">
-          <div class="card-body bg-secondary">
-            <h5 class="card-text text-white" style="font-weight:600; ">ID: {{reserva.booking_id}}</h5>
+        <div class="card h-100 bg-light">
+          <div class="card-body bg-warning">
+            <h5 class="card-text text-dark" style="font-weight:600; ">ID: {{reserva.booking_id}}</h5>
           </div>
           <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="150" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
-          <div class="card-body bg-light">
-            <h5 class="card-text">Cliente: {{reserva.guest.nombre}} {{reserva.guest.ap_paterno}}</h5>
+          <div class="card-body bg-white text-dark">
+            <h5 class="card-text" style="color:#000;">Cliente: {{reserva.guest.nombre}} {{reserva.guest.ap_paterno}}</h5>
             <hr> 
               {% if reserva.status == '1' %}
-                <p class="card text-success" style="font-weight: 600;">Estado: Activa</p>
+                <p class="card text-success" style="font-weight: 550; font-family: 'Poppins';border: none;">Estado: Activa</p>
               {% elif reserva.status == '2' %}
-              <p class="card text-danger" style="font-weight: 600;">Estado: Cancelada</p>
+              <p class="card text-danger" style="font-weight: 500; font-family: 'Poppins'">Estado: Cancelada</p>
               {% else %}
                   Error
               {% endif %}
-            <p class="card-text" style="font-weight: 600;">Check-IN: {{reserva.check_in}}</p>
-            <p class="card-text" style="font-weight: 600;">Check-OUT: {{reserva.check_out}}</p>
+            <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">Check-IN: {{reserva.check_in}}</p>
+            <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">Check-OUT: {{reserva.check_out}}</p>
             <hr>
-            <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
-            <a href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>
-          </div>
-
+            <div style="display: flex; justify-content: center;">
+              <a style="width: 150px;" href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
+              <br style="margin: 10px;">
+              <a style="width: 150px;" href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>  
+            </div>
+            <br style="margin: 1px;">
+              <div style="display: flex; justify-content: center;">
+                <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                <i class="fas fa-file-pdf"></i>
+                Descargar detalle
+              </a>
+              </div>
           </div>
         </div>
       </div>
     {% endfor %}
   </div>
+</div>
 </div>
 </form>
 {% endblock %}

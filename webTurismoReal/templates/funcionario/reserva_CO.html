@@ -1,27 +1,43 @@
 {% extends '../layout/base_funcionario.html' %}
+{% load static %}
+{% load tags %}
 {% block title %}Check OUT{% endblock %}
 {% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'css/style4.css' %}">
 <hr style="color:aliceblue ; height: 0.1px;">
+<div class="container" style="border-radius: 20px; background-color: rgb(244, 184, 72);">
+  <div class="row">
+    <hr style="color:aliceblue ; height: 0.1px;">
+    <h3 style="font-weight:530; display: flex;">Detalles de la reserva:
+      <p style="font-family: Poppins; font-size: 20px; margin-top: 10px; margin-left: 10px;">(ID {{reserva.booking_id}})</p>
+      <h4 style="color:rgb(0, 0, 0); font-weight: 600; margin-top: -15px;">CHECK-OUT</h4></h3>
+  </div>
 <div class="col" style="color:black">
     <form action="." method="POST">
         {% csrf_token %}
-        <div class="card card-default">
-
-
-
-            <div class="card-body" >
+        <div class="card card-default bg-white">
+            <div class="card-body">
+              <h5 class="card-text" style="display:inline-block">Nombre del cliente:
+                <h4 style="margin:10px; font-weight:600;display:inline-block">{{reserva.guest.nombre}} {{reserva.guest.ap_paterno}} | ({{reserva.guest}})</h4></h5>
+              <hr>
+              <h5 class="card-text" style="display:inline-block">Detalles de la reserva:<h4 style="margin:10px; font-weight:600;display:inline-block">{{reserva.detalle_dpto.departamento.titulo}} | ${{reserva.total_reserva | numberFormat}} | {{reserva.check_out}}</h4></h5>
+              <hr>
               {% for f in form %}
               <label class="text-dark">{{ f.label }}</label>
               {{ f }}
+              <hr style="color:aliceblue ; height: 0.1px;">
               {% endfor %}
             </div>
 
-          <div class="card-footer">
-            <button type="submit" class="btn btn-primary">
-               Guardar
+          <div style="display: flex; justify-content: center;">
+            <a style="padding: 10px 32px; color:white; font-weight: 600;" href="{% url 'funcionario_home' %}" type="submit" class="btn btn-danger">ATRÁS</a>
+            <br style="margin: 10px;">
+            <button style="padding: 10px 32px; color:white; font-weight: 600;" type="submit" class="btn btn-success">
+               GUARDAR
             </button>
           </div>
+          <hr style="color:aliceblue ; height: 0.1px;">
     </form>
 </div>
-
+<hr style="color:aliceblue ; height: 0.1px;">
 {% endblock%}
