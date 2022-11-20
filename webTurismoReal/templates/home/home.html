@@ -17,7 +17,7 @@
     <!-- Formulario de busqueda de departamento empieza aqui -->
     <form action="" method="POST" class="needs-validation text-white">
       {% csrf_token %}
-      <div class="row justify-content-center py-5" style="background: rgb(40, 44, 90);">
+      <div class="row justify-content-center py-5" style="background: rgb(40, 44, 90); width:1900px;">
         <div class="col-lg-3 form-group text-center">
           <label>Destino</label>
           <select class="form-select bg-white rounded-pill text-center border-primary" name="search_location" id="id_comuna">
@@ -117,7 +117,7 @@
       <div class="col-12 col-md-6 offset-md-3">
         <div class="col-12 col-md-6 offset-md-3 text-center">
           {% for dpto in detalles_dpto %}
-          <hr><h4>Departamentos en: <h5>{{dpto.departamento.comuna.nombre}}</h5></h4><hr>
+          <hr><h5 style="font-size: 20px;">Departamentos en: <h5 style="font-size: 30px; font-weight: bold;">{{dpto.departamento.comuna.nombre}}</h5></h4><hr>
           </div>
           </div>
           <div class="card mb-3" style="max-width: 600px;">
@@ -131,9 +131,215 @@
                   <p class="card-text">Direccion: {{ dpto.departamento.direccion }}</p>
                   <p class="card-text">Capacidad: {{ dpto.capacidad }}</p>
                   <p class="card-text">A partir de: ${{ dpto.precio|numberFormat}}</p>
-                  <div class="d-grid gap-2 col-6 mx-auto">
-                   <a href="{% url 'home_reserva_confirmacion' dpto.id %}"><button class= "btn btn-warning btn-lg">Reservar</button></a>
-                  </div>
+                  <div style="display: flex; justify-content: center;">
+                   <a href="{% url 'home_reserva_confirmacion' dpto.id %}">
+                    <button class= "btn btn-success btn-md">
+                      <i class="fa-solid fa-building-user" style="margin-right: 5px;"></i>
+                      Reservar
+                    </button>
+                   </a>
+
+                   <br style="margin: 10px;">
+                    <button class="btn btn-warning btn-md" data-bs-toggle="modal" data-bs-target="#depaModal" style="margin-bottom: 8px;">
+                      <i class="fa-solid fa-magnifying-glass" style="margin-right: 5px;"></i>
+                      Mas detalles
+                    </button>
+
+                    <!--Seccion de ventana modal para departamentos empieza aqui-->
+
+                    <div class="modal fade" id="depaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content" style="width: 1000px; display: inline-block; margin-left: -250px;">
+                          <div class="modal-header">
+                            <h3 class="modal-title" id="exampleModalLabel" style="font-weight: 500;">{{ dpto.departamento.titulo }}</h3>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h5 class="card-text" style="font-size: 20px; margin-bottom: 10px;"><i aria-hidden="true" class="fa fa-people-pants-simple"></i>{{ dpto.departamento.descripcion }}</h5>
+                                </div>
+                              </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h5 class="card-text" style="font-size: 20px;"><i aria-hidden="true" class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>Dirección: {{ dpto.departamento.direccion }}, {{dpto.departamento.comuna}}</h5>
+                                </div>
+                              </div>
+                              <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h5 class="card-text" style="margin-bottom: 10px;font-size: 20px;"><i aria-hidden="true" class="fas fa-restroom" style="margin-right: 5px;"></i>Capacidad: {{ dpto.capacidad }} personas</h5>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="row">
+                              <div class="col-md-6">
+                                <div class="d-flex justify-content-between align-items-center">
+                                  <h5 class="card-text" style="margin-top: 10px;"> <i class="fas fa-money-bill" style="margin-right: 5px;"></i>Precio de hoy:<h5 style="color:green; margin-right: 200px; font-weight: bold;margin-top: 10px">${{ dpto.precio|numberFormat}}</h5></h5>
+                                </div>
+                              </div>
+                            </div>
+                            
+                            <h5 style="font-size: 30px; margin-top: 15px;">Imágenes de la residencia:</h5>
+                            <hr style="color:rgb(255, 255, 255) ; height: 0.1px;">
+                            <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
+                              <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                  <img src="{{ dpto.departamento.imagenes.first.imagen.url }}" class="d-block w-100" alt="...">
+                                </div>
+                                <div class="carousel-item">
+                                  {%comment%}
+                                  <img src="{{ dpto.departamento.imagenes.second.imagen.url }}"  class="d-block w-100" alt="...">
+                                  {%endcomment%}
+
+                                  <img src="{% static 'img/gallery-4.jpg' %}" class="d-block w-100" alt="...">
+
+                                </div>
+                                <div class="carousel-item">
+
+                                  {%comment%}
+                                  <img src="{{ dpto.departamento.imagenes.third.imagen.url }}"  class="d-block w-100" alt="...">
+                                  {%endcomment%}
+
+                                  <img src="{% static 'img/gallery-3.jpg' %}" class="d-block w-100" alt="...">
+                                </div>
+                              </div>
+                              <hr>
+                              <h5 style="font-size: 30px; margin-top: 20px; margin-bottom: 10px;">Comodidades del lugar:</h5>
+
+                              <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-wifi" style="margin-right: 5px;"></i>
+                                      Servicio de internet: {{ dpto.internet}}
+                                      {% if dpto.internet == 'NO' %}
+                                        <i aria-hidden="true" class="fa fa-close" style="margin-left: 5px; color:red"></i> 
+                                      {% else %}
+                                        <i aria-hidden="true" class="fa fa-check" style="margin-left: 5px; color:green"></i> 
+                                      {% endif %}
+                                    </h5>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-tv" style="margin-right: 5px;"></i>
+                                      Servicio de cable: {{ dpto.cable}}
+                                      {% if dpto.cable == 'NO' %}
+                                        <i aria-hidden="true" class="fa fa-close" style="margin-left: 5px; color:red"></i> 
+                                      {% else %}
+                                        <i aria-hidden="true" class="fa fa-check" style="margin-left: 5px; color:green"></i> 
+                                      {% endif %}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-suitcase" style="margin-right: 5px;"></i>
+                                      Electrodomesticos: {{ dpto.electronicos}}
+                                      {% if dpto.electronicos == 'NO' %}
+                                        <i aria-hidden="true" class="fa fa-close" style="margin-left: 5px; color:red"></i> 
+                                      {% else %}
+                                        <i aria-hidden="true" class="fa fa-check" style="margin-left: 5px; color:green"></i> 
+                                      {% endif %}
+                                    </h5>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-snowflake" style="margin-right: 5px;"></i>
+                                      Aire acondicionado: {{ dpto.aire_acondicionado}}
+                                      {% if dpto.aire_acondicionado == 'NO' %}
+                                        <i aria-hidden="true" class="fa fa-close" style="margin-left: 5px; color:red"></i> 
+                                      {% else %}
+                                        <i aria-hidden="true" class="fa fa-check" style="margin-left: 5px; color:green"></i> 
+                                      {% endif %}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-door-closed" style="margin-right: 5px;"></i>
+                                      Bodega: {{ dpto.bodega}}
+                                      {% if dpto.bodega == 'NO' %}
+                                        <i aria-hidden="true" class="fa fa-close" style="margin-left: 5px; color:red"></i> 
+                                      {% else %}
+                                      <i aria-hidden="true" class="fa fa-check" style="margin-left: 5px; color:green"></i> 
+                                      {% endif %}
+                                    </h5>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-shower" style="margin-right: 5px;"></i>
+                                      Baños: {{ dpto.cant_bannio}}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div class="row" style="margin-top: 20px;">
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-bed" style="margin-right: 5px;"></i>
+                                      Dormitorios: {{ dpto.cant_dormitorio}} 
+                                    </h5>
+                                  </div>
+                                </div>
+                                <div class="col-md-6">
+                                  <div class="d-flex justify-content-between align-items-center">
+                                    <h5 class="card-text" style="font-size: 20px; ">
+                                      <i aria-hidden="true" class="fas fa-car" style="margin-right: 5px;"></i>
+                                      Estacionamientos: {{ dpto.cant_estacionamiento}}
+                                    </h5>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                              </button>
+                            </div>
+
+                          </div>
+                          <div style="display: flex; justify-content: center;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" style="width: 150px;">Cerrar</button>
+                            <br style="margin: 10px;">
+                            <a href="{% url 'home_reserva_confirmacion' dpto.id %}">
+                              <button class= "btn btn-success btn-md" style="width: 150px;">
+                                <i class="fa-solid fa-building-user" style="margin-right: 5px;"></i>
+                                Reservar
+                              </button>
+                             </a>
+                             
+                          </div>
+                          <hr style="color:aliceblue ; height: 0.1px;">
+                         </div>
+                       </div>
+                     </div>  
+                   </div>
+
+                   <!--Seccion de ventana modal para departamentos finaliza aqui-->
                 </div>
             </div>
       {% endfor %}
@@ -145,7 +351,7 @@
 
 <!-- Carrusel de imagenes empieza aqui-->
 <section class="home">
-  <div class="content">
+  <div class="content" style=" width:1900px;">
     <div class="owl-carousel owl-theme">
       <div class="item">
         <img src="{% static 'img/banner-1.jpg' %}" height="500px" alt="">
