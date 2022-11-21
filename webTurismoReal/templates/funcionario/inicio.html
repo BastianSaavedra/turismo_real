@@ -44,3 +44,76 @@
 </div>
 </form>
 {% endblock %}
+
+{% comment %}
+{% block content %}
+  <div class="container mt-5 pt-3">
+
+    <div class="row text-center">
+      <div class="mt-2 pt-3">
+        <h2>Reservas</h2>
+      </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      {% for reserva in reserva_list %}
+      <div class="col">
+        <div class="card h-100 border border-2 border-warning">
+          <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="150" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
+          <div class="card-body bg-light text-center">
+            <h4>Codigo: <span class="badge bg-primary">{{ reserva.booking_id }}</span></h4>
+            <hr/>
+            <h5>
+            Estado: 
+              {% if reserva.status == "1" %}
+              <span class="bg-success badge">Activa</span>
+              {% elif reserva.status == "2" %}
+                <span class="bg-danger badge">Cancelada</span>
+              {% elif reserva.status == "3" %}
+                <span class="bg-warning badge">Terminada</span>
+              {% else %}
+                <span class="bg-info badge">Error</span>
+              {% endif %}
+            </h5>
+            <hr/>
+            <h5 class="card-title text-center">Informacion</h5>
+            <p class="card-text text-capitalize">
+            Cliente: {{ reserva.guest.nombre }} {{ reserva.guest.ap_paterno}}
+            </p>
+            <p class="card-text">
+            Fecha Inicio: {{ reserva.check_in }}
+            </p>
+            <p class="card-text">
+            Fecha Fin: {{ reserva.check_out }}
+            </p>
+          </div>
+
+          <div class="card-footer text-center">
+            {% if reserva.status == "3" %}
+            No hay opciones
+            {% elif reserva.status_estadia == "0" %}
+            <a href="{% url 'checkin_update' reserva.pk %}" class="btn btn-success">
+              Check In
+            </a>
+            {% elif reserva.status_estadia == "1" %}
+            <a href="{% url 'checkout_update' reserva.pk %}" class="btn btn-danger">
+              Check Out
+            </a>
+
+            {% else %}
+            No hay opciones
+
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      {% endfor %}
+    </div>
+
+
+
+  </div>
+
+{% endblock %}
+{% endcomment %}
