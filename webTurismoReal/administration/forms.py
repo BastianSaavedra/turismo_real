@@ -294,9 +294,7 @@ class ReservaStatusForm(forms.ModelForm):
     class Meta:
         model = Reserva
         fields = ('status',)
-        labels = {
-            'status': 'Estado de Reserva'
-        }
+        labels = { 'status': 'Estado de Reserva' }
         widgets = {
             'status': forms.Select(
                 attrs = {
@@ -306,17 +304,17 @@ class ReservaStatusForm(forms.ModelForm):
 
                 }
             )
-
-
         }
-
 
 
 class ConductorForm(forms.ModelForm):
 
     class Meta:
         model = Conductor
-        fields = '__all__'
+        fields = (
+            'nombre', 'apellido',
+            'edad', 'annio_experiencia'
+        )
         labels = {
             'nombre': 'Nombre',
             'apellido': 'Apellido',
@@ -350,6 +348,22 @@ class ConductorForm(forms.ModelForm):
             )
         }
 
+
+class ConductorStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = Conductor
+        fields = ('status',)
+        labels = { 'status': 'Estado del Conductor' }
+        widgets = {
+            'status': forms.Select(
+                attrs = {
+                    'class': 'form-control select-search mb-4',
+                    'name': 'statusConductor',
+                    'id': 'statusConductor'
+                }
+            )
+        }
 
 # Transporte Inline Form
 class MarcaForm(forms.ModelForm):

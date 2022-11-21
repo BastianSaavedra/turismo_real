@@ -6,7 +6,7 @@
 <form action="" method="POST">
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="col ms-5">
-<h2 style="font-weight:600">Reservas concretadas: </h2>
+<h2 style="font-weight:600">Reservas: </h2>
   <div class="row">
     {% for reserva in reserva_list %}
       <div class="col-4 mt-4 ">
@@ -22,6 +22,8 @@
                 <p class="card text-success" style="font-weight: 600;">Estado: Activa</p>
               {% elif reserva.status == '2' %}
               <p class="card text-danger" style="font-weight: 600;">Estado: Cancelada</p>
+              {% elif reserva.status == '3' %}
+              <p class="card text-warning" style="font-weight: 600;">Estado: Terminado</p>
               {% else %}
                   Error
               {% endif %}
@@ -29,11 +31,8 @@
             <p class="card-text" style="font-weight: 600;">Check-OUT: {{reserva.check_out}}</p>
             <hr>
             <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
-            {% comment %}
-            <a href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>
-            {% endcomment %}
-            <a href="{% url 'reserva_check_out' reserva.id %}" class="btn btn-danger">CHECK OUT</a>
+            <a href="{% url 'checkin_update' reserva.pk%}" class="btn btn-warning">Check In</a>
+            <a href="{% url 'checkout_update' reserva.pk %}" class="btn btn-danger">Check Out</a>
 
           </div>
 

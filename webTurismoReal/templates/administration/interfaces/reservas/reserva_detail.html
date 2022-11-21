@@ -88,14 +88,20 @@
                       <tr>
                         <td>Estado Reserva</td>
                         <td>
-                          {% if obj.status == '1'%}
+                          {% if obj.status == "1" %}
                             <span class="bg-success text-white rounded-pill px-2">
                               Activa
                             </span>
-                          {% else %}
+                          {% elif obj.status == "2" %}
                             <span class="bg-danger text-white rounded-pill px-2">
                               Cancelada
                             </span>
+                          {% elif obj.status == "3" %}
+                            <span class="bg-warning text-white rounded-pill px-2">
+                              Terminada
+                            </span>
+                          {% else %}
+                            En proceso
                           {% endif %}</td>
                       </tr>
                     </tbody>

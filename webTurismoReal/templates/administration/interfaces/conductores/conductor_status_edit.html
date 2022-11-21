@@ -8,17 +8,16 @@
         </span>
         {{ title }}
       </h3>
-      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close">
-      </button>
+      <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
     </div>
-    <form action="{% url 'administration_transporte_status_edit' object.id %}" method="POST">
+    <form action="{% url 'administration_conductor_status_edit' object.id %}" method="POST">
       {% csrf_token %}
       <div class="modal-body">
         {{ form.status.label }}
         {{ form.status }}
       </div>
 
-      <div class="modal-footer d-flex justify-content-start">
+      <div class="modal-footer d-flex justify_content-start">
         <button class="btn btn-success" type="submit">
           Guardar
         </button>
@@ -26,8 +25,9 @@
         <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">
           Cancelar
         </button>
-
       </div>
+
     </form>
   </div>
+
 </div>

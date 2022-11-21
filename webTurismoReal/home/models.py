@@ -201,10 +201,17 @@ class Tour(models.Model):
         verbose_name_plural = 'Tours'
     
 class Conductor(models.Model):
+    
+    CONDUCTOR_STATUS = (
+        ('1', 'Activo'),
+        ('2', 'Inactivo')
+    )
+
     nombre = models.CharField(max_length=50, blank=True, null=True)
     apellido = models.CharField(max_length=50, blank=True, null=True)
     edad = models.PositiveIntegerField(default=0, blank=True, null=True)
     annio_experiencia = models.PositiveIntegerField(default=0, blank=True, null=True)
+    status = models.CharField(choices=CONDUCTOR_STATUS, max_length=13, default="1")
     
     def __str__(self):
         return self.nombre
@@ -289,7 +296,8 @@ class Reserva(models.Model):
 
     RESERVA_STATUS = (
         ('1', 'Activa'),
-        ('2', 'Cancelada')
+        ('2', 'Cancelada'),
+        ('3', 'Terminada')
     )
 
     ESTADIA = (

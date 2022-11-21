@@ -3,7 +3,7 @@ from secrets import token_urlsafe
 from typing import List
 from django.contrib.admin.options import reverse
 from django.db.models.functions import Coalesce
-from django.db.models import Sum
+from django.db.models import Sum, Q
 from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import get_template
@@ -18,7 +18,7 @@ from home.models import (
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
     DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm,
-    TransporteStatusForm, TourForm, ReservaStatusForm, DetalleTPForm
+    TransporteStatusForm, TourForm, ReservaStatusForm, DetalleTPForm, ConductorStatusForm
     )
 
 from datetime import datetime
@@ -44,7 +44,7 @@ def sumatoria():
     return data 
 
 def total_reserva():
-    total = Reserva.objects.filter(status="1").aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
+    total = Reserva.objects.filter(Q(status='1') | Q(status='3')).aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
     return total
 
 def administration_dashboard(request):
@@ -383,6 +383,7 @@ class ReservaDetailPdfView(View):
 
  
     def get(self, request, *args, **kwargs):
+        now = datetime.now()
         try:
             template = get_template('administration/interfaces/reservas/reserva_detail_pdf.html')
             context = {
@@ -391,7 +392,7 @@ class ReservaDetailPdfView(View):
             }
             html = template.render(context)
             response = HttpResponse(content_type='application/pdf')
-            response['Content-Disposition'] = 'attachment; filename="report.pdf"'
+            response['Content-Disposition'] = 'attachment; filename="report-{}.pdf"'.format(now)
             pisaStatus = pisa.CreatePDF(
                 html, 
                 dest=response,
@@ -491,6 +492,17 @@ class AdministracionConductorUpdateView(UpdateView):
         return context
 
 
+class AdministracionConductorStatusEdit(UpdateView):
+    model = Conductor
+    form_class = ConductorStatusForm
+    template_name = 'administration/interfaces/conductores/conductor_status_edit.html'
+    success_url = reverse_lazy('administration_conductor')
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionConductorStatusEdit, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Estado del Conductor'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
 
 # Transporte Views
 class AdministracionTransporteListView(ListView):

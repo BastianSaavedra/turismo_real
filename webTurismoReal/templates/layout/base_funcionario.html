@@ -7,7 +7,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<!-- <<<<<<< HEAD -->
     <!-- Static CSS -->
     <link rel="stylesheet" type="text/css" href="{% static 'css/style2.css' %}"/>
     <!-- Bootstrap CSS -->
@@ -37,6 +36,7 @@
           })
       }
     </script>
+    {% block css %}{% endblock %}
     
 {% if request.user.is_funcionario %}
     <title>{% block title %}Turismo Real{% endblock %}</title>

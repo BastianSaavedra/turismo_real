@@ -1,28 +1,44 @@
 {% extends '../layout/base_funcionario.html' %}
 {% block title %}Check IN{% endblock %}
+{% block css %}
+<style>
+label {
+  color: black
+}
+</style>
+{% endblock %}
+{% load tags %}
 {% block content %}
-
 <div class="col" style="color:black">
-    <form action="." method="POST">
-        {% csrf_token %}
-        <div class="card card-default">
+  <form action="." method="POST">
+    {% csrf_token %}
+    <div class="card card-default">
 
+      <div class="card-body">
+        <label>Cliente</label>
+        <input value="{{ cliente.guest }}" class="form-control" disabled />
+        <label>Codigo Reserva</label>
+        <input value="{{ cliente.booking_id }}" class="form-control" disabled/>
 
-            <div class="card-body" >
-              {% for f in form %}
-              <label class="text-dark">{{ f.label }}</label>
-              {{ f }}
-              {% endfor %}
-            </div>
+        {{ form }} 
 
-          <div class="card-footer">
+      </div>
 
-            <button type="submit" class="btn btn-primary">
-               Guardar
-            </button>
-          </div>
+      <div class="card-footer">
+        <button type="submit" class="btn btn-primary">
+          Guardar
+        </button>
 
-    </form>
+        <a href="{% url 'funcionario_home' %}" type="submit" class="btn btn-secondary">
+          Cancelar
+        </a>
+
+      </div>
+
+    </div>
+  </form>
 </div>
+
+
 
 {% endblock%}

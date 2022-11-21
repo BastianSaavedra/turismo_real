@@ -1,5 +1,5 @@
 from audioop import reverse
-from django.shortcuts import redirect, render
+from django.shortcuts import redirect, render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
 from django.contrib import messages
@@ -22,67 +22,69 @@ class FuncionarioReservaListView(ListView):
         context['object_list'] = Reserva.objects.all()
         return context
 
-class FuncionarioReservaUpdateView1(UpdateView):
-    model = Reserva
-    form_class = FormularioCheckIn
-    template_name = 'funcionario/reserva_CI.html'
-    success_url = reverse_lazy('funcionario_home')
-    
-    def get_context_data(self, **kwargs):
-        context = super(FuncionarioReservaUpdateView1, self).get_context_data(**kwargs)
-        return context
-    
-    
-class FuncionarioReservaUpdateView2(UpdateView):
-    model = Reserva
-    form_class = FormularioCheckOut
-    template_name = 'funcionario/reserva_CO.html'
-    success_url = reverse_lazy('funcionario_home')
+def checkin_update(request, checkin_id):
+    checkin = Reserva.objects.get(id=checkin_id)
+    cliente = Reserva.objects.get(id=checkin_id)
 
-    def get_context_data(self, **kwargs):
-        context = super(FuncionarioReservaUpdateView2, self).get_context_data(**kwargs)
-        return context
+    data = {
+        'form': FormularioCheckIn(instance=checkin),
+        'cliente': cliente
+    }
 
-    def suma(self):
-        reservation = Reserva.objects.get(id=self.request.pk)
-        valor_total = reservation.total_reserva
-        valor_multa = reservation.costo_multa
+    if request.method == 'POST':
+        formulario = FormularioCheckIn(data=request.POST, instance=checkin)
+        if formulario.is_valid():
+            formulario.save()
+            return redirect('funcionario_home')
+        data["form"] = formulario
 
-        suma = valor_total + valor_multa 
-        return Reserva.objects.filter(id=self.request.pk).update( total_reserva = suma)
-
-
-def reserva_check_out(request, id):
-
-    reservas = Reserva.objects.filter(id=id)
-    return HttpResponse(
-        render(
-            request,
-            'funcionario/reserva_CO.html',
-            {
-                'reservas': reservas
-            }
-        )
+    return render(
+        request,
+        'funcionario/reserva_CI.html',
+        data
     )
 
-def guardar_reserva_check_out(request, id):
-   
-    if request.method == 'POST':
 
-        reservation = Reserva.objects.get(id=id)
+def checkout_update(request, checkout_id):
+    checkout = Reserva.objects.get(id=checkout_id)
+    return render(
+        request,
+        'funcionario/reserva_CO.html',
+        {
+            "checkout": checkout
+        }
+    )
 
-        comentario = request.POST['comentario_checkout']
+def save_checkout(request, checkout_id):
+    reserva = Reserva.objects.get(id=checkout_id)
 
-        costo_reserva = reservation.total_reserva
+    # guest = request.POST['cliente']
+    # codigo = request.POST['codigo']
+    comentario = request.POST['comentario']
+    monto_multa = request.POST['montoMulta']
 
-        costo_multa = request.POST['monto_multa']
+    reserva_status = '3'
 
-        multa_agregada = costo_reserva + costo_multa
+    reserva.mensaje_check_out = comentario
+    reserva.costo_multa = monto_multa
 
-        Reserva.objects.filter(id=id).update(mensaje_check_out=comentario)
-        Reserva.objects.filter(id=id).update(total_reserva=multa_agregada)
+    reserva.status = reserva_status
 
-        return redirect("funcionario_home")
-    else:
-        return HttpResponse('Guardado Fallido')
-        
+    total_reserva = reserva.total_reserva
+
+    suma_multa = total_reserva + int(monto_multa)
+
+    reserva.total_reserva = suma_multa
+    reserva.save()
+    
+    return redirect('funcionario_home')
+
+
+
+
+
+
+
+
+    
+

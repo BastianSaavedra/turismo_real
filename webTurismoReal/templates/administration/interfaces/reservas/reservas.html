@@ -29,7 +29,7 @@
         <td>{{ r.detalle_dpto.departamento }}</td>
         <td>{{ r.guest }}</td>
         <td>{{ r.booking_id }}</td>
-        {% if r.status == '1' %}
+        {% if r.status == "1" %}
           <td>
             ${{ r.total_reserva | numberFormat }}
           </td>
@@ -38,7 +38,7 @@
               Activa
             </span>
           </td>
-        {% elif r.status == '2' %}
+        {% elif r.status == "2" %}
           <td>
             <del>
               ${{ r.total_reserva | numberFormat }}
@@ -49,6 +49,16 @@
               Cancelada
             </span>
           </td>
+        {% elif r.status == "3" %}
+          <td>
+            ${{ r.total_reserva | numberFormat }}
+          </td>
+          <td>
+            <span class="bg-warning text-white rounded-pill px-2">
+              Terminada
+            </span>
+          </td>
+
         {% else %}
           <td>Error</td>
           <td>Error</td>

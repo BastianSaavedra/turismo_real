@@ -20,12 +20,13 @@ urlpatterns = [
 
     # Cliente Views
     path('cliente/list/', views.AdministracionClienteListView.as_view(), name="administration_cliente"),
-    path('cliente/reservas-list/<int:pk>', views.AdministracionClienteReservasListView.as_view(), name="administration_cliente_reservas"),
+    path('cliente/reservas-list/<int:pk>/', views.AdministracionClienteReservasListView.as_view(), name="administration_cliente_reservas"),
 
     # Conductor Views
     path('conductor/list/', views.AdministracionConductorListView.as_view(), name="administration_conductor"),
     path('conductor/add/', views.AdministracionConductorCreateView.as_view(), name="administration_conductor_create"),
     path('conductor/edit/<int:pk>/', views.AdministracionConductorUpdateView.as_view(), name="administration_conductor_update"),
+    path('conductor/edit-status/<int:pk>/', views.AdministracionConductorStatusEdit.as_view(), name="administration_conductor_status_edit"),
 
     # Transporte Views
     path('transporte/list/', views.AdministracionTransporteListView.as_view(), name="administration_transporte"),
