@@ -169,7 +169,7 @@
           <div class="col-md-6">
             <div class="jumbotron">
               <label for="username" id="lbl1">Servicio Turistico <label style="color:red; font-size: 13px;">*Costo extra</label></label>
-              <select class="btn btn-outline-success btn-md" name="tour" id="tour">
+              <select class="btn btn-outline-success btn-md" name="tour" id="tour" style="width:640px;border-radius:10px;">
                 <option value="0" label="Seleccionar">0</option>
                     {% for tour in all_tours %}
                     <option id="tour_id" value="{{ tour.id }}" label="{{ tour }} ${{ tour.costo | numberFormat}}">
@@ -187,7 +187,7 @@
           <div class="col-md-6">
             <div class="jumbotron">
               <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
-              <select class="btn btn-outline-success btn-md" name="lugar" id="lugar">
+              <select class="btn btn-outline-success btn-md" name="lugar" id="lugar" style="width:640px;border-radius:10px;">
                 <option value="0" label="Seleccionar">0</option>
                     {% for ts in all_transp %}
                     <option id="lugar_id" value="{{ ts.id }}" label="{{ ts.lugar_tp }} ${{ ts.costo_tp | numberFormat }}">

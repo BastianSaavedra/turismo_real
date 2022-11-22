@@ -58,6 +58,15 @@
               Terminada
             </span>
           </td>
+        {% elif r.status == "4" %}
+          <td>
+            ${{ r.total_reserva | numberFormat }}
+          </td>
+          <td>
+            <span class="bg-info text-white rounded-pill px-2">
+              En Proceso
+            </span>
+          </td>
 
         {% else %}
           <td>Error</td>

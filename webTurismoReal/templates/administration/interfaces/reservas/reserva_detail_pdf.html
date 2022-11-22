@@ -189,13 +189,13 @@
 
     <h2>Detalle Movilizacion del Cliente</h2>
     <p>
-        Este detalle muestra informacion del transporte encargado de<br/>
+        Este detalle muestra informacion del transporte encargado de
         movilizar con el cliente
     </p>
     <table>
       {% if obj.detalle_tp %}
         <tr>
-          <td>Lugar del Transporte</td>
+          <td style="width: 70%;">Lugar del Transporte</td>
           <td>
             {% if obj.detalle_tp %}
               {{ obj.detalle_tp.lugar_tp }}
@@ -206,12 +206,12 @@
         </tr>
         <tr>
           <td>Hora Inicio</td>
-          <td>{{ obj.detalle_tp.horario_in }}</td>
+          <td>{{ obj.detalle_tp.horario_in | time:"H:i a"  }}</td>
         </tr>
 
         <tr>
           <td>Hora Fin</td>
-          <td>{{ obj.detalle_tp.horario_fin }}</td>
+          <td>{{ obj.detalle_tp.horario_fin | time:"H:i a" }}</td>
         </tr>
 
         <tr>
@@ -229,7 +229,7 @@
     <table>
       {% if obj.detalle_tp %}
         <tr>
-          <td>Patente</td>
+          <td style="width: 70%;">Patente</td>
           <td>{{ obj.detalle_tp.transporte.patente }}</td>
         </tr>
         <tr>
@@ -300,8 +300,8 @@
           </td>
         </tr>
         <tr style="border-top: 1px solid black; padding-top: 4px;">
-          <td style="width: 80%;"><b>TOTAL A PAGAR</b></td>
-          <td style="width: 20%;">${{ obj.total_reserva | numberFormat }}</td>
+          <td style="width: 70%;"><b>TOTAL A PAGAR</b></td>
+          <td style="width: 30%;">${{ obj.total_reserva | numberFormat }}</td>
         </tr>
       </tbody>
     </table>

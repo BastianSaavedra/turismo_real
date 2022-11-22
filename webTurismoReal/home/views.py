@@ -155,7 +155,6 @@ def home_reserva(request):
             tour = Tour.objects.get(id=tipo_tour)
             valor_tour = tour.costo
 
-
         lugar_transporte = request.POST['lugar']
         if lugar_transporte == "0":
             lugar_transporte = None
@@ -164,11 +163,12 @@ def home_reserva(request):
             lugar_transporte = request.POST['lugar']
             transporte = DetalleTP.objects.get(id=lugar_transporte)
             valor_transporte = transporte.costo_tp
+            transp = DetalleTP.objects.get(id=lugar_transporte)
+            valor_transporte = transp.costo_tp
+
         #--------------------------------- SERVICIOS ---------------------------------
         
         #--------------------------------------Guardado de servicios en bbdd----------------------------------------
-        # reservation.detalle_tp = detalle_transporte  
-        # reservation.tour = tour
 
         reservation.tour_id = tipo_tour
         reservation.detalle_tp_id = lugar_transporte
@@ -213,7 +213,7 @@ def home_reservas_usuario(request):
         return redirect("home_inicio")
     user = Usuario.objects.all().get(id=request.user.id)
     print(f"request user id = {request.user.id}")
-    reservas = Reserva.objects.all().filter(guest=user, status = '1')
+    reservas = Reserva.objects.all().filter((Q(status = '1') | Q(status = '4')), guest=user)
     if not reservas:
         messages.warning(request, "Aún no tienes reservas", extra_tags="Debes reservar un departamento para poder visualizar")
     return HttpResponse(

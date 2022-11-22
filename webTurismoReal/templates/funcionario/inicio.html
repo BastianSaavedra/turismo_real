@@ -3,47 +3,130 @@
 {% load tags %}
 {% block title %}Revision de Reservas {% endblock %}
 {% block content %}
-<form action="" method="POST">
+<link rel="stylesheet" type="text/css" href="{% static 'css/style5.css' %}">
 <hr style="color:aliceblue ; height: 0.1px;">
-<div class="col ms-5">
-<h2 style="font-weight:600">Reservas: </h2>
-  <div class="row">
-    {% for reserva in reserva_list %}
-      <div class="col-4 mt-4 ">
-        <div class="card h-100">
-          <div class="card-body bg-secondary">
-            <h5 class="card-text text-white" style="font-weight:600; ">ID: {{reserva.booking_id}}</h5>
+<div class="container mt-3 pt-3">
+
+  <div class="row text-center mb-3">
+    <h2 style="font-weight:600; color:#fff;">Reservas</h2>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 g-4">
+    {% for reserva in reserva_list%}
+    {% if reserva.status == "2" %}
+
+    {% else %}
+      <div class="col">
+        <div class="card h-100 bg-light" style="border-end-end-radius: 20px; border-bottom-left-radius: 20px;">
+
+          <div class="card-body bg-warning">
+            <h5 class="card-text text-dark">
+              Codigo: {{ reserva.booking_id }}
+            </h5>
           </div>
+
           <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="150" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
-          <div class="card-body bg-light">
-            <h5 class="card-text">Cliente: {{reserva.guest.nombre}} {{reserva.guest.ap_paterno}}</h5>
-            <hr> 
-              {% if reserva.status == '1' %}
-                <p class="card text-success" style="font-weight: 600;">Estado: Activa</p>
-              {% elif reserva.status == '2' %}
-              <p class="card text-danger" style="font-weight: 600;">Estado: Cancelada</p>
-              {% elif reserva.status == '3' %}
-              <p class="card text-warning" style="font-weight: 600;">Estado: Terminado</p>
+
+          <div class="card-body bg-white text-dark" style="border-radius: 10px;">
+            <h5 class="card-text text-dark">
+              Cliente: {{ reserva.guest.nombre }} {{ reserva.guest.ap_paterno }}
+            </h5>
+            <hr/>
+
+            {% if reserva.status == "1" %}
+              <p class="card text-success" style="font-weight: 550; font-family: 'Poppins';border: none;">
+                Estado: Activa
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check in: {{reserva.check_in}}
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check out: {{reserva.check_out}}
+              </p>
+              <hr>
+              <div style="display: flex; justify-content: center;">
+                <a style="width: 150px;" href="{% url 'checkin_update' reserva.pk%}" class="btn btn-warning">
+                  Check In 
+                </a>
+                <br style="margin: 10px;">
+                <a style="width: 150px;" href="{% url 'checkout_update' reserva.pk%}" class="btn btn-danger disabled">
+                  Check Out
+                </a>  
+              </div>
+              <br style="margin: 1px;">
+              <div style="display: flex; justify-content: center;">
+                <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                  <i class="fas fa-file-pdf"></i>
+                  Descargar detalle
+                </a>
+              </div>
+            {% elif reserva.status == "2" %}
+              <p class="card text-danger" style="font-weight: 500; font-family: 'Poppins';border: none;">
+                Estado: Cancelada 
+              </p>
+            {% elif reserva.status == "3" %}
+              <p class="card text-warning" style="font-weight: 500; font-family: 'Poppins';border: none;">
+                Estado: Terminada
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check-IN: {{reserva.check_in}}
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check-OUT: {{reserva.check_out}}
+              </p>
+              <hr>
+              
+              <div style="display: flex; justify-content: center;">
+                <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                <i class="fas fa-file-pdf"></i>
+                  Descargar detalle
+                </a>
+              </div>
+              <br style="margin: 19px;">
+            {% elif reserva.status == "4" %}
+              <p class="card text-info" style="font-weight: 500; font-family: 'Poppins';border: none;">
+                Estado: En Proceso
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check in: {{ reserva.check_in }}
+              </p>
+              <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                Check out: {{reserva.check_out}}
+              </p>
+              <hr>
+              <div style="display: flex; justify-content: center;">
+                <a style="width: 150px;" href="{% url 'checkin_update' reserva.pk%}" class="btn btn-warning disabled">
+                  Check In 
+                </a>
+                <br style="margin: 10px;">
+                <a style="width: 150px;" href="{% url 'checkout_update' reserva.pk%}" class="btn btn-danger">
+                  Check Out
+                </a>  
+              </div>
+              
+              <br style="margin: 1px;">
+              <div style="display: flex; justify-content: center;">
+                <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                <i class="fas fa-file-pdf"></i>
+                  Descargar detalle
+                </a>
+              </div>
               {% else %}
                   Error
               {% endif %}
-            <p class="card-text" style="font-weight: 600;">Check-IN: {{reserva.check_in}}</p>
-            <p class="card-text" style="font-weight: 600;">Check-OUT: {{reserva.check_out}}</p>
-            <hr>
-            <div class="d-grid gap-2 col-6 mx-auto">
-            <a href="{% url 'checkin_update' reserva.pk%}" class="btn btn-warning">Check In</a>
-            <a href="{% url 'checkout_update' reserva.pk %}" class="btn btn-danger">Check Out</a>
-
           </div>
 
-          </div>
         </div>
       </div>
+      {% endif %}
     {% endfor %}
   </div>
+  
 </div>
-</form>
 {% endblock %}
+
+
+
 
 {% comment %}
 {% block content %}

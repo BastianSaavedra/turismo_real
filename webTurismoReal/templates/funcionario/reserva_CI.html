@@ -1,44 +1,78 @@
 {% extends '../layout/base_funcionario.html' %}
-{% block title %}Check IN{% endblock %}
+{% load static %}
+{% load tags %}
+{% block title %}Check In{% endblock %}
 {% block css %}
 <style>
 label {
   color: black
 }
 </style>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style4.css' %}">
 {% endblock %}
 {% load tags %}
 {% block content %}
-<div class="col" style="color:black">
-  <form action="." method="POST">
-    {% csrf_token %}
-    <div class="card card-default">
 
-      <div class="card-body">
-        <label>Cliente</label>
-        <input value="{{ cliente.guest }}" class="form-control" disabled />
-        <label>Codigo Reserva</label>
-        <input value="{{ cliente.booking_id }}" class="form-control" disabled/>
+<hr style="color:aliceblue ; height: 0.1px;">
+<div class="container" style="border-radius: 20px; background-color: rgb(244, 184, 72);">
 
-        {{ form }} 
-
-      </div>
-
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary">
-          Guardar
-        </button>
-
-        <a href="{% url 'funcionario_home' %}" type="submit" class="btn btn-secondary">
-          Cancelar
-        </a>
-
-      </div>
-
+  <div class="row">
+    <hr style="color:aliceblue ; height: 0.1px;">
+    <div class=''>
+      <h3 style="font-weight:530; display: flex;">Detalles de la reserva: 
+        <p style="font-family: Poppins; font-size: 20px; margin-top: 10px; margin-left: 10px;">
+        (Codigo {{ reserva.booking_id }})
+        </p>
+      </h3>
     </div>
-  </form>
+    <h4 style="color:rgb(0, 0, 0); font-weight: 600; margin-top: -15px;">
+      CHECK-IN
+    </h4>
+  </div>
+
+  <div class="col" style="color:black">
+    <form action="." method="POST">
+      {% csrf_token %}
+      <div class="card card-default bg-white" >
+          <div class="card-body">
+            <h5 class="card-text" style="display:inline-block">Nombre del cliente:
+              <h4 style="margin:10px; font-weight:600;display:inline-block">
+                {{ reserva.guest.nombre }} {{ reserva.guest.ap_paterno }} | ({{ reserva.guest }})
+              </h4>
+            </h5>
+
+            <hr>
+
+            <h5 class="card-text" style="display:inline-block">Detalles de la reserva:
+              <h4 style="margin:10px; font-weight:600;display:inline-block">
+                {{ reserva.detalle_dpto.departamento.titulo }} | $ {{ reserva.total_reserva | numberFormat }} | {{ reserva.check_in }}
+              </h4>
+            </h5>
+
+            <hr>
+
+
+            {% for f in form %}
+            <label style="font-weight: 00;"class="text-dark">{{ f.label }}</label>
+            {{ f }}
+            
+            <hr style="color:aliceblue ; height: 0.1px;">                
+            {% endfor %}
+            
+            
+          </div>
+        
+        <div style="display: flex; justify-content: center;">
+          <a style="padding: 10px 32px; color:white; font-weight: 600;" href="{% url 'funcionario_home' %}" type="submit" class="btn btn-danger">ATRÁS</a>
+          <br style="margin: 10px;">
+          <button style="padding: 10px 32px; color:white; font-weight: 600;" type="submit" class="btn btn-success">
+             GUARDAR
+          </button>
+        </div>
+        <hr style="color:aliceblue ; height: 0.1px;">
+    </form>
+  </div>
 </div>
-
-
+<hr style="color:aliceblue ; height: 0.1px;">
 
 {% endblock%}

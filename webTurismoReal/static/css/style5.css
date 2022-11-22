@@ -14,21 +14,10 @@ label{
     color:#000;
 }
 body{
-    background-image: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5) ), url('../img/bg-img.jpg');
+    background-image: linear-gradient( rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.5) ), url('../img/bg-img.jpg');
     background-size: cover;
 }
 
 .card-body{
     box-shadow: 7px 13px 37px #000;
-}
-
-#containerLg{
-    padding: 30px;
-    margin-top: 100px;
-}
-
-.form-control{
-    border-radius: 10px;
-    border-color: rgb(171, 82, 0);
-    border-width: 1px;
 }

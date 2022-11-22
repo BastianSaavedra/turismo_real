@@ -56,7 +56,7 @@
                       </tr>
                       <tr>
                         <td>Check Out</td>
-                        <td>{{ obj.check_out}}</td>
+                        <td>{{ obj.check_out }}</td>
                       </tr>
                       <tr>
                         <td>Fecha de Crecion</td>
@@ -100,9 +100,14 @@
                             <span class="bg-warning text-white rounded-pill px-2">
                               Terminada
                             </span>
+                          {% elif obj.status == "4" %}
+                            <span class="bg-info text-white rounded-pill px-2">
+                              En Proceso
+                            </span>
                           {% else %}
-                            En proceso
-                          {% endif %}</td>
+                            Error
+                          {% endif %}
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -204,11 +209,11 @@
                       </tr>
                       <tr>
                         <td>Hora Inicio</td>
-                        <td>{{ obj.detalle_tp.horario_in }}</td>
+                        <td>{{ obj.detalle_tp.horario_in | time:"H:i a" }}</td>
                       </tr>
                       <tr>
                         <td>Hora Fin</td>
-                        <td>{{ obj.detalle_tp.horario_fin }}</td>
+                        <td>{{ obj.detalle_tp.horario_fin | time:"H:i a" }}</td>
                       </tr>
                       <tr>
                         <td>Transporte a Cargo de recoger al Cliente</td>
@@ -289,7 +294,7 @@
                     <tbody>
                     {% if obj.tour %}
                       <tr>
-                        <td>Tour Seleccionado</td>
+                        <td style="width: 70%;">Tour Seleccionado</td>
                         <td>
                           {% if obj.tour %}
                             {{ obj.tour.nombreTour }}
