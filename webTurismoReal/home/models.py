@@ -268,7 +268,7 @@ class Transporte(models.Model):
     modelo = models.ForeignKey(Modelo, on_delete=models.CASCADE)
     conductor = models.ForeignKey(Conductor, on_delete=models.CASCADE, related_name="transporte")
     status = models.CharField(choices=TRANSPORTE_STATUS, max_length=12, default="1")
-    
+     
     def __str__(self):
         return self.patente
 
@@ -310,7 +310,7 @@ class Reserva(models.Model):
     check_in = models.DateField(auto_now=False)
     check_out = models.DateField()
     date_joined = models.DateField(default=datetime.now)
-    detalle_dpto = models.ForeignKey(DetalleDpto, on_delete=models.CASCADE)
+    detalle_dpto = models.ForeignKey(DetalleDpto, on_delete=models.CASCADE, related_name="detalleDpto")
     guest = models.ForeignKey(Usuario, on_delete=models.CASCADE)
     booking_id = models.CharField(max_length=100, default="null")
     cant_dias_reserva = models.IntegerField(default=0)
@@ -334,5 +334,28 @@ class Reserva(models.Model):
         db_table = 'reserva'
         verbose_name = 'Reserva'
         verbose_name_plural = 'Reservas'
+
+
+class BookingOrder(models.Model):
+    user = models.ForeignKey(Usuario, models.DO_NOTHING)
+    reserva = models.ForeignKey(Reserva, models.DO_NOTHING)
+    token_ws = models.CharField(max_length=255, default='0')
+    tarjeta = models.CharField(max_length=10, default='0')
+    fecha_transbank = models.CharField(max_length=100, default='0')
+    estado_transbank = models.CharField(max_length=100, default='0')
+    total = models.PositiveIntegerField(default=0)
+    fecha = models.DateField(auto_now=True, null=True, blank=True)
+
+    def __str__(self):
+        return f"N°{self.id}"
+
+    class Meta:
+        db_table = 'orden_de_reserva'
+        verbose_name = 'Order de Reserva'
+        verbose_name_plural = 'Ordenes de Reservas'
+
+
+
+    
 
 

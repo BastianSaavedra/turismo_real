@@ -1,0 +1,99 @@
+{% extends '../layout/base.html' %}
+{% load static %}
+{% load tags %}
+{% block title %}Pagando Reserva{% endblock %}
+{% block content %}
+<div class="container">
+
+  <div class="row">
+    <div class="col-12">
+      <h2 class="card-title mt-2">Verificación del pago</h2>
+      <p >Para ir a pagar necesitamos algunos datos tuyos para poder realizar el envío de los productos. <strong>Es muy importante que indiques de forma correcta los datos de tu dirección de envío, para que tu pedido te llegue de manera correcta y se eviten retrasos.</strong></p>
+      <hr /> 
+    </div>
+
+     <div class="col-12">
+       <div class="row">
+        <div class="col-md-4 order-md-2 mb-4">
+          <h4 class="d-flex justify-content-between align-items-center mb-3">
+            <span class="text-muted">Informacion del Precio</span>
+          </h4>
+          <ul class="list-group mb-3">
+
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0 color_negro">Monto Reserva</h6>
+                <small class="text-muted">Cantidad de Dias: {{ reserva.cant_dias_reserva }}</small>
+              </div>
+              <span class="text-muted color_negro">${{ reserva.costo_reserva | numberFormat }}</span>
+            </li>
+
+            {% if reserva.tour %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0 color_negro">Monto Tour</h6>
+                <small class="text-muted">Tour: {{ reserva.tour.nombreTour }}</small>
+              </div>
+              <span class="text-muted color_negro">${{ reserva.tour.costo | numberFormat }}</span>
+            </li>
+            {% endif %}
+
+            {% if reserva.detalle_tp %}
+            <li class="list-group-item d-flex justify-content-between lh-condensed">
+              <div>
+                <h6 class="my-0 color_negro">Monto Traslado</h6>
+                <small class="text-muted">Traslado: {{ reserva.detalle_tp.lugar_tp }}</small>
+              </div>
+              <span class="text-muted color_negro">${{ reserva.detalle_tp.costo_tp | numberFormat }}</span>
+            </li>
+            {% endif %}
+
+            <li class="list-group-item d-flex justify-content-between">
+              <span>Total</span>
+              <strong class="color_negro">${{ reserva.total_reserva | numberFormat}}</strong>
+            </li>
+          </ul>
+        </div>
+
+        <div class="col-md-8 order-md-1">
+          <h4 class="mb-3">Dirección de envío</h4>
+          <form class="needs-validation" name="form_pagar" method="post" action="#">
+            {% csrf_token %}
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="firstName" class="text-dark">Nombre</label>
+                <input type="text" class="form-control" id="fnombre" name="nombre" value="{{ reserva.guest.nombre }}" readonly="true" />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="lastName" class="text-dark">Apellidos</label>
+                <input type="text" class="form-control" id="apellido" name="apellido"value="{{ reserva.guest.ap_paterno}} {{ reserva.guest.ap_materno }}" readonly="true" />
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="text-dark">E-Mail </label>
+              <input type="email" class="form-control" id="correo" name="correo" value="{{ reserva.guest.correo }}" readonly="true" />
+            </div>
+
+            <div class="mb-3">
+              <label for="email" class="text-dark">Fechas</label>
+              <input type="text" class="form-control" id="telefono" name="telefono" value="{{ reserva.check_in }} - {{ reserva.check_out }}" readonly="true" />
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="text-dark">Huespedes</label>
+              <input type="number" class="form-control" id="direccion" name="direccion" value="{{ reserva.huespedes }}" />
+            </div>
+
+            <hr class="mb-4">
+            <button class="btn btn-primary  btn-block" type="button" title="Ir a webpay para realizar el pago">
+              <i class="fas fa-money-check-alt"></i> 
+              Pagar con webpay
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div> 
+{% endblock %}

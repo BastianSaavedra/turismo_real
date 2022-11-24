@@ -1,7 +1,7 @@
 {% extends '../layout/base.html' %}
 {% load static %}
 {% load tags %}
-{% block title %}Confirmando Reserva{% endblock %}
+{% block title %}Reserva{% endblock %}
 {% block content %}
 <link rel="stylesheet" type="text/css" href="{% static 'css/style4.css' %}">
 <!-- Booking Section start here -->
@@ -217,7 +217,14 @@
         <div style="display: flex; justify-content: center;">
           <a style="padding: 10px 32px;" href="{% url 'home' %}" type="submit" class="btn btn-outline-danger">Cancelar</a>
           <br style="margin: 10px;">
-          <button type="submit" class="btn btn-outline-primary">Reservar ahora</button>   
+          {% comment %}
+          <a href="{% url 'home_reserva_pay' %}" type="submit" class="btn btn-outline-primary">
+            Reservar ahora
+          </a>   
+          {% endcomment %}
+          <button class="btn btn-outline-primary" type="submit">
+            Reservar
+          </button>
           <input type="hidden" name="detalledptoid" value="{{ detalle_dpto.id }}" />
         </div>
         <hr style="color:aliceblue ; height: 0.1px;">

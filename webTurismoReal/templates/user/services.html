@@ -43,6 +43,7 @@
             <label for="password2" id="lbl2">Servicio de Transporte <label style="color:red; font-size: 13px;"> *Costo extra</label></label>
             <select class="btn btn-success btn-md" name="lugar" id="lugar" style="width:640px;border-radius:10px;">
               <option value="0" label="Seleccionar">0</option>
+
               {% for ts in all_transp %}
                 <option id="lugar_id" value="{{ ts.id }}" label="{{ ts.lugar_tp }} ${{ ts.costo_tp | numberFormat }}">
                   {{ ts.costo_tp }}
@@ -206,7 +207,7 @@
         {%comment%}
         <a href="{% url 'agregar_servicios' reserva.id %}"><button style="padding: 10px 32px;" class="btn btn-primary">Actualizar reserva</button></a>
         {%endcomment%}
-        <button type="submit" class="btn btn-primary">Actualizar reserva</button>   
+        <button type="submit" class="btn btn-primary">Pagar</button>   
         <input type="hidden" name="reservaid" value="{{ reserva.detalle_dpto.id }}" />  
       </div>
       
@@ -257,7 +258,8 @@
         console.log(price_transporte)
       }
 
-      output.value = "$ " + (price_reserva + price_tour + price_transporte) ;
+
+      output.value = "$ " + (price_tour + price_transporte) ;
     } else {
       output.value = 0;
     }

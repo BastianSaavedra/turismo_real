@@ -6,6 +6,8 @@ urlpatterns = [
     path('', views.home_inicio, name="home_inicio"),
     path('user/reserva-dpto/dpto=<int:id>', views.home_reserva_confirmacion, name="home_reserva_confirmacion"),
     path('user/reserva-dpto/reserva', views.home_reserva, name="home_reserva"),
+    path('user/reserva-dpto/webpay-respuesta/', views.reserva_webpay_respuesta, name="home_webpay_respuesta"),
+
     path('user/mis-reservas', views.home_reservas_usuario, name="home_reservas_usuario"),
     path('user/mis-reservas/cancelar-reserva/<id>/', views.cancelar_reserva, name="home_cancelar_reserva"),
     path('user/mis-reservas/reserva=<int:id>', views.detalle_reserva, name="detalle_reserva"),

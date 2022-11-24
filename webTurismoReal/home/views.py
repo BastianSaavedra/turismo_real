@@ -1,6 +1,8 @@
+from importlib.abc import ResourceReader
 from django.shortcuts import render, redirect, get_object_or_404
+from django.template import RequestContext
 from django.views.decorators.http import require_http_methods
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, Http404
 from django.utils.functional import total_ordering
 from .models import Departamento, DetalleDpto, Reserva, Comuna, Region
 from django.urls import reverse_lazy
@@ -14,6 +16,8 @@ from .forms import Registro
 from .models import Usuario
 from django.contrib import messages
 from django.db.models import Q
+from tools import webpay, utilities
+
 import datetime
 
 
@@ -38,9 +42,9 @@ def home_inicio(request):
             detalle_dpto = DetalleDpto.objects.all().filter(
                 departamento=departamento, 
                 capacidad__gte = int(request.POST['capacidad']),
-                status = '1'
+                status = '1',
             ).exclude(id__in=rr)
-  
+
                     
             if len(detalle_dpto) > 0:
                 messages.success(request, "Departamentos Disponibles")
@@ -130,21 +134,6 @@ def home_reserva(request):
         reservation.huespedes = total_person
         
         #--------------------------------- SERVICIOS ---------------------------------
-        # tipo_tour = request.POST['tour']
-        # if tipo_tour == "0":
-        #     tipo_tour = None 
-        #     valor_tour = 0
-        # else:
-        #     tipo_tour = request.POST['tour']
-        #     valor_tour = reservation.tour.costo
-        #
-        # lugar_transporte = request.POST['lugar']
-        # if lugar_transporte == "0":
-        #     lugar_transporte = None
-        #     valor_transporte = 0
-        # else:
-        #     lugar_transporte = request.POST['lugar']
-        #     valor_transporte = reservation.detalle_tp.costo_tp
 
         tipo_tour = request.POST['tour']
         if tipo_tour == "0":
@@ -163,8 +152,8 @@ def home_reserva(request):
             lugar_transporte = request.POST['lugar']
             transporte = DetalleTP.objects.get(id=lugar_transporte)
             valor_transporte = transporte.costo_tp
-            transp = DetalleTP.objects.get(id=lugar_transporte)
-            valor_transporte = transp.costo_tp
+            # transp = DetalleTP.objects.get(id=lugar_transporte)
+            # valor_transporte = transp.costo_tp
 
         #--------------------------------- SERVICIOS ---------------------------------
         
@@ -201,12 +190,136 @@ def home_reserva(request):
         reservation.booking_id = booking_id
 
         reservation.save()
+        latest_id = reservation.save()
+        id_reserva = reservation.id
 
-        messages.success(request, "Felicidades!", extra_tags="Tu reserva fue ingresada Exitosamente!")
+        url_webpay = 'user/reserva-dpto/webpay-respuesta/'
 
-        return redirect("home_inicio")
+        
+        result = webpay.crearTransaccion(
+            id_reserva, current_user, 
+            total_precio_reserva, url_webpay
+        )
+        
+        return render(
+            request, 
+            'user/webpay.html',
+            {
+                'url': result['url'],
+                'token': result['token']
+            }
+        )
+
+        # return redirect("home_inicio")
+        # return render(
+        #     request,
+        #     "user/pay_section.html",
+        #     {
+        #         'reserva_id': id_reserva
+        #     }
+        # )
     else:
         return HttpResponse('Acceso Denegado')
+
+
+def reserva_webpay_respuesta(request):
+    if not request.GET.get('token_ws'):
+        raise Http404
+    token = request.GET.get('token_ws')
+    # result = webpay.verificarTransaccion(token)
+    # current_user = request.user
+    
+    # user = Usuario.objects.filter(username=current_user)
+    #
+    # order = BookingOrder.objects.filter(user=current_user.id)
+    # # order = BookingOrder.objects.only('reserva_id').get(user=current_user.id)
+    # reserva = Reserva.objects.filter(guest=current_user.id).get()
+    # monto_reserva = reserva.costo_reserva
+    # monto_multa = reserva.costo_multa
+    # monto_tour = reserva.tour.costo
+    # monto_traslado = reserva.detalle_tp.costo_tp
+    # total = reserva.total_reserva
+    #
+    # detalle = ""
+    # detalle = f"""
+    # <tr>
+    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_reserva) }</td>
+    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_multa) }</td>
+    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_tour) }</td>
+    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_traslado) }</td>
+    # </tr>
+    #
+    # """
+    #
+    # #
+    # html = f"""
+    # <!DOCTYPE html>
+    # <html>
+    #     <head>
+    #         <meta charset="utf-8"/>
+    #         <title>Turismo Real</title>
+    #     </head>
+    #     <body>
+    #         <div>
+    #             <h2>
+    #                 Hola {user.nombre } { user.ap_paterno } 
+    #             </h2>
+    #             <h3>Tu pago ha sido ingresada al sistema con el N°{order.id}</h3>
+    #             <h4 style="color: green">Tu codigo de Reserva es{ reserva.booking_id }</h4>
+    #         </div>
+    #         <table style="border-collapse: collapse;">
+    #             <thead>
+    #                 <tr>
+    #                     <th>Monto Reserva</th>
+    #                     <th>Monto Multa</th>
+    #                     <th>Monto Tour</th>
+    #                     <th>Monto Traslado</th>
+    #                 </tr>
+    #             </thead>
+    #             <tbody>
+    #                 {detalle}
+    #                 <tr>
+    #                     <td colspan="5" style="border: 1px solid black;">
+    #                         Total
+    #                     </td>
+    #                 </tr>
+    #                 <tr>
+    #                     <td colspan="5" style="border: 1px solid black;">
+    #                         ${ utilities.numberFormat(total) }
+    #                     </td>
+    #                 </tr>
+    #             </tbody>
+    #         </table>
+    #
+    #
+    #
+    #     </body>
+    # </html>
+    #
+    # """
+    # subject = "Reserva en Turismo Real" 
+    #
+    #
+    # #
+    # utilities.sendMail(html,subject , 'bastiansaavedra55@gmail.com')
+    # #
+    messages.success(
+        request,
+        "Pago autorizado",
+        extra_tags="El pago ha sido recibido"
+    )
+    return redirect("home_reservas_usuario")
+    # return render(
+    #     request,
+    #     'user/webpay_respuesta.html',
+    #     {
+    #         'result': result
+    #     }
+    # )
+
+
+
+
 
 def home_reservas_usuario(request):
     if request.user.is_authenticated == False:
@@ -241,6 +354,11 @@ def cancelar_tour(request, id):
     reservation = Reserva.objects.get(id=id)
     valor_total = reservation.total_reserva
     valor_tour = reservation.tour.costo
+
+    # if valor_tour == 0:
+    #     valor_tour = 0
+    # else:
+    #     valor_tour = reservation.tour.costo
 
     resta_tour = valor_total - valor_tour
 
@@ -309,7 +427,6 @@ def agregar_servicios(request,id):
             tour = Tour.objects.get(id=tipo_tour)
             valor_tour = tour.costo
 
-
         lugar_transporte = request.POST['lugar']
         if lugar_transporte == "0":
             lugar_transporte = None
@@ -324,18 +441,40 @@ def agregar_servicios(request,id):
        
 
         total_precio_reserva = costo_reserva + valor_tour + valor_transporte + costo_multa
+
+        costo_extra = valor_tour + valor_transporte
         
         Reserva.objects.filter(id=id).update(tour = tipo_tour)
         Reserva.objects.filter(id=id).update(detalle_tp = lugar_transporte)
 
         Reserva.objects.filter(id=id).update(total_reserva = total_precio_reserva)
-        messages.success(
-                        request,
-                        "Reserva actualizada",
-                        extra_tags="Tu reserva ha sido actualizada correctamente"
-                         )
 
-        return redirect("home_reservas_usuario")
+        id_reserva = reservation.id
+        id_user = reservation.guest.id
+
+        url_webpay = 'user/reserva-dpto/webpay-respuesta/'
+
+
+        result = webpay.crearTransaccion(
+            id_reserva, id_user, 
+            costo_extra, url_webpay 
+        )
+
+        # messages.success(
+        #                 request,
+        #                 "Reserva actualizada",
+        #                 extra_tags="Tu reserva ha sido actualizada correctamente"
+        #                  )
+
+        return render(
+            request,
+            'user/webpay.html',
+            {
+                'url': result['url'],
+                'token': result['token']
+            }
+        )
+        # return redirect("home_reservas_usuario")
     else:
         return HttpResponse('Acceso Denegado')
 

@@ -25,6 +25,7 @@ conf_string = json_path.read()
 json_path.close()
 config = json.loads(conf_string)
 
+BASE_URL = config['base_url']
 
 
 # Quick-start development settings - unsuitable for production
@@ -36,7 +37,7 @@ SECRET_KEY = 'django-insecure-*7#a155e$)dn3fq6mulp0s%!8s+t=6&u9c)68u!gqgdr+8+6*4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*', '127.0.0.1']
 
 
 # Application definition
@@ -176,6 +177,11 @@ MAIL_OUTPUT = config['email']
 PASSWORD_MAIL_OUTPUT = config['email_password']
 
 # Webpay settings
+WEBPAY_URL = config['webpay_url']
+WEBPAY_ID = config['webpay_id']
+WEBPAY_SECRET = config['webpay_secret']
+
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
