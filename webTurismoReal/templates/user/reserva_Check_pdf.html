@@ -1,0 +1,353 @@
+{% load tags %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle Reserva </title>
+</head>
+  <style>
+    .field{
+        width:200px;
+        color:black;
+        font-size:15px;}
+        
+    .h1,h2{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+        font-weight: 500;
+        text-transform: capitalize;
+        color:#000;
+        text-align: center;
+    }
+
+    .head {
+      text-align: center;
+      text-transform: uppercase;
+    }
+    
+    #invoice thead tr th {
+        text-align: left;
+        border-bottom: 1px solid black;
+        border-top: 1px solid black;
+        padding-top: 4px;
+    }
+
+    #invoice thead tr {
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    #invoice tbody tr {
+        padding: 0;
+    }
+      
+  </style>
+<body>
+    <p class="head">
+      <img src="../static/img/logo_2.png" width="150px" height="100px">
+    </p>
+    <hr>
+    <h2>Detalle de la Reserva</h2>
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 70%;">ID</td>
+        <td style="width: 30%;">{{ reserva.id }}</td>
+      </tr>
+      <tr>
+        <td>Nombre del cliente</td>
+        <td>{{ reserva.guest.nombre }} {{ reserva.guest.ap_paterno }} {{ reserva.guest.ap_materno }}</td>
+      </tr>
+      <tr>
+        <td>Rut Cliente</td>
+        <td>{{ reserva.guest.rut }}-{{ reserva.guest.dv }}</td>
+      </tr>
+      <tr>
+        <td>Codigo Reserva</td>
+        <td>{{ reserva.booking_id }}</td>
+      </tr>
+      <tr>
+        <td>Check In</td>
+        <td>{{ reserva.check_in }}</td>
+      </tr>
+      <tr>
+        <td>Check Out</td>
+        <td>{{ reserva.check_out}}</td>
+      </tr>
+      <tr>
+        <td>Fecha de Creacion</td>
+        <td>{{ reserva.date_joined }}</td>
+      </tr>
+
+      <tr>
+        <td>Nombre del Departamento</td>
+        <td>{{ reserva.detalle_dpto.departamento.titulo }}</td>
+      </tr>
+
+      <tr>
+        <td>Cantidad Huespedes</td>
+        <td>{{ reserva.huespedes }}</td>
+      </tr>
+
+    </table>
+    <hr/>
+
+    <h2>Detalle del Departamento</h2>
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 70%;">Amoblamiento</td>
+        <td style="width: 30%;">{{ reserva.detalle_dpto.amoblado }}</td>
+      </tr>
+      <tr>
+        <td>Servicio de cable</td>
+        <td>{{ reserva.detalle_dpto.cable }}</td>
+      </tr>
+      <tr>
+        <td>Electrodomesticos</td>
+        <td>{{ reserva.detalle_dpto.electronicos }}</td>
+      </tr>
+      <tr>
+        <td>Servicio de internet</td>
+        <td>{{ reserva.detalle_dpto.internet }}</td>
+      </tr>
+
+      <tr>
+        <td>Aire Acondicionado</td>
+        <td>{{ reserva.detalle_dpto.aire_acondicionado }}</td>
+      </tr>
+      <tr>
+        <td>Bodega</td>
+        <td>{{reserva.detalle_dpto.bodega}}</td>
+      </tr>
+      <tr>
+        <td>Cantidad de baños</td>
+        <td>{{ reserva.detalle_dpto.cant_bannio }}</td>
+      </tr>
+      <tr>
+        <td>Cantidad de dormitorios</td>
+        <td>{{ reserva.detalle_dpto.cant_dormitorio }}</td>
+      </tr>
+      <tr>
+        <td>Cantidad de estacionamientos</td>
+        <td>{{ reserva.detalle_dpto.cant_estacionamiento }}</td>
+      </tr>
+
+    </table>
+
+    <hr/>
+
+    <h2>Detalle Check In y Check Out</h2>
+    <table>
+      <tr>
+        <td style="width: 70%;">Estado de la Estadia</td>
+        <td style="width: 30%;">
+          {% if reserva.status_estadia == '1' %}
+              Cliente hospedado
+          {% elif reserva.status_estadia == '2' %}
+            Cliente no llegó
+          {% else %}
+            No Efectuado
+          {% endif %}
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <h3>Mensaje Check In</h3>
+            <td style="font-weight: bold;">
+            {{ reserva.mensaje_check_in }}
+          </td>
+        </td>
+      </tr>
+      
+      <tr>
+        <td>
+          <h3>Mensaje Check Out</h3>
+          <td style="font-weight: bold;">
+              {{ reserva.mensaje_check_out }}
+            </td>
+        </td>
+      </tr>
+
+    </table>
+    <hr/>
+    
+    <h2>Detalle Tour</h2>
+
+    <table>
+      {% if reserva.tour %}
+        <tr>
+          <td style="width: 70%;">Tour Seleccionado</td>
+          <td style="width: 30%;">
+            {% if reserva.tour %}
+              {{ reserva.tour.nombreTour }}
+            {% else %}
+              No hay tour seleccionado
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <td>Tipo del Tour</td>
+          <td>
+            {% if reserva.tour.tipoTour == '1' %}
+              Turismo Cultural
+            {% elif reserva.tour.tipoTour == '2' %}
+              Turismo de Naturaleza
+            {% elif reserva.tour.tipoTour == '3' %}
+              Turismo Gastronomico
+            {% else %}
+              Otro Tipo de Tour
+            {% endif %}
+          </td>
+        </tr>
+
+        <tr>
+          <td>Horario Inicio</td>
+          <td>{{ reserva.tour.horario_in | time:"H:i a" }}</td>
+        </tr>
+
+        <tr>
+          <td>Horario Termino</td>
+          <td>{{ reserva.tour.horario_fin | time:"H:i a" }}</td>
+        </tr>
+
+        <tr>
+          <td>Comuna del Tour</td>
+          <td>{{ reserva.tour.comuna }}</td>
+        </tr>
+        
+      {% else %}
+        <p>No hay tour en esta reserva</p>
+      {% endif %}
+    </table>
+    <hr/>
+
+    <h2>Detalle Movilizacion del Cliente</h2>
+    <table  style="width: 100%;">
+      {% if reserva.detalle_tp %}
+        <tr>
+          <td style="width: 70%;">Lugar del Transporte</td>
+          <td style="width: 30%;">
+            {% if reserva.detalle_tp %}
+              {{ reserva.detalle_tp.lugar_tp }}
+            {% else %}
+              No hay transporte seleccionado
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>Hora Inicio</td>
+          <td>{{ reserva.detalle_tp.horario_in }}</td>
+        </tr>
+
+        <tr>
+          <td>Hora Fin</td>
+          <td>{{ reserva.detalle_tp.horario_fin }}</td>
+        </tr>
+
+        <tr>
+          <td>Transporte a Cargo de recoger al Cliente</td>
+          <td>{{ reserva.detalle_tp.transporte.patente }}</td>
+        </tr>
+
+      {% else %}
+        <p>No hay transporte en esta reserva</p>
+      {% endif %}
+    </table>
+    <hr/>
+
+    <h2>Detalle del Transporte</h2>
+    <table style="width: 100%;">
+      {% if reserva.detalle_tp %}
+        <tr>
+          <td style="width: 70%;">Patente</td>
+          <td style="width: 30%;">{{ reserva.detalle_tp.transporte.patente }}</td>
+        </tr>
+        <tr>
+          <td>Tipo Transporte</td>
+          <td>
+            {% if reserva.detalle_tp.transporte.tipo_transporte == '1' %}
+              Taxi
+            {% elif reserva.detalle_tp.transporte.tipo_transporte == '2' %}
+              Furgoneta
+            {% elif reserva.detalle_tp.transporte.tipo_transporte == '3' %}
+              Bus
+            {% else %}
+              Otro
+            {% endif %}
+          </td>
+        </tr>
+        <tr>
+          <td>Conductor</td>
+          <td>
+            {{ reserva.detalle_tp.transporte.conductor.nombre }} {{ reserva.detalle_tp.transporte.conductor.apellido }}
+          </td>
+        </tr>
+      {% else %}
+        <p>No hay transporte en esta reserva</p>
+      {% endif %}
+    </table>
+
+    <br/>
+    <table id="invoice">
+      <thead>
+        <tr>
+          <th style="width: 80%;">Tipo de Monto</th>
+          <th style="width: 20%;">Monto</th>
+        </tr>
+      </thead>
+
+
+      <tbody>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Reserva</td>
+          <td>${{ reserva.costo_reserva | numberFormat }}</td>
+
+        </tr>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Multa</td>
+          <td>${{ reserva.costo_multa | numberFormat }}</td>
+        </tr>
+        
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Tour</td>
+          <td>
+            {% if reserva.tour.costo %}
+              ${{ reserva.tour.costo | numberFormat }}
+            {% else %}
+              $0
+            {% endif %}
+          </td>
+        </tr>
+        <tr style="padding-top: 3px;">
+          <td class="text-center">Transporte</td>
+          <td>
+            {% if reserva.detalle_tp.costo_tp %}
+              ${{ reserva.detalle_tp.costo_tp | numberFormat }}
+            {% else %}
+              $0
+            {% endif %}
+
+          </td>
+        </tr>
+        <tr style="border-top: 1px solid black; padding-top: 4px;">
+          <td style="width: 80%;"><b>TOTAL A PAGAR</b></td>
+          <td style="width: 20%;">${{ reserva.total_reserva | numberFormat }}</td>
+        </tr>
+      </tbody>
+    </table>
+</body>
+
+<footer>
+  <tfoot>
+    <table>
+      <hr style="margin-bottom: 120px;">
+      <tr style="border-top: 1px solid black; padding-top: 4px; ">
+        <td class="field"><strong>Firma del cliente</strong></td>
+      </tr>
+    </table>
+  </tfoot>
+</footer>
+
+</html>

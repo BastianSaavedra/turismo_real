@@ -321,20 +321,51 @@ def agregar_servicios(request,id):
     else:
         return HttpResponse('Acceso Denegado')
 
+
 def login(request):     
     if request.user.is_authenticated:
         return redirect ('home')     
     
     elif request.method == 'POST':
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-        usuarios = authenticate(username=username, password=password)
+        # username = request.POST.get('username')
+        # password = request.POST.get('password')
+        # usuarios = authenticate(username=username, password=password)
+        
+        username = request.POST['username']
+        password = request.POST['password']
+        usuarios = authenticate(request, username=username, password=password)
+        
+                
+        # if usuarios: 
+        #     lg(request,usuarios)
+        #     messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+        #     return redirect("home")  
         
         if usuarios: 
-            lg(request,usuarios)
-            messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
-            return redirect("home")  
+            
+            if usuarios.is_staff:
+                lg(request,usuarios)
+                messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+                return redirect("home_inicio")      
+            
+            elif usuarios.is_cliente:
+                lg(request,usuarios)
+                messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+                return redirect("home_inicio")
+            
+            elif usuarios.is_admin:
+                lg(request,usuarios)
+                messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+                return redirect("/administration_dashboard") 
+            
+            elif usuarios.is_funcionario:
+                lg(request,usuarios)
+                messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
+                return redirect("/funcionario/inicio.html") 
+         
              
+        #------------------------------------
+        
         # if usuarios.is_admin:
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
@@ -343,38 +374,16 @@ def login(request):
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect("")
-        # elif usuarios.is_funcionario:
+        # elif usuarios.is_funcionario == True:
         #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect("")
+        #     messages.success(request, f'Bienvenido funcionario{usuarios.username}')
+        #     return redirect("funcionario_home")
         # elif usuarios.is_admin == False:
         #     lg(request, usuarios)
         #     messages.success(request, f'Bienvenido {usuarios.username}')
         #     return redirect("home_inicio")
-
-
-        if usuarios: 
-            lg(request,usuarios)
-            messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
-            return redirect("home_inicio")  
-             
-        # if usuarios.is_funcionario:
-
-        # elif usuarios.is_funcionario:
-
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect('funcionario/inicio.html')
-        # elif usuarios.is_admin:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect('administration/dashboard.html')
-        # elif usuarios.cliente:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect("home_inicio")
-        else:
-            messages.error(request, f'Datos incorrectos', extra_tags='Completa nuevamente los campos')
+       
+        
     return render(request, 'users/login.html',{})
 
 
@@ -414,3 +423,19 @@ class RegistrarUsuario(CreateView):
             #return redirect('home')
         else:
             return render(request,self.template_name,{'form':form})
+
+def Reserva_Check_PDF(request,*args, **kwargs):
+    pk = kwargs.get('pk')
+    reserva = get_object_or_404(Reserva,pk=pk)
+    template_path = 'funcionario/reserva_Check_pdf.html'
+    context = {'reserva': reserva}
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="estado.pdf"'
+    template = get_template(template_path)
+    html = template.render(context)
+    pisa_status = pisa.CreatePDF(
+       html, dest=response)
+    
+    if pisa_status.err:
+       return HttpResponse('Intente nuevamente <pre>' + html + '</pre>')
+    return response

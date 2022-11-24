@@ -7,14 +7,14 @@
 <form action="" method="POST">
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="container">
-<div class="col ms-5">
+<div class="col ms-2">
 <h2 style="font-weight:600; color:#fff;">Reservas concretadas: </h2>
-  <div class="row">
+  <div class="row gy-3 my-3">
     {% for reserva in reserva_list %}
-      <div class="col-4 mt-4 ">
+      <div class="col-12 col-md-6 col-lg-4">
         <div class="card h-100 bg-light" style="border-end-end-radius: 20px; border-bottom-left-radius: 20px;">
           <div class="card-body bg-warning" >
-            <h5 class="card-text text-dark" style="font-weight:600; ">ID: {{reserva.booking_id}}</h5>
+            <h5 class="card-text text-dark">Código: {{reserva.booking_id}}</h5>
           </div>
           <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="150" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
           <div class="card-body bg-white text-dark" style="border-radius: 10px;">
@@ -26,6 +26,7 @@
                 <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">Check-OUT: {{reserva.check_out}}</p>
                 <hr>
                 <div style="display: flex; justify-content: center;">
+                  
                   <a style="width: 150px;" href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
                   <br style="margin: 10px;">
                   <a style="width: 150px;" href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>  
@@ -51,28 +52,10 @@
               </div>
 
               <br style="margin: 19px;">
-
               
               {% else %}
                   Error
-              {% endif %}
-            {%comment%}
-            <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">Check-IN: {{reserva.check_in}}</p>
-            <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">Check-OUT: {{reserva.check_out}}</p>
-            <hr>
-            <div style="display: flex; justify-content: center;">
-              <a style="width: 150px;" href="{% url 'funcionario_CI' reserva.pk%}" class="btn btn-warning">CHECK IN</a>
-              <br style="margin: 10px;">
-              <a style="width: 150px;" href="{% url 'funcionario_CO' reserva.pk%}" class="btn btn-danger">CHECK OUT</a>  
-            </div>
-            <br style="margin: 1px;">
-              <div style="display: flex; justify-content: center;">
-                <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
-                <i class="fas fa-file-pdf"></i>
-                Descargar detalle
-              </a>
-              </div>
-              {%endcomment%}
+              {% endif %} 
           </div>
         </div>
       </div>

@@ -11,13 +11,14 @@
 
 
 <!-- Booking Section empieza aqui -->
+
 <section class="booking">
   <div class="container-fluid px-5">
     </div>
     <!-- Formulario de busqueda de departamento empieza aqui -->
     <form action="" method="POST" class="needs-validation text-white">
       {% csrf_token %}
-      <div class="row justify-content-center py-5" style="background: rgb(40, 44, 90); width:1900px;">
+      <div class="row justify-content-center py-5" style="background: rgb(40, 44, 90); ">
         <div class="col-lg-3 form-group text-center">
           <label>Destino</label>
           <select class="form-select bg-white rounded-pill text-center border-primary" name="search_location" id="id_comuna">
@@ -120,7 +121,7 @@
           <hr><h5 style="font-size: 20px;">Departamentos en: <h5 style="font-size: 30px; font-weight: bold;">{{dpto.departamento.comuna.nombre}}</h5></h4><hr>
           </div>
           </div>
-          <div class="card mb-3" style="max-width: 600px;">
+          <div class="card mb-3 ms-2" style="max-width: 600px;">
             <div class="row g-0">
               <div class="col-md-4">
                 <img src="{{ dpto.departamento.imagenes.first.imagen.url }}" height="230" alt="{{ dpto.departamento.imagenes.first.imagen.url }}" >
@@ -148,8 +149,8 @@
                     <!--Seccion de ventana modal para departamentos empieza aqui-->
 
                     <div class="modal fade" id="depaModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content" style="width: 1000px; display: inline-block; margin-left: -250px;">
+                      <div class="modal-dialog modal-xl">
+                        <div class="modal-content" >
                           <div class="modal-header">
                             <h3 class="modal-title" id="exampleModalLabel" style="font-weight: 500;">{{ dpto.departamento.titulo }}</h3>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -166,19 +167,19 @@
                             <div class="row">
                               <div class="col-md-6">
                                 <div class="d-flex justify-content-between align-items-center">
-                                  <h5 class="card-text" style="font-size: 20px;"><i aria-hidden="true" class="fas fa-map-marker-alt" style="margin-right: 5px;"></i>Dirección: {{ dpto.departamento.direccion }}, {{dpto.departamento.comuna}}</h5>
+                                  <h5 class="card-text" style="font-size: 20px;"><i aria-hidden="true" class="fas fa-map-marker-alt" style="margin-right: 5px; padding-bottom: 5px;"></i>Dirección: {{ dpto.departamento.direccion }}, {{dpto.departamento.comuna}}</h5>
                                 </div>
                               </div>
                               <div class="col-md-6">
                                 <div class="d-flex justify-content-between align-items-center">
-                                  <h5 class="card-text" style="margin-bottom: 10px;font-size: 20px;"><i aria-hidden="true" class="fas fa-restroom" style="margin-right: 5px;"></i>Capacidad: {{ dpto.capacidad }} personas</h5>
+                                  <h5 class="card-text" style="margin-bottom: 10px;font-size: 20px;"><i aria-hidden="true" class="fas fa-restroom" style="margin-right: 5px; margin-bottom: 5px;"></i>Capacidad: {{ dpto.capacidad }} personas</h5>
                                 </div>
                               </div>
                             </div>
                             <div class="row">
-                              <div class="col-md-6">
-                                <div class="d-flex justify-content-between align-items-center">
-                                  <h5 class="card-text" style="margin-top: 10px;"> <i class="fas fa-money-bill" style="margin-right: 5px;"></i>Precio de hoy:<h5 style="color:green; margin-right: 200px; font-weight: bold;margin-top: 10px">${{ dpto.precio|numberFormat}}</h5></h5>
+                              <div class="col-md-12">
+                                <div class="d-flex justify-content-start align-content-start flex-wrap">
+                                  <h5 class="card-text" style="font-size: 20px; margin-top: 10px; text-align: justify;"> <i class="fas fa-money-bill" style="margin-right: 5px;"></i>Precio de hoy:<h5 style="color:green; padding-right: 820px; font-weight: bold;margin-top: 10px;">${{ dpto.precio|numberFormat}}</h5></h5>
                                 </div>
                               </div>
                             </div>
@@ -191,17 +192,26 @@
                                   <img src="{{ dpto.departamento.imagenes.first.imagen.url }}" class="d-block w-100" alt="...">
                                 </div>
                                 <div class="carousel-item">
+                                  
                                   {%comment%}
-                                  <img src="{{ dpto.departamento.imagenes.second.imagen.url }}"  class="d-block w-100" alt="...">
+                                  {% for imagen in dpto.departamento.imagenes%}
+                                    {%if forloop.counter == 2%}
+                                      <img src="{{ imagen.url }}" height="150" alt="{{ imagen.url }}" class="img-fluid rounded-start">
+                                    {%endif%}
+                                  {%endfor%}
                                   {%endcomment%}
-
+                                  
                                   <img src="{% static 'img/gallery-4.jpg' %}" class="d-block w-100" alt="...">
-
                                 </div>
+
                                 <div class="carousel-item">
 
                                   {%comment%}
-                                  <img src="{{ dpto.departamento.imagenes.third.imagen.url }}"  class="d-block w-100" alt="...">
+                                  {% for imagen in dpto.departamento.imagenes.all%}
+                                    {%if forloop.counter == 3%}
+                                      <img src="{{ imagen.url }}" height="150" alt="{{ imagen.url }}" class="img-fluid rounded-start">
+                                    {%endif%}
+                                  {%endfor%}
                                   {%endcomment%}
 
                                   <img src="{% static 'img/gallery-3.jpg' %}" class="d-block w-100" alt="...">
@@ -350,14 +360,15 @@
 <!-- Booking Section finaliza aqui -->
 
 <!-- Carrusel de imagenes empieza aqui-->
+<!-- Carrusel de imagenes empieza aqui-->
 <section class="home">
-  <div class="content" style=" width:1900px;">
-    <div class="owl-carousel owl-theme">
+  <div class="content">
+    <div class="owl-carousel owl-theme" style="max-height: 500px;">
       <div class="item">
-        <img src="{% static 'img/banner-1.jpg' %}" height="500px" alt="">
+        <img class="img-fluid" src="{% static 'img/banner-1.jpg' %}" alt="" >
           <div class="text" id="texto">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -365,10 +376,10 @@
           </div>
       </div>
       <div class="item">
-        <img src="{% static 'img/banner.jpg' %}" height="500px"  alt="">
+        <img class="img-fluid" src="{% static 'img/banner.jpg' %}"  alt="">
           <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -376,10 +387,10 @@
           </div>
       </div>
       <div class="item">
-        <img src="{% static 'img/banner-4.jpg' %}" height="500px"  alt="">
+        <img class="img-fluid" src="{% static 'img/banner-4.jpg' %}"  alt="">
           <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -387,10 +398,10 @@
           </div>
       </div>
       <div class="item">
-        <img src="{% static 'img/gallery-2.jpg' %}" height="500px"  alt="">
+        <img class="img-fluid" src="{% static 'img/gallery-2.jpg' %}"  alt="">
           <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -398,10 +409,10 @@
           </div>
       </div>
       <div class="item">
-        <img src="{% static 'img/gallery-3.jpg' %}" height="500px"  alt="">
+        <img class="img-fluid" src="{% static 'img/gallery-3.jpg' %}"   alt="">
           <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -409,10 +420,10 @@
           </div>
       </div>
       <div class="item">
-        <img src="{% static 'img/gallery-4.jpg' %}" height="500px"  alt="">
+        <img class="img-fluid" src="{% static 'img/gallery-4.jpg' %}"   alt="">
           <div class="text">
-            <h1>Disfruta de tus vacaciones</h1>
-            <p>Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
+            <h1>Disfruta tus vacaciones</h1>
+            <p style="font-weight: 600;">Contamos con una amplia variedad de selecciones a lo largo del pais, desde el extremo norte en Arica hasta el extremo sur en Punta Arenas.</p>
               <div class="flex">
                 <button class="btn btn-warning">Leer mas</button> 
                 <button class="btn btn-success">Contactanos</button>
@@ -425,9 +436,9 @@
 <!-- Fin de seccion carrusel -->
 
 <!-- Footer -->
-<footer class="bg-dark text-white">
+<footer id="site-footer" class="bg-dark text-white" style="padding-top: 40px;">
   <!-- Grid container -->
-  <div class="container p-4 ">
+  <div class="container-fluid bg-dark text-white">
     <!-- Section: Social media -->
     <section class="mb-4 text-center">
       <!-- Facebook -->
@@ -458,7 +469,7 @@
     <!-- Section: Social media -->
 
     <!-- Section: Text -->
-    <section class="mb-4 text-center">
+    <section class="mb-4 text-center" style="padding: 20px;">
       <img src="{% static 'img/logo_wh2.png' %}" height="100" width="140">
       <hr>
       <p>
@@ -475,10 +486,10 @@
       <!--Grid row-->
       <div class="row">
         <!--Grid column-->
-        <div class="col-sm-4 center-block">
+        <div class="col-xs-12 col-sm-4 col-sm-push-4" style="padding-left:100px; padding-bottom: 10px;">
           <h5 class="text-uppercase">Links</h5>
 
-          <ul class="list-unstyled mb-0">
+          <ul class="list mb-0">
             <li>
               <a href="#!" class="text-white">Galeria</a>
             </li>
@@ -496,24 +507,27 @@
         <!--Grid column-->
 
         <!--Grid column-->
-        <div class="col-sm-4 center-block">
+        <div class="col-xs-12 col-sm-4 col-sm-push-4" style="padding-left:100px;">
           <h5 class="text-uppercase">Servicios</h5>
-          <ul class="list-unstyled mb-0">
-            <li>
-              <a href="#!" class="text-white">Servicio de alimentacion</a>
-            </li>
-            <li>
-              <a href="#!" class="text-white">Servicio turistico</a>
-            </li>
-            <li>
-              <a href="#!" class="text-white">Transporte</a>
-            </li>
-          </ul>
+          <ul class="list mb-0">
+            <div class="icon flex">
+              <div class="text">
+                <i class="fas fa-archway"></i>
+                 <p class="text-white">Servicio turistico</p>
+                </div>
+              </div>
+              <div class="icon flex">
+                <div class="text">
+                  <i class="fas fa-shuttle-van"></i>
+                  <p class="text-white">Transporte</p>
+                </div>
+              </div>
+            </ul>
         </div>
         <!--Grid column-->
 
         <!--Grid column-->
-        <div class="col-xs-12 col-sm-4 col-sm-push-4">
+        <div class="col-xs-12 col-sm-4 col-sm-push-4" style="padding-left:100px;">
           <h5 class="text-uppercase">Contacto</h5>
           <ul class="list- mb-0">
             <div class="icon flex">
@@ -547,12 +561,13 @@
   <!-- Grid container -->
 
   <!-- Copyright -->
-  <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+  <div class="bg-dark text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
     © 2022 Copyright:
     <a class="text-white" >TurismoReal.com</a>
   </div>
   <!-- Copyright -->
 </footer>
+<!-- Fin de Footer -->
 <!-- Fin de Footer -->
 
 {% endblock %}
@@ -578,7 +593,7 @@
         0:{
             items:1
         },
-        768:{
+        700:{
             items:1
         },
         1000:{

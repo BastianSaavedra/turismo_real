@@ -25,6 +25,7 @@ class UsuarioManager(BaseUserManager):
                              telefono = telefono
                              )
         usuario.set_password(password)
+        usuario.usuario_cliente = True
         usuario.save()
         return usuario
     
