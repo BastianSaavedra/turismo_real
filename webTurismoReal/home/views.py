@@ -80,10 +80,10 @@ def home_reserva_confirmacion(request, id):
     # Obtencion de los tours disponibles
     #all_tours = Tour.objects.values_list('nombreTour','comuna', 'id').distinct().order_by().filter(tipoTour = '1' and '2' and '3')
     # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
-    all_tours = Tour.objects.all()
+    all_tours = Tour.objects.all().filter(status="1")
     # all_transp = DetalleTP.objects.values_list('lugar_tp').filter(~Q(transporte__tipo_transporte='0'))
     # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
-    all_transp = DetalleTP.objects.all()
+    all_transp = DetalleTP.objects.all(status="1")
 
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
     return HttpResponse(
@@ -226,82 +226,7 @@ def reserva_webpay_respuesta(request):
     if not request.GET.get('token_ws'):
         raise Http404
     token = request.GET.get('token_ws')
-    # result = webpay.verificarTransaccion(token)
-    # current_user = request.user
     
-    # user = Usuario.objects.filter(username=current_user)
-    #
-    # order = BookingOrder.objects.filter(user=current_user.id)
-    # # order = BookingOrder.objects.only('reserva_id').get(user=current_user.id)
-    # reserva = Reserva.objects.filter(guest=current_user.id).get()
-    # monto_reserva = reserva.costo_reserva
-    # monto_multa = reserva.costo_multa
-    # monto_tour = reserva.tour.costo
-    # monto_traslado = reserva.detalle_tp.costo_tp
-    # total = reserva.total_reserva
-    #
-    # detalle = ""
-    # detalle = f"""
-    # <tr>
-    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_reserva) }</td>
-    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_multa) }</td>
-    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_tour) }</td>
-    #     <td style="border: 1px solid black;">${ utilities.numberFormat(monto_traslado) }</td>
-    # </tr>
-    #
-    # """
-    #
-    # #
-    # html = f"""
-    # <!DOCTYPE html>
-    # <html>
-    #     <head>
-    #         <meta charset="utf-8"/>
-    #         <title>Turismo Real</title>
-    #     </head>
-    #     <body>
-    #         <div>
-    #             <h2>
-    #                 Hola {user.nombre } { user.ap_paterno } 
-    #             </h2>
-    #             <h3>Tu pago ha sido ingresada al sistema con el N°{order.id}</h3>
-    #             <h4 style="color: green">Tu codigo de Reserva es{ reserva.booking_id }</h4>
-    #         </div>
-    #         <table style="border-collapse: collapse;">
-    #             <thead>
-    #                 <tr>
-    #                     <th>Monto Reserva</th>
-    #                     <th>Monto Multa</th>
-    #                     <th>Monto Tour</th>
-    #                     <th>Monto Traslado</th>
-    #                 </tr>
-    #             </thead>
-    #             <tbody>
-    #                 {detalle}
-    #                 <tr>
-    #                     <td colspan="5" style="border: 1px solid black;">
-    #                         Total
-    #                     </td>
-    #                 </tr>
-    #                 <tr>
-    #                     <td colspan="5" style="border: 1px solid black;">
-    #                         ${ utilities.numberFormat(total) }
-    #                     </td>
-    #                 </tr>
-    #             </tbody>
-    #         </table>
-    #
-    #
-    #
-    #     </body>
-    # </html>
-    #
-    # """
-    # subject = "Reserva en Turismo Real" 
-    #
-    #
-    # #
-    # utilities.sendMail(html,subject , 'bastiansaavedra55@gmail.com')
     # #
     messages.success(
         request,
@@ -397,8 +322,8 @@ def cancelar_transporte(request, id):
 def detalle_reserva(request, id):
     # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
     # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
-    all_tours = Tour.objects.all()
-    all_transp = DetalleTP.objects.all()
+    all_tours = Tour.objects.all(status="1")
+    all_transp = DetalleTP.objects.all(status="1")
     user = Usuario.objects.all().get(id=request.user.id)
     reservas = Reserva.objects.filter(id=id)
     return HttpResponse(

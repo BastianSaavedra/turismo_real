@@ -205,7 +205,7 @@
               </a>
             </li>
             <li>
-              <a href="{{ traslados }}" class="nav-link px-3 ">
+              <a href="{{ traslados }}" class="nav-link px-3 {% if request.path == traslados %}active{% endif %}">
                 <span class="me-2"><i class="fas fa-route"></i></span>
                 <span>Traslado Clientes</span>
               </a>

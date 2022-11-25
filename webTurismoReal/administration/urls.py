@@ -42,11 +42,13 @@ urlpatterns = [
     path('tour/list/', views.AdministracionTourListView.as_view(), name="administration_tour"),
     path('tour/add/', views.AdministracionTourCreateView.as_view(), name="administration_tour_create"),
     path('tour/edit/<int:pk>/', views.AdministracionTourUpdateView.as_view(), name="administration_tour_update"),
+    path('tour/edit-status/<int:pk>/', views.AdministracionTourStatusEdit.as_view(), name="administration_tour_status_edit"),
 
     # Traslado Views
     path('traslado/list/', views.AdministracionDetalleTPListView.as_view(), name="administration_traslado"),
     path('traslado/add/', views.AdministracionDetalleTPCreateView.as_view(), name="administration_traslado_create"),
-    path('traslado/edit/<int:pk>/', views.AdministracionDetalleTPUpdateView.as_view(), name="administration_traslado_update")
+    path('traslado/edit/<int:pk>/', views.AdministracionDetalleTPUpdateView.as_view(), name="administration_traslado_update"),
+    path('traslado/edit-status/<int:pk>/', views.AdministracionDetalleTPStatusEdit.as_view(), name="administration_traslado_status_edit"),
 
 
 

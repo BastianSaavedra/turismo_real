@@ -11,7 +11,8 @@
     <th scope="col">Horario Termino</th>
     <th scope="col">Costo Traslado</th>
     <th scope="col">Transporte</th>
-    <th>Editar</th>
+    <th scope="col">Estado</th>
+    <th>Opciones</th>
   </tr>
 {% endblock %}
 
@@ -26,13 +27,39 @@
       <td>$ {{ traslado.costo_tp | numberFormat }}</td>
       <td>{{ traslado.transporte }}</td>
       <td>
-        <a class="btn btn-warning btn-sm" type="button" href="{% url 'administration_traslado_update' traslado.id %}">
-          <i class="bi bi-pencil"></i>
-        </a>
+        {% if traslado.status == "1" %}
+          <span class="bg-success text-white rounded-pill px-2">
+            Disponible
+          </span>
+        {% else %}
+          <span class="bg-secondary text-white rounded-pill px-2">
+            No Disponible
+          </span>
+        {% endif %}
+      </td>
+      <td>
+        <button class="btn btn-warning btn-sm dropdown-toggle" type="button" id="editButton" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fas fa-sliders-h"></i>
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="editButton">
+          <li>
+            <a href="{% url 'administration_traslado_update' traslado.id %}" class="dropdown-item">
+              Editar registro
+            </a>
+          </li>
+          <li>
+            <button class="dropdown-item" onclick="abrir_modal_edicion('{% url 'administration_traslado_status_edit' traslado.id %}')">
+              Cambiar Estado
+            </button>
+          </li>
+        </ul>
       </td>
     </tr>
     {% endfor %}
   {% endif %}
+  <div class="modal fade pt-5" id="edicion" role="dialog" data-bs-backdropt="static">
+    
+  </div>
 {% endblock%}
 
 {% block button_create %}
@@ -40,4 +67,14 @@
   <i class="fas fa-plus"></i>
   Agregar Traslado
 </a>
+{% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+  function abrir_modal_edicion(url){
+    $('#edicion').load(url, function(){
+      $(this).modal('show');
+    });
+  }
+</script>
 {% endblock %}

@@ -178,6 +178,11 @@ class DetalleDpto(models.Model):
         
 class Tour(models.Model):
     
+    TOUR_STATUS = (
+        ("1", "Disponible"),
+        ("2", "No Disponible")
+    )
+    
     TIPO_TR = (
         ("0", "Seleccione"),
         ("1", "Turismo Cultural"),
@@ -191,6 +196,7 @@ class Tour(models.Model):
     horario_fin = models.TimeField(default='00:00', blank=True, null=True)
     costo = models.PositiveBigIntegerField(default=0, blank=True, null=True)
     comuna = models.CharField(max_length=150, blank=True, null=True)
+    status = models.CharField(choices=TOUR_STATUS, max_length=13, default="1")
     
     def __str__(self):
         return self.nombreTour
@@ -278,11 +284,18 @@ class Transporte(models.Model):
         verbose_name_plural = 'Trasportes'
     
 class DetalleTP(models.Model):
+    
+    TRASLADO_STATUS = (
+        ("1", "Disponible"),
+        ("2", "No Disponible")
+    )
+
     lugar_tp = models.CharField(max_length=200, blank=True, null=True)
     horario_in = models.TimeField(default='00:00', blank=True, null=True)
     horario_fin = models.TimeField(default='00:00', blank=True, null=True)
     costo_tp = models.PositiveBigIntegerField(default=0, blank=True, null=True)
     transporte = models.ForeignKey(Transporte, on_delete=models.CASCADE)
+    status = models.CharField(choices=TRASLADO_STATUS, max_length=12, default="1")
     
     def __str__(self):
         return self.transporte.patente

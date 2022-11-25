@@ -499,7 +499,10 @@ class TourForm(forms.ModelForm):
 
     class Meta:
         model = Tour
-        fields = '__all__'
+        fields = (
+            'tipoTour', 'nombreTour', 'horario_in', 'horario_fin',
+            'costo', 'comuna'
+        )
         labels = {
             'tipoTour': 'Tipo de Tour',
             'nombreTour': 'Nombre del Tour',
@@ -549,11 +552,34 @@ class TourForm(forms.ModelForm):
         }
 
 
+class TourStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = Tour
+        fields = ('status', )
+        labels = {
+            'status': 'Estado del Tour'
+        }
+        widgets = {
+            'status': forms.Select(
+                attrs = {
+                    'class': 'form-control select-search mb-4',
+                    'name': 'statusTour',
+                    'id': 'statusTour'
+                }
+            )
+        }
+
+
+
 class DetalleTPForm(forms.ModelForm):
 
     class Meta:
         model = DetalleTP
-        fields = '__all__'
+        fields = (
+            'lugar_tp', 'horario_in', 'horario_fin',
+            'costo_tp', 'transporte'
+        )
         labels = {
             'lugar_tp': 'Lugar Traslado',
             'horario_in': 'Horario Inicio',
@@ -595,4 +621,21 @@ class DetalleTPForm(forms.ModelForm):
         }
 
 
+class DetalleTPStatusForm(forms.ModelForm):
+
+    class Meta:
+        model = DetalleTP
+        fields = ('status', )
+        labels = {
+            'status': 'Estado del Traslado'
+        }
+        widgets = {
+            'status': forms.Select(
+                attrs = {
+                    'class': 'form-control select-search mb-4',
+                    'name': 'statusDetalleTP',
+                    'id': 'statusDetalleTP'
+                }
+            )
+        }
 

@@ -18,7 +18,8 @@ from home.models import (
 from .forms import (
     DepartamentoForm, DetalleFormSet, ImagenFormSet, DetalleFormSetUpdate, ImagenFormSetUpdate,
     DepartamentoStatusForm ,ReservaForm, ConductorForm, TransporteForm, ModeloForm, MarcaForm,
-    TransporteStatusForm, TourForm, ReservaStatusForm, DetalleTPForm, ConductorStatusForm
+    TransporteStatusForm, TourForm, ReservaStatusForm, DetalleTPForm, ConductorStatusForm,
+    TourStatusForm, DetalleTPStatusForm
     )
 
 from datetime import datetime
@@ -620,6 +621,20 @@ class AdministracionTourUpdateView(UpdateView):
         context['icon'] = 'fa-solid fa-pen-to-square'
         return context
 
+
+class AdministracionTourStatusEdit(UpdateView):
+    model = Tour
+    form_class = TourStatusForm
+    success_url = reverse_lazy('administration_tour')
+    template_name = 'administration/interfaces/servicios_extras/tour_status_edit.html'
+
+
+    def get_context_data(self, **kwargs):
+        context = super(AdministracionTourStatusEdit, self).get_context_data(**kwargs)
+        context['title'] = 'Editando Estado del Tour'
+        context['icon'] = 'fa-solid fa-pen-to-square'
+        return context
+
 # DetalleTP
 class AdministracionDetalleTPListView(ListView):
     model = DetalleTP
@@ -657,6 +672,13 @@ class AdministracionDetalleTPUpdateView(UpdateView):
         context['icon'] = 'fa-solid fa-pen-to-square'
         return context
 
+
+class AdministracionDetalleTPStatusEdit(UpdateView):
+    model = DetalleTP
+    form_class = DetalleTPStatusForm
+    template_name = 'administration/interfaces/servicios_extras/traslado_status_edit.html'
+    success_url = reverse_lazy('administration_traslado')
+    
 
 
 
