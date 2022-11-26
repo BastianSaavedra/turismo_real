@@ -67,6 +67,15 @@
               En Proceso
             </span>
           </td>
+        {% elif r.status == "5" %}
+          <td>
+            ${{ r.total_reserva | numberFormat }}
+          </td>
+          <td>
+            <span class="bg-primary text-white rounded-pill px-2">
+              En Espera
+            </span>
+          </td>
 
         {% else %}
           <td>Error</td>

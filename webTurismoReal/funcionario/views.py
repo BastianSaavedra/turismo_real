@@ -1,7 +1,7 @@
 from audioop import reverse
 from importlib.abc import ResourceReader
 
-from django.shortcuts import redirect, render, get_object_or_404
+from django.shortcuts import Http404, redirect, render, get_object_or_404
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse_lazy
@@ -12,8 +12,9 @@ from django.views.generic.edit import CreateView, UpdateView
 from django.template.loader import get_template
 from home.models import DetalleDpto, Reserva, ImagenDepartamento
 from django.contrib import messages
-
 from funcionario.forms import *
+from tools import webpay
+
 
 #PDF related
 from io import BytesIO
@@ -32,32 +33,41 @@ class FuncionarioReservaListView(ListView):
         return context
 
 def checkin_update(request, checkin_id):
-    checkin = Reserva.objects.get(id=checkin_id)
     reserva = Reserva.objects.get(id=checkin_id)
-    data = {
-        # 'form': FormularioCheckIn(instance=checkin),
-      
-        'form': FormularioCheckIn(instance=checkin),
-        'reserva': reserva
-    }
-
-    reserva.status = '4'
-    reserva.save()
-    
-    if request.method == "POST":
-        formulario = FormularioCheckIn(data=request.POST, instance=checkin)
-    
-        if formulario.is_valid():
-            formulario.save()
-            return redirect('funcionario_home')
-        data["form"] = formulario
-
-    
     return render(
         request,
         'funcionario/reserva_CI.html',
-        data
+        {
+            "form": FormularioCheckIn(),
+            "reserva": reserva
+        }
     )
+
+def save_checkin(request, checkin_id):
+    reserva = Reserva.objects.get(id=checkin_id)
+
+    status_estadia = request.POST['status_estadia']
+    comentario = request.POST['mensaje_check_in']
+
+    reserva.status_estadia = status_estadia
+    reserva.mensaje_check_in = comentario
+
+    reserva.save()
+
+
+    if status_estadia == '1':
+        status = '4'
+        reserva.status = status
+        reserva.save()
+    elif status_estadia == '2':
+        status = '5'
+        reserva.status = status
+        reserva.save()
+
+    return redirect('funcionario_home')
+
+    
+    
 
 
 
@@ -92,8 +102,47 @@ def save_checkout(request, checkout_id):
 
     reserva.total_reserva = suma_multa
     reserva.save()
-    
+
+    print("valor multa", monto_multa)
+
+    if int(monto_multa) == 0:
+        return redirect('funcionario_home')
+
+    id_reserva = reserva.id 
+    current_user = reserva.guest.id
+    valor_multa =  monto_multa
+    url_webpay = 'funcionario/reservas/updateCO/pago-multa/webpay-respuesta/'
+
+    result = webpay.crearTransaccion(
+        id_reserva, current_user,
+        valor_multa, url_webpay
+    )
+    return render(
+        request,
+        'funcionario/webpay.html',
+        {
+            'url': result['url'],
+            'token': result['token']
+        }
+
+    )
+
+
+
+def multa_webpay_respuesta(request):
+    if not request.GET.get('token_ws'):
+        raise Http404
+    token = request.GET.get('token_ws')
+
+    messages.success(
+        request,
+        "Pago autorizado",
+        extra_tags = "El pago ha sido recibido"
+    )
     return redirect('funcionario_home')
+
+
+
 
 
 

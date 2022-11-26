@@ -14,7 +14,7 @@
 <hr style="color:aliceblue ; height: 0.1px;">
 <div class="container px-0 mx-auto">
   {% for reserva in reservas %}
-  {% if reserva.status == '1'  or reserva.status == '4'  %}
+  {% if reserva.status == '1'  or reserva.status == '4' or reserva.status == '5'  %}
   <div class="col-12 col-md-12 offset-md-2" style="background-color: rgb(255, 255, 255); max-width: 1000px; box-shadow: 5px 9px 10px #000;">
     <div class="row">
       <div class="col-md-4">
@@ -24,7 +24,7 @@
         <div class="card-body">
           <h5 style="font-weight:600">{{ reserva.detalle_dpto.departamento.titulo }} - {{reserva.detalle_dpto.departamento.comuna}}</h5>
           <p>Estado: 
-          {% if reserva.status == '1' %}
+          {% if reserva.status == '1' or reserva.status == '5' %}
           Activa
           {% elif reserva.status == '4' %}
           En Progreso

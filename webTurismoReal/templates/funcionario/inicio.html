@@ -111,6 +111,33 @@
                   Descargar detalle
                 </a>
               </div>
+              {% elif reserva.status == "5" %}
+                <p class="card text-primary" style="font-weight: 550; font-family: 'Poppins';border: none;">
+                  Estado: En espera
+                </p>
+                <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                  Check in: {{reserva.check_in}}
+                </p>
+                <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
+                  Check out: {{reserva.check_out}}
+                </p>
+                <hr>
+                <div style="display: flex; justify-content: center;">
+                  <a style="width: 150px;" href="{% url 'checkin_update' reserva.pk%}" class="btn btn-warning">
+                    Check In 
+                  </a>
+                  <br style="margin: 10px;">
+                  <a style="width: 150px;" href="{% url 'checkout_update' reserva.pk%}" class="btn btn-danger disabled">
+                    Check Out
+                  </a>  
+                </div>
+                <br style="margin: 1px;">
+                <div style="display: flex; justify-content: center;">
+                  <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                    <i class="fas fa-file-pdf"></i>
+                    Descargar detalle
+                  </a>
+                </div>
               {% else %}
                   Error
               {% endif %}

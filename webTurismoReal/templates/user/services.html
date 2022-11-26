@@ -176,14 +176,14 @@
 
 
       <div class="form-group">
-        <label for="password2">Precio</label>
         <input
-            type="text"
+            type="hidden"
             class="form-control"
             id="monto_reserva"
             name="monto_reseva"
             placeholder="0"
             value="{{ reserva.total_reserva }}"
+            
             disabled
         />
       </div>
@@ -202,12 +202,15 @@
       
       <hr>
       <div style="display: flex; justify-content: center;">
-        <a style="padding: 10px 32px;" href="{% url 'home_reservas_usuario' %}" type="submit" class="btn btn-danger">Cancelar</a>
+        <a href="{% url 'home_reservas_usuario' %}" type="submit" class="btn btn-danger">Cancelar</a>
         <br style="margin: 10px;">
         {%comment%}
         <a href="{% url 'agregar_servicios' reserva.id %}"><button style="padding: 10px 32px;" class="btn btn-primary">Actualizar reserva</button></a>
         {%endcomment%}
-        <button type="submit" class="btn btn-primary">Pagar</button>   
+        <button type="submit" class="btn btn-primary">
+          <i class="fas fa-credit-card"></i>
+          Pagar
+        </button>   
         <input type="hidden" name="reservaid" value="{{ reserva.detalle_dpto.id }}" />  
       </div>
       

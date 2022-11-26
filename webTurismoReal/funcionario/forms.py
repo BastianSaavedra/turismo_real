@@ -62,8 +62,8 @@ class FormularioCheckIn(forms.ModelForm):
                 attrs = {
                     'class':'form-control bg-white',
                     'placeholder': 'Estado de reserva',
-                    'id': 'status',
-                    'name':'estado_estadia',
+                    'id': 'statusEstadia',
+                    'name':'statusEstadia',
                     'style':'border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px;'
                 }
             ),
@@ -72,8 +72,8 @@ class FormularioCheckIn(forms.ModelForm):
                 attrs = {
                     'class': 'form-control bg-white',
                     'placeholder': 'Realiza un comentario sobre la reserva',
-                    'id': 'check-in',
-                    'name':'comentario_checkIn',
+                    'id': 'comentario',
+                    'name':'comentario',
                     'style':'height:50px;border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px; height: 150px;',
                     
                 }  

@@ -38,14 +38,14 @@ def sumatoria():
     try:
         year = datetime.now().year
         for m in range(1, 13):
-            total = Reserva.objects.filter(date_joined__year=year, date_joined__month=m, status="1").aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
+            total = Reserva.objects.filter(~Q(status='2') ,date_joined__year=year, date_joined__month=m).aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
             data.append(float(total))
     except:
         pass
     return data 
 
 def total_reserva():
-    total = Reserva.objects.filter(Q(status='1') | Q(status='3')).aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
+    total = Reserva.objects.filter(~Q(status='2')).aggregate(r=Coalesce(Sum('total_reserva'), 0)).get('r')
     return total
 
 def administration_dashboard(request):
@@ -66,6 +66,10 @@ def administration_dashboard(request):
     total_departamentos = len(detalles_dptos)
 
     reservas = len(Reserva.objects.all().filter(status = '1'))
+    reservas_en_proceso = len(Reserva.objects.all().filter(status = '4'))
+    reservas_terminadas = len(Reserva.objects.all().filter(status = '5'))
+
+
     reservas_canceladas = len(
         Reserva.objects.all().filter(status = '2')
     )
@@ -149,6 +153,8 @@ def administration_dashboard(request):
             'departamentos': departamentos,
             'reservas': reservas,
             'reservas_canceladas': reservas_canceladas,
+            'reservas_en_proceso': reservas_en_proceso,
+            'reservas_terminadas': reservas_terminadas,
             'detalles_dptos': detalles_dptos,
             'total_departamentos': total_departamentos,
             'disponibles': departamentos_disponibles,

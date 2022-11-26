@@ -311,7 +311,8 @@ class Reserva(models.Model):
         ('1', 'Activa'),
         ('2', 'Cancelada'),
         ('3', 'Terminada'),
-        ('4', 'En Proceso')
+        ('4', 'En Proceso'),
+        ('5', 'En Espera')
     )
 
     ESTADIA = (

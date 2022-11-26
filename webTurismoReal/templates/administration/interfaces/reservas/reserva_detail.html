@@ -104,6 +104,10 @@
                             <span class="bg-info text-white rounded-pill px-2">
                               En Proceso
                             </span>
+                          {% elif obj.status == "5" %}
+                            <span class="bg-primary text-white rounded-pill px-2">
+                              En Espera 
+                            </span>
                           {% else %}
                             Error
                           {% endif %}

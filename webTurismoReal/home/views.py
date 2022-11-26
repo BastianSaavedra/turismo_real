@@ -83,7 +83,7 @@ def home_reserva_confirmacion(request, id):
     all_tours = Tour.objects.all().filter(status="1")
     # all_transp = DetalleTP.objects.values_list('lugar_tp').filter(~Q(transporte__tipo_transporte='0'))
     # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
-    all_transp = DetalleTP.objects.all(status="1")
+    all_transp = DetalleTP.objects.filter(status="1")
 
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
     return HttpResponse(
@@ -251,7 +251,7 @@ def home_reservas_usuario(request):
         return redirect("home_inicio")
     user = Usuario.objects.all().get(id=request.user.id)
     print(f"request user id = {request.user.id}")
-    reservas = Reserva.objects.all().filter((Q(status = '1') | Q(status = '4')), guest=user)
+    reservas = Reserva.objects.all().filter((Q(status = '1') | Q(status = '4') | Q(status = '5')), guest=user)
     if not reservas:
         messages.warning(request, "Aún no tienes reservas", extra_tags="Debes reservar un departamento para poder visualizar")
     return HttpResponse(
@@ -322,8 +322,8 @@ def cancelar_transporte(request, id):
 def detalle_reserva(request, id):
     # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
     # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
-    all_tours = Tour.objects.all(status="1")
-    all_transp = DetalleTP.objects.all(status="1")
+    all_tours = Tour.objects.filter(status="1")
+    all_transp = DetalleTP.objects.filter(status="1")
     user = Usuario.objects.all().get(id=request.user.id)
     reservas = Reserva.objects.filter(id=id)
     return HttpResponse(
