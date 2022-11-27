@@ -3,91 +3,180 @@
 {% load tags %}
 {% block title %}Mis Reservas {% endblock %}
 {% block content %}
-<hr style="color:aliceblue ; height: 0.1px;">
-<h2 class="text-center " 
-    style="@import url('https://fonts.googleapis.com/css?family=Poppins');
-           font-family: 'Poppins' ;
-           font-weight: 400;
-           text-transform: uppercase;">
-  Mis Reservas
-</h2>
-<hr style="color:aliceblue ; height: 0.1px;">
-<div class="container px-0 mx-auto">
-  {% for reserva in reservas %}
-  {% if reserva.status == '1'  or reserva.status == '4' or reserva.status == '5'  %}
-  <div class="col-12 col-md-12 offset-md-2" style="background-color: rgb(255, 255, 255); max-width: 1000px; box-shadow: 5px 9px 10px #000;">
-    <div class="row">
-      <div class="col-md-4">
-        <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="360" width="340">
-      </div>
-      <div class="col-md-8">
-        <div class="card-body">
-          <h5 style="font-weight:600">{{ reserva.detalle_dpto.departamento.titulo }} - {{reserva.detalle_dpto.departamento.comuna}}</h5>
-          <p>Estado: 
-          {% if reserva.status == '1' or reserva.status == '5' %}
-          Activa
-          {% elif reserva.status == '4' %}
-          En Progreso
-          {% endif %}
-          </p>
-          <p>Usuario: {{ reserva.guest }}</p>
-          <p>Desde: {{ reserva.check_in }}</p>
-          <p>Hasta: {{ reserva.check_out }}</p>
-          <p>Precio: ${{ reserva.total_reserva|numberFormat}}</p>
-          <p>Codigo Reserva: {{ reserva.booking_id }}</p>
+<link rel="stylesheet" type="text/css" href="{% static 'css/style5.css' %}">
+<!-- <div class="container"> -->
+<!-- <div class="col ms-2"> -->
+<!-- <h2 class="text-center" style="color:#fff;padding-top: 25px;">Mis Reservas</h2> -->
+<!-- <hr style="color:aliceblue ; height: 0.1px;"> -->
 
-          <!---------------------------------------------------Seccion de servicios extra--------------------------------------------------------->
-          {% if reserva.tour and reserva.detalle_tp%}
-            <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
-              {% csrf_token %}
-              <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
-            </form>
-            <p>Tour: {{ reserva.tour }}</p>
+<div class="container mt-3 pt-3">
 
-            <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
-              {% csrf_token %}
-              <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
-              <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
-              <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
-            </form>
+  <div class="row text-center mb-3">
+    <h2 class="text-center" style="color:#fff;padding-top: 25px;">Mis Reservas</h2>
+    <hr style="color:aliceblue ; height: 0.1px;">
+  </div>
 
-           {% elif reserva.tour and not reserva.detalle_tp %}
+
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for reserva in reservas %}
+      {% if reserva.status == "1" or reserva.status == "4" or reserva.status == "5" %}
+      <div class="col">
+        <div class="card h-100 bg-light" style="border-end-end-radius: 20px; border-bottom-left-radius: 20px;">
+
+          <div class="card-body bg-warning">
+            <h5 class="card-text text-dark">
+              Codigo: {{ reserva.booking_id }}
+            </h5>
+          </div>
+
+          <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}"  alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
+
+          <div class="card-body bg-white text-dark" style="border-radius: 10px;">
+            <h5 class="card-text text-dark">
+              {{ reserva.detalle_dpto.departamento.titulo }} - {{ reserva.detalle_dpto.departamento.comuna }}
+            </h5>
+            <hr/>
+
+            <div class="row">
+              <div class="col-md-6">
+                {% if reserva.status == "1" or reserva.status == "5" %}
+                  <p class="card text-success" style="font-weight: 550; font-family: 'Poppins';border: none;">
+                    Estado: Activa
+                  </p>
+                {% elif reserva.status == "4" %}
+                  <p class="card text-info" style="font-weight: 550; font-family: 'Poppins';border: none;">
+                    Estado: En Progreso 
+                  </p>
+                {% endif %}
+              </div>
+              <div class="col-md-6">
+                <p class="card-text" style="font-size:15px; font-weight: 500; font-family: 'Poppins';color: rgb(215, 33, 33);">
+                  Check-IN: {{reserva.check_in}}
+                </p>
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col-md-6">
+                <p class="card-text text-capitalize" style="font-weight: 500; font-family: 'Poppins'">
+                  Usuario: {{ reserva.guest }}
+                </p>
+              </div>
+
+              <div class="col-md-6">
+                <p class="card-text" style="font-size:15px; font-weight: 500; font-family: 'Poppins';color: rgb(215, 33, 33);">
+                  Check-OUT: {{reserva.check_out}}
+                </p>
+              </div>
+            </div>
+
+            <hr>
+            <p class="card-text" style="font-weight: 500; font-family: 'Poppins'; font-size: 20px;">
+              SERVICIOS EXTRAS
+            </p>
+            <hr>
+            {% if reserva.tour and reserva.detalle_tp%}
               <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
                 {% csrf_token %}
-                <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Tour"/>
-                </form>
-                <p>Tour: {{ reserva.tour }}</p>
-                <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 160px;">Añadir transporte</button></a>
+                <input class="btn btn-outline-danger btn-md" style="float: right;" type="submit" value="Cancelar Tour"/>
+              </form>
+              <p style="font-weight: 500; font-family: 'Poppins'">Tour: {{ reserva.tour }}</p>
 
-            {% elif not reserva.tour and reserva.detalle_tp %}
-              <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: right;width: 160px;">Añadir tour</button></a>
               <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
                 {% csrf_token %}
-                <p>Lugar: {{ reserva.detalle_tp.lugar_tp }}</p>
-                <input class="btn btn-outline-danger btn-md" style="float: right;width: 160px;" type="submit" value="Cancelar Transporte"/>
-                <p>Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}</p>
+                <p style="font-weight: 500; font-family: 'Poppins'">
+                  Lugar: {{ reserva.detalle_tp.lugar_tp }}
+                </p>
+                <input class="btn btn-outline-danger btn-md" style="float: right;" type="submit" value="Cancelar Transporte"/>
+                <p style="font-weight: 500; font-family: 'Poppins'">
+                  Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}
+                </p>
               </form>
 
-          {% else %}
-            <a href="{% url 'detalle_reserva' reserva.id %}"><button class="btn btn-success btn-md" style="float: center;width: 180px;">Añadir servicios extra</button></a>
-          {% endif %}
+            {% elif reserva.tour and not reserva.detalle_tp %}
+              <form method="post" onsubmit="return cancelarTour(this);" action="{% url 'home_cancelar_tour' reserva.id %}">
+                {% csrf_token %}
+                <input class="btn btn-outline-danger btn-md" style="float: right;" type="submit" value="Cancelar Tour"/>
+                </form>
+                <p style="font-weight: 500; font-family: 'Poppins'">
+                  Tour: {{ reserva.tour }}
+                </p>
+                <br>
+                <div class="d-flex justify-content-center mt-3">
+                  <a href="{% url 'detalle_reserva' reserva.id %}">
+                    <button class="btn btn-md btn-success" style="float: center;">
+                      Añadir transporte
+                    </button>
+                  </a>
+                </div>
 
-          <!--------------------------------------------------------------------------------------------------------------------------------------->
+            {% elif not reserva.tour and reserva.detalle_tp %}
+              <div class="d-flex justify-content-center">
+                <a href="{% url 'detalle_reserva' reserva.id %}">
+                  <button class="btn btn-success btn-md" style="float: right;width: 160px;">
+                    Añadir tour
+                  </button>
+                </a>
+              </div>
+              <form method="post" onsubmit="return cancelarTransporte(this);" action="{% url 'home_cancelar_transporte' reserva.id %}">
+                {% csrf_token %}
+                <p style="font-weight: 500; font-family: 'Poppins'">
+                  Lugar: {{ reserva.detalle_tp.lugar_tp }}
+                </p>
+                <input class="btn btn-outline-danger btn-md" style="float: right;" type="submit" value="Cancelar Transporte"/>
+                <p style="font-weight: 500; font-family: 'Poppins'">
+                  Tipo Transporte: {{ reserva.detalle_tp.transporte.get_tipo_transporte_display }}
+                </p>
+              </form>
+            {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+              No hay Servicios Extras
+            </div>
+              <div class="d-flex justify-content-center">
+                <a  style="margin-bottom: 5px;" href="{% url 'detalle_reserva' reserva.id %}">
+                  <button class="btn btn-success btn-md" style="float: center;">
+                    Añadir servicios extra
+                  </button>
+                </a>
+              </div>
+            {% endif %}
 
-        </div>
 
-        <div class="card-footer bg-white text-end">
-          <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
-            {% csrf_token %}
-            <div class="d-grid gap-3 col-6 mx-auto">
-              <input class="btn btn-danger btn-md" type="submit" value="Cancelar Reserva"/>
+
+            <div class="d-flex justify-content-center">
+              <div class="mt-auto p-2">
+              <a class="btn btn-md btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
+                <i class="fas fa-file-pdf"></i>
+                Descargar Detalle
+              </a>
+              </div>
+            </div>
+
+            <div class="card-footer bg-white text-end">
+
+              <form method="post" onsubmit="return cancelarReserva(this);" action="{% url 'home_cancelar_reserva' reserva.id %}">
+                {% csrf_token %}
+                <div class="d-grid gap-3 col-6 mx-auto">
+                  <input class="btn btn-danger btn-md" type="submit" value="Cancelar Reserva"/>
+                </div>
+              </form>
+
+            </div>
+
           </div>
-          </form>
+          
         </div>
+
       </div>
-    </div>
+      {% endif %}
+    {% endfor %}
   </div>
-  {% endif %}
+
+</div>
+{% endblock %}
+
+
+{% block js %}
   <script>
     function cancelarReserva(form) {
       Swal.fire({
@@ -107,7 +196,6 @@
         return false;
     }
   </script>
-
   <script>
     function cancelarTour(form) {
       Swal.fire({
@@ -147,11 +235,7 @@
         return false;
     }
   </script>
-  <hr style="color:aliceblue ; height: 10px;">
-  {% endfor %}
-</div>
-
 
 {% endblock %}
-
+ 
 

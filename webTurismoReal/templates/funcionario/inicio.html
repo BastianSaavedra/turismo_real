@@ -25,6 +25,7 @@
             </h5>
           </div>
 
+
           <img src="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" height="150" alt="{{ reserva.detalle_dpto.departamento.imagenes.first.imagen.url }}" class="img-fluid rounded-start">
 
           <div class="card-body bg-white text-dark" style="border-radius: 10px;">
@@ -74,15 +75,15 @@
               <p class="card-text" style="font-weight: 500; font-family: 'Poppins'">
                 Check-OUT: {{reserva.check_out}}
               </p>
-              <hr>
-              
+            <br/>
+            <br/>
+            <br/>
               <div style="display: flex; justify-content: center;">
                 <a class="btn btn-outline-dark" type="button" href="{% url 'detalle_reserva_pdf' reserva.pk %}">
-                <i class="fas fa-file-pdf"></i>
+                  <i class="fas fa-file-pdf"></i>
                   Descargar detalle
                 </a>
               </div>
-              <br style="margin: 19px;">
             {% elif reserva.status == "4" %}
               <p class="card text-info" style="font-weight: 500; font-family: 'Poppins';border: none;">
                 Estado: En Proceso
@@ -214,6 +215,12 @@
             No hay opciones
 
             {% endif %}
+=======
+              
+              {% else %}
+                  Error
+              {% endif %} 
+>>>>>>> origin/branch_SebastianZuniga
           </div>
         </div>
       </div>

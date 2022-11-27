@@ -13,40 +13,6 @@ label {
 {% block content %}
 {% load tags %}
 
-{% comment %}
-<div class="col" style="color:black">
-  <form method="POST" action="{% url 'save_checkout' checkout.id %}">
-    {% csrf_token %}
-    <div class="card card-default">
-
-        <div class="card-body" >
-          <label>Cliente</label>
-          <input type="text" id="cliente" name="cliente" value="{{ checkout.guest }}" class="form-control" disabled />
-          
-          <label>Codigo Reserva</label>
-          <input type="text" id="codigo" name="codigo" value="{{ checkout.booking_id }}" class='form-control' disabled />
-
-          <label>Comentario</label>
-          <textarea id="comentario" name="comentario" placeholder="Comentario Check-Out" class="form-control" style="height: 150px;">
-            {{ checkout.mensaje_check_out }}
-          </textarea>
-
-          <label>Monto Multa</label>
-          <input type="number" id="montoMulta" name="montoMulta" class="form-control" placeholder="$ 0" value="{{ checkout.costo_multa | numberFormat}}" />
-        </div>
-
-      <div class="card-footer">
-        <button type="submit" class="btn btn-primary">
-           Guardar
-        </button>
-
-        <a type="submit" class="btn btn-secondary" href="{% url 'funcionario_home' %}">
-          Cancelar
-        </a>
-      </div>
-  </form>
-</div>
-{% endcomment %}
 
 
 <hr style="color:aliceblue ; height: 0.1px;">
@@ -54,14 +20,20 @@ label {
 
   <div class="row">
     <hr style="color:aliceblue ; height: 0.1px;">
-    <h3 style="font-weight:530; display: flex;">Detalles de la reserva:
-      <p style="font-family: Poppins; font-size: 20px; margin-top: 10px; margin-left: 10px;">
-        (ID {{checkout.booking_id}})
-      </p>
-      <h4 style="color:rgb(0, 0, 0); font-weight: 600; margin-top: -15px;">
-        CHECK-OUT
-      </h4>
-    </h3>
+<!-- <<<<<<< HEAD -->
+<!--     <h3 style="font-weight:530; display: flex;">Detalles de la reserva: -->
+<!--       <p style="font-family: Poppins; font-size: 20px; margin-top: 10px; margin-left: 10px;"> -->
+        <!-- (ID {{checkout.booking_id}}) -->
+<!--       </p> -->
+<!--       <h4 style="color:rgb(0, 0, 0); font-weight: 600; margin-top: -15px;"> -->
+<!--         CHECK-OUT -->
+<!--       </h4> -->
+<!--     </h3> -->
+<!-- ======= -->
+    <h3 style="font-weight:530; display: flex;">Código de la reserva:
+      <p style="font-family: Poppins; font-size: 20px; margin-top: 10px; margin-left: 10px;">(ID {{checkout.booking_id}})</p>
+      <h4 style="color:rgb(0, 0, 0); font-weight: 600; margin-top: -15px;">CHECK-OUT</h4></h3>
+<!-- >>>>>>> origin/branch_SebastianZuniga -->
   </div>
 
   <div class="col" style="color:black">

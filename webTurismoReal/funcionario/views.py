@@ -149,7 +149,7 @@ def multa_webpay_respuesta(request):
 def funcionarioReserva_Check_PDF(request,*args, **kwargs):
     pk = kwargs.get('pk')
     reserva = get_object_or_404(Reserva,pk=pk)
-    template_path = 'funcionario/reserva_Check_pdf.html'
+    template_path = 'user/reserva_Check_pdf.html'
     context = {'reserva': reserva}
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="estado.pdf"'
