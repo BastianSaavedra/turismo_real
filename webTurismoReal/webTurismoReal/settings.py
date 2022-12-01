@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#---------------------------------------------------------MySQL-----------------------------------------------------------
 # DATABASES = { 
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -106,30 +107,30 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 #     }
 # }
 
-# Mysql
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': config['db_name'],
-#         'USER': config['user_name'],
-#         'PASSWORD': config['password'],
-#         'HOST': config['host_name'],
-#         'PORT': config['port'],
-#         'OPTIONS': {
-#             'autocommit': True,
-#         },
-#     }
-# }
 
-# Oracle
+
+#---------------------------------------------------------ORACLE-----------------------------------------------------------
 DATABASES = {
     'default': {
-        'ENGINE': config['engine_oracle'],
-        'NAME': config['name_oracle'],
-        'USER': config['user_oracle'],
-        'PASSWORD': config['password_oracle'],
-    },
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'xe',
+        'USER': 'c##turismoreal',
+        'PASSWORD': 'turismo',
+        'HOST': 'localhost',
+        'PORT': '1521',
+    }
 }
+
+#----------------- Config Oracle para Test Unitarios ----------------------
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': config['engine_oracle'],
+#         'NAME': config['name_oracle'],
+#         'USER': config['user_oracle'],
+#         'PASSWORD': config['password_oracle'],
+#     },
+# }
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators

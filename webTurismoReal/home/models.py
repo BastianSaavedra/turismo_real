@@ -356,7 +356,7 @@ class BookingOrder(models.Model):
     reserva = models.ForeignKey(Reserva, models.DO_NOTHING)
     token_ws = models.CharField(max_length=255, default='0')
     tarjeta = models.CharField(max_length=10, default='0')
-    fecha_transbank = models.CharField(max_length=100, default='0')
+    # fecha_transbank = models.CharField(max_length=100, default='0')
     estado_transbank = models.CharField(max_length=100, default='0')
     total = models.PositiveIntegerField(default=0)
     fecha = models.DateField(auto_now=True, null=True, blank=True)

@@ -3,8 +3,7 @@ from secrets import token_urlsafe
 from typing import List
 from django.contrib.admin.options import reverse
 from django.db.models.functions import Coalesce
-from django.db.models import Sum, Q
-from django.shortcuts import get_object_or_404, render, redirect
+from django.db.models import Sum, Q from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.template.loader import get_template
 from django.urls import reverse_lazy
