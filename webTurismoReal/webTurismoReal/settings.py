@@ -91,6 +91,7 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+#---------------------------------------------------------MySQL-----------------------------------------------------------
 # DATABASES = { 
 #     'default': {
 #         'ENGINE': 'django.db.backends.mysql',
@@ -105,19 +106,50 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 #     }
 # }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': config['db_name'],
+#         'USER': config['user_name'],
+#         'PASSWORD': config['password'],
+#         'HOST': config['host_name'],
+#         'PORT': config['port'],
+#         'OPTIONS': {
+#             'autocommit': True,
+#         },
+#     }
+# }
+
+
+#---------------------------------------------------------ORACLE-----------------------------------------------------------
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config['db_name'],
-        'USER': config['user_name'],
-        'PASSWORD': config['password'],
-        'HOST': config['host_name'],
-        'PORT': config['port'],
-        'OPTIONS': {
-            'autocommit': True,
-        },
+        'ENGINE': 'django.db.backends.oracle',
+        'NAME': 'xe',
+        'USER': 'c##turismoreal',
+        'PASSWORD': 'turismo',
+        'HOST': 'localhost',
+        'PORT': '1521',
     }
 }
+
+#---------------------------FORMA 2 CONEXION ORACLE-----------------------------------------------------------
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.oracle',
+#         'NAME': 'localhost/xe',
+#         'USER': 'c##turismoreal',
+#         'PASSWORD': 'turismo',
+#         'TEST': {
+#             'USER': 'default_test',
+#             'TBLSPACE': 'default_test_tbls',
+#             'TBLSPACE_TMP': 'default_test_tbls_tmp',
+#         },
+#     }
+# }
+
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
