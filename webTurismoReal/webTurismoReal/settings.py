@@ -26,6 +26,7 @@ json_path.close()
 config = json.loads(conf_string)
 
 BASE_URL = config['base_url']
+BASE_URL_MOVIL = config['base_url_movil']
 
 
 # Quick-start development settings - unsuitable for production
@@ -37,7 +38,7 @@ SECRET_KEY = 'django-insecure-*7#a155e$)dn3fq6mulp0s%!8s+t=6&u9c)68u!gqgdr+8+6*4
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*', '127.0.0.1']
+ALLOWED_HOSTS = ['*', '127.0.0.1', '192.168.0.10']
 
 
 # Application definition
@@ -105,18 +106,29 @@ WSGI_APPLICATION = 'webTurismoReal.wsgi.application'
 #     }
 # }
 
+# Mysql
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': config['db_name'],
+#         'USER': config['user_name'],
+#         'PASSWORD': config['password'],
+#         'HOST': config['host_name'],
+#         'PORT': config['port'],
+#         'OPTIONS': {
+#             'autocommit': True,
+#         },
+#     }
+# }
+
+# Oracle
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': config['db_name'],
-        'USER': config['user_name'],
-        'PASSWORD': config['password'],
-        'HOST': config['host_name'],
-        'PORT': config['port'],
-        'OPTIONS': {
-            'autocommit': True,
-        },
-    }
+        'ENGINE': config['engine_oracle'],
+        'NAME': config['name_oracle'],
+        'USER': config['user_oracle'],
+        'PASSWORD': config['password_oracle'],
+    },
 }
 
 # Password validation
@@ -180,8 +192,6 @@ PASSWORD_MAIL_OUTPUT = config['email_password']
 WEBPAY_URL = config['webpay_url']
 WEBPAY_ID = config['webpay_id']
 WEBPAY_SECRET = config['webpay_secret']
-
-
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

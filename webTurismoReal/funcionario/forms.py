@@ -6,58 +6,14 @@ class FormularioCheckIn(forms.ModelForm):
     class Meta:
         model = Reserva
         fields = (
-
-         # 'guest',
-         # 'booking_id',
-        # 'guest',
-        # 'booking_id',
-
          'status_estadia',
          'mensaje_check_in'
         )
         labels = {
-
-            # 'guest':'Cliente',
-            # 'booking_id':'Codigo Reserva',
-
-            #'guest':'Nombre de usuario',
-            #'booking_id':'Codigo Reserva',
-
             'status_estadia':'Estado',
             'mensaje_check_in': 'Comentarios'
         }
         widgets = {
-            # 'guest':forms.Select(
-            #     attrs = {
-
-            #         'class':'form-control ',
-            #         'id': 'Cliente',
-            #         'name':'guest',
-
-            #         'class':'form-control',
-            #         'placeholder': 'Cliente',
-            #         'id': 'Cliente',
-            #         'name':'guest',
-            #         'disabled':'true',
-            #         'style':'border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px;'
-
-            #     }
-            # ),
-            # 'booking_id':forms.TextInput(
-            #     attrs={
-            #         'class':'form-control',
-            #         'placeholder': 'ID_Reserva',
-            #         'id': 'identificador',
-            #         'name':'id_reserva',
-
-            #     }
-
-            #         'disabled':'true',
-            #         'style':'border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px;'
-            #         }
-
-            # ),
-            
             'status_estadia':forms.Select(
                 attrs = {
                     'class':'form-control bg-white',
@@ -86,14 +42,10 @@ class FormularioCheckOut(forms.ModelForm):
     class Meta: 
         model = Reserva
         fields = (
-            # 'guest',
-            # 'booking_id',
             'mensaje_check_out',
             'costo_multa'
         )
         labels = {
-            # 'guest':'Nombre de usuario',
-            # 'booking_id':'Codigo Reserva',
             'mensaje_check_out': 'Comentarios',
             'costo_multa':'Monto a multar'
         }
@@ -119,31 +71,6 @@ class FormularioCheckOut(forms.ModelForm):
                 }
             ),
 
-            #  'guest':forms.Select(
-            #     attrs = {
-            #         'class':'form-control',
-            #         'placeholder': 'Cliente',
-            #         'id': 'Cliente',
-            #         'name':'guest',
-            #         'disabled':'true',
-            #         'style':'border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px;'
-
-            #     }
-            # ),
-             
-            # 'booking_id':forms.TextInput(
-            #     attrs={
-            #         'class':'form-control',
-            #         'placeholder': 'ID_Reserva',
-            #         'id': 'identificador',
-            #         'name':'id_reserva',
-            #         'disabled':'true',
-            #         'style':'border-radius: 10px; border-color: rgb(171, 82, 0);border-width: 1px;'
-
-            #         }
-            # ),
-
-            
             'mensaje_check_out': forms.Textarea(
                 attrs = {
                     'class': 'form-control bg-white',

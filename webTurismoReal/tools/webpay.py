@@ -92,7 +92,7 @@ def crearTransaccionFuncionario(reserva_id, user_id, total, url_webpay):
     buy_order = f"orden{order.id}"
     session_id = str(random.randrange(1000000, 999999999))
     amount = total
-    ruta = f"{settings.BASE_URL}{url_webpay}"
+    ruta = f"{settings.BASE_URL_MOVIL}{url_webpay}"
     endpoint = settings.WEBPAY_URL
     payload = {
         "buy_order": buy_order,

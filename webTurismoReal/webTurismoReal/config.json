@@ -1,11 +1,21 @@
 {
-  "user_name": "root",
-  "password": "fq3JnvrMdyf",
-  "host_name": "localhost",
-  "db_name": "turismo_real",
-  "port": "3306",
+  "engine_mysql": "django.db.backends.mysql",
+  "user_name_mysql": "root",
+  "password_mysql": "fq3JnvrMdyf",
+  "host_name_mysql": "localhost",
+  "db_name_mysql": "turismo_real",
+  "port_mysql": "3306",
+
+  "engine_oracle": "django.db.backends.oracle",
+  "name_oracle": "localhost:1521/XEPDB1",
+  "user_oracle": "django",
+  "password_oracle": "django",
+  "host_oracle": "localhost",
+  "port_oracle": "1521",
+
 
   "base_url": "http://127.0.0.1:8000/",
+  "base_url_movil": "http://192.168.0.12:8000",
 
   "smtp": "smtp.google.com",
   "port_smtp": 465,

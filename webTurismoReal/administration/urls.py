@@ -31,11 +31,9 @@ urlpatterns = [
     # Transporte Views
     path('transporte/list/', views.AdministracionTransporteListView.as_view(), name="administration_transporte"),
     path('transporte/add/', views.AdministracionTransporteCreateView.as_view(), name="administration_transporte_create"),
-    # path('transporte/add/', views.agregar_transporte, name="administration_transporte_create"),
     path('transporte/edit/<int:pk>/', views.AdministracionTransporteUpdateView.as_view(), name="administration_transporte_update"),
     path('transporte/edit-status/<int:pk>/', views.AdministracionTransporteStatusEdit.as_view(), name="administration_transporte_status_edit"),
     path('transporte/add-modelo/', views.AdministracionModeloCreateView.as_view(), name="administration_modelo_create"),
-    # path('transporte/add-modelo/update/', views.AdministracionModeloUpdateView.as_view(), name="administration_modelo_update"),
     path('transporte/add-modelo/add-marca/', views.AdministracionMarcaCreateView.as_view(), name="administration_marca_create"),
 
     # Tours Views

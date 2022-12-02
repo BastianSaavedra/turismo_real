@@ -77,12 +77,7 @@ def home_inicio(request):
 
 # @login_required(login_url='/user')
 def home_reserva_confirmacion(request, id):
-    # Obtencion de los tours disponibles
-    #all_tours = Tour.objects.values_list('nombreTour','comuna', 'id').distinct().order_by().filter(tipoTour = '1' and '2' and '3')
-    # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
     all_tours = Tour.objects.all().filter(status="1")
-    # all_transp = DetalleTP.objects.values_list('lugar_tp').filter(~Q(transporte__tipo_transporte='0'))
-    # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
     all_transp = DetalleTP.objects.filter(status="1")
 
     detalle_dpto = DetalleDpto.objects.all().filter(id=id).get()
@@ -152,8 +147,6 @@ def home_reserva(request):
             lugar_transporte = request.POST['lugar']
             transporte = DetalleTP.objects.get(id=lugar_transporte)
             valor_transporte = transporte.costo_tp
-            # transp = DetalleTP.objects.get(id=lugar_transporte)
-            # valor_transporte = transp.costo_tp
 
         #--------------------------------- SERVICIOS ---------------------------------
         
@@ -210,14 +203,6 @@ def home_reserva(request):
             }
         )
 
-        # return redirect("home_inicio")
-        # return render(
-        #     request,
-        #     "user/pay_section.html",
-        #     {
-        #         'reserva_id': id_reserva
-        #     }
-        # )
     else:
         return HttpResponse('Acceso Denegado')
 
@@ -234,13 +219,6 @@ def reserva_webpay_respuesta(request):
         extra_tags="El pago ha sido recibido"
     )
     return redirect("home_reservas_usuario")
-    # return render(
-    #     request,
-    #     'user/webpay_respuesta.html',
-    #     {
-    #         'result': result
-    #     }
-    # )
 
 
 
@@ -280,10 +258,6 @@ def cancelar_tour(request, id):
     valor_total = reservation.total_reserva
     valor_tour = reservation.tour.costo
 
-    # if valor_tour == 0:
-    #     valor_tour = 0
-    # else:
-    #     valor_tour = reservation.tour.costo
 
     resta_tour = valor_total - valor_tour
 
@@ -320,8 +294,6 @@ def cancelar_transporte(request, id):
 
 
 def detalle_reserva(request, id):
-    # all_tours = Tour.objects.all().filter(~Q(tipoTour='0'))
-    # all_transp = DetalleTP.objects.all().filter(~Q(transporte__tipo_transporte='0'))
     all_tours = Tour.objects.filter(status="1")
     all_transp = DetalleTP.objects.filter(status="1")
     user = Usuario.objects.all().get(id=request.user.id)
@@ -385,11 +357,6 @@ def agregar_servicios(request,id):
             costo_extra, url_webpay 
         )
 
-        # messages.success(
-        #                 request,
-        #                 "Reserva actualizada",
-        #                 extra_tags="Tu reserva ha sido actualizada correctamente"
-        #                  )
 
         return render(
             request,
@@ -399,7 +366,6 @@ def agregar_servicios(request,id):
                 'token': result['token']
             }
         )
-        # return redirect("home_reservas_usuario")
     else:
         return HttpResponse('Acceso Denegado')
 
@@ -409,19 +375,12 @@ def login(request):
         return redirect ('home')     
     
     elif request.method == 'POST':
-        # username = request.POST.get('username')
-        # password = request.POST.get('password')
-        # usuarios = authenticate(username=username, password=password)
         
         username = request.POST['username']
         password = request.POST['password']
         usuarios = authenticate(request, username=username, password=password)
         
                 
-        # if usuarios: 
-        #     lg(request,usuarios)
-        #     messages.success(request, f'Bienvenido @{usuarios.username}', extra_tags='Tu sesion ha sido iniciada correctamente')
-        #     return redirect("home")  
         
         if usuarios: 
             
@@ -448,22 +407,6 @@ def login(request):
              
         #------------------------------------
         
-        # if usuarios.is_admin:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect("administration_dashboard")
-        # elif usuarios.is_staff:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect("")
-        # elif usuarios.is_funcionario == True:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido funcionario{usuarios.username}')
-        #     return redirect("funcionario_home")
-        # elif usuarios.is_admin == False:
-        #     lg(request, usuarios)
-        #     messages.success(request, f'Bienvenido {usuarios.username}')
-        #     return redirect("home_inicio")
        
         
     return render(request, 'users/login.html',{})
@@ -473,6 +416,7 @@ def salir(request):
     logout(request)
     messages.success(request,'Sesion finalizada', extra_tags=f'Hasta pronto amigo!')
     return redirect(login)
+
 
 
 class RegistrarUsuario(CreateView):

@@ -47,12 +47,14 @@
                 
                 {{ form.modelo.label }}
                 {{ form.modelo}}
+                {% comment %}
                 <p class="pt-2">No esta el modelo? 
                   <a class="btn btn-outline-success btn-sm" href="{% url 'administration_modelo_create' %}">
                     <i class="{{ icon }}"></i>
                     Agregar Modelo
                   </a>
                 </p>
+                {% endcomment %}
 
                 {{ form.conductor.label }}
                 {{ form.conductor }}

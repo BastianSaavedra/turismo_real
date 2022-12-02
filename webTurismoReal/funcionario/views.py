@@ -84,8 +84,6 @@ def checkout_update(request, checkout_id):
 def save_checkout(request, checkout_id):
     reserva = Reserva.objects.get(id=checkout_id)
 
-    # guest = request.POST['cliente']
-    # codigo = request.POST['codigo']
     comentario = request.POST['comentario']
     monto_multa = request.POST['montoMulta']
 

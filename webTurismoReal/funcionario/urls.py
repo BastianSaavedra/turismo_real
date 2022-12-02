@@ -10,9 +10,5 @@ urlpatterns = [
     path('reservas/updateCO/<int:checkout_id>/', views.checkout_update, name="checkout_update"),
     path('reservas/save-updateCO/<int:checkout_id>/', views.save_checkout, name="save_checkout"),
     path('reservas/updateCO/pago-multa/webpay-respuesta/', views.multa_webpay_respuesta, name="multa_webpay_respuesta"),
-
-    # path('reservas/updateCI/<int:pk>/', views.FuncionarioReservaUpdateView1.as_view(), name="funcionario_CI"),
-    #path('reservas/updateCI/<id>/', views.funcionarioReservaUpdateCheckIn, name="funcionario_CI"),
-    # path('reservas/updateCO/<int:pk>/', views.FuncionarioReservaUpdateView2.as_view(), name="funcionario_CO"),
     path('reservas/check/pdf/<int:pk>/',views.funcionarioReserva_Check_PDF, name='detalle_reserva_pdf'),
 ] 

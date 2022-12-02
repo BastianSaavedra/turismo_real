@@ -67,7 +67,7 @@ def administration_dashboard(request):
 
     reservas = len(Reserva.objects.all().filter(status = '1'))
     reservas_en_proceso = len(Reserva.objects.all().filter(status = '4'))
-    reservas_terminadas = len(Reserva.objects.all().filter(status = '5'))
+    reservas_terminadas = len(Reserva.objects.all().filter(status = '3'))
 
 
     reservas_canceladas = len(

@@ -15,5 +15,4 @@ urlpatterns = [
     path('user/mis-reservas/cancelar-tour/<id>/', views.cancelar_tour, name="home_cancelar_tour"),
     path('user/mis-reservas/cancelar-transporte/<id>/', views.cancelar_transporte, name="home_cancelar_transporte"),
     path('user/mis-reservas//pdf/<int:pk>/',views.Reserva_Check_PDF, name='detalle_reserva_pdf'),
-    # path('user/arriendo-dpto/arriendo', arriendo_confirmacion, name="arriendo_dpto"),
 ]
